@@ -1,2 +1,5 @@
 #Item localization
 item.itemAmpoule.name=Ampoule
+
+#Token localization
+token.tokenProjectile.name=Projectile Token

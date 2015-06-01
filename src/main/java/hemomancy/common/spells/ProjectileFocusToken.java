@@ -36,6 +36,7 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	{
 		super("textures/tokens/ProjectileToken.png");
 		damageMap.put("default", 5.0);
+		this.setUnlocalizedName("token.tokenProjectile.name");
 	}
 
 	@Override

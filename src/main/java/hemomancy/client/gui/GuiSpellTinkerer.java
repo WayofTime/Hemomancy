@@ -3,11 +3,14 @@ package hemomancy.client.gui;
 import hemomancy.api.spells.SpellToken;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -65,10 +68,43 @@ public class GuiSpellTinkerer extends GuiContainer
 	}
 
 	@Override
-    protected void drawGuiContainerForegroundLayer(int param1, int param2)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
+		int x = (width - xSize) / 2;
+        int y = (height - ySize) / 2;
+        
+		SpellToken token = this.getSpellTokenAtMouse(mouseX, mouseY);
+		if(token == null)
+		{
+			token = this.getCuecueAtMouse(mouseX, mouseY);
+		}
+		
+		if(token != null)
+		{
+			this.renderToolTip(token, mouseX - x, mouseY - y);
+		}
         //the parameters for drawString are: string, x, y, color
 //        fontRendererObj.drawString("Sigil of Holding", 52, 4, 4210752);
+    }
+	
+	protected void renderToolTip(SpellToken token, int x, int y)
+    {
+        List list = new ArrayList();
+        list.add(token.getLocalizedName());
+
+        for (int k = 0; k < list.size(); ++k)
+        {
+            if (k == 0)
+            {
+                list.set(k, (String)list.get(k));
+            }
+            else
+            {
+                list.set(k, EnumChatFormatting.GRAY + (String)list.get(k));
+            }
+        }
+
+        this.drawHoveringText(list, x, y, (fontRendererObj));
     }
 
     @Override
@@ -178,6 +214,54 @@ public class GuiSpellTinkerer extends GuiContainer
         }
         
     	return false;
+    }
+    
+    protected SpellToken getSpellTokenAtMouse(int mouseX, int mouseY)
+    {
+    	int guiX = -(width - xSize) / 2 + mouseX;
+        int guiY = -(height - ySize) / 2 + mouseY;
+                
+        if(guiX >= tokenWindowStartX + 1 && guiX < tokenWindowStartX + tokenWindowSizeX && guiY >= tokenWindowStartY + 1 && guiY < tokenWindowStartY + tokenWindowSizeY)
+        {
+        	int adjustedX = guiX - tokenWindowStartX - 1; //Adjustment to make sure 0,0 is at the top-left of the first token
+        	int adjustedY = guiY - tokenWindowStartY - 1;
+        	
+        	if(adjustedX % 18 < 16 && adjustedY % 18 < 16)
+        	{
+        		int xIndex = adjustedX / 18;
+        		int yIndex = adjustedY / 18;
+        		
+        		int index = xIndex + yIndex * tokenCollumns + startingIndex * tokenCollumns;
+        		
+        		return ((ContainerSpellTinkerer)this.inventorySlots).inventory.getSpellTokenAtIndex(index);
+        	}
+        }
+        
+        return null;
+    }
+    
+    protected SpellToken getCuecueAtMouse(int mouseX, int mouseY)
+    {
+    	int guiX = -(width - xSize) / 2 + mouseX;
+        int guiY = -(height - ySize) / 2 + mouseY;
+                
+        if(guiX >= cueWindowStartX + 1 && guiX < cueWindowStartX + cueWindowSizeX && guiY >= cueWindowStartY + 1 && guiY < cueWindowStartY + cueWindowSizeY)
+        {
+        	int adjustedX = guiX - cueWindowStartX - 1; //Adjustment to make sure 0,0 is at the top-left of the first cue
+        	int adjustedY = guiY - cueWindowStartY - 1;
+        	
+        	if(adjustedX % 18 < 16 && adjustedY % 18 < 16)
+        	{
+        		int xIndex = adjustedX / 18;
+        		int yIndex = adjustedY / 18;
+        		
+        		int index = xIndex + yIndex * cueCollumns + startingIndex * cueCollumns;
+        		
+        		return ((ContainerSpellTinkerer)this.inventorySlots).inventory.getCueTokenAtIndex(index);
+        	}
+        }
+        
+        return null;
     }
     
     @Override

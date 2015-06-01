@@ -41,6 +41,26 @@ public class InventorySpellTinkerer implements IInventory
 //        this.tokenList = getTokenListOfPlayer(player);
     }
     
+    public SpellToken getSpellTokenAtIndex(int index)
+    {
+    	if(index >= 0 && index < tokenList.size())
+    	{
+    		return tokenList.get(index);
+    	}
+    	
+    	return null;
+    }
+    
+    public SpellToken getCueTokenAtIndex(int index)
+    {
+    	if(index >= 0 && index < spellCueList.size())
+    	{
+    		return spellCueList.get(index);
+    	}
+    	
+    	return null;
+    }
+    
     public List<SpellToken> getTokenListOfPlayer(EntityPlayer player) //TODO Make this function from server -> client
     {
     	if(!player.worldObj.isRemote && player instanceof EntityPlayerMP)
