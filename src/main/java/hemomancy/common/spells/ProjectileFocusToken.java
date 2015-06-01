@@ -3,10 +3,15 @@ package hemomancy.common.spells;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
+import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,10 +24,16 @@ import net.minecraft.world.World;
 
 public class ProjectileFocusToken extends SpellToken implements IFocusToken
 {
-	public List<SpellToken> tokenList = new ArrayList();
+	private List<SpellToken> tokenList = new ArrayList();
+	public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
+	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
+	
+	public Map<String, Double> damageMap = new HashMap();
+	
 	public ProjectileFocusToken() 
 	{
 		super("");
+		damageMap.put("default", 5.0);
 	}
 
 	@Override
@@ -43,8 +54,12 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) 
 	{
-		
+		float potency = 1;
+		EntitySpellProjectile projectile = new EntitySpellProjectile(world, player, this, tokenList);
 
+		prepareProjectileForEntity(world, projectile, potency);
+		world.spawnEntityInWorld(projectile);
+		
 		return stack;
 	}
 
@@ -96,8 +111,26 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		return new ProjectileFocusToken();
 	}
 	
-	public EntitySpellProjectile getProjectileForEntity(World world, EntityPlayer player)
+	public void prepareProjectileForEntity(World world, EntitySpellProjectile projectile, float potency)
 	{
-		return new EntitySpellProjectile(world, player, this, tokenList);
+		for(SpellToken token : this.tokenList)
+		{
+			if(token instanceof IProjectileToken)
+			{
+				((IProjectileToken)token).manipulateProjectileFocus(this, potency);
+			}
+		}
+		
+		double damage = 0;
+		
+		projectile.onUpdateEffectList = this.onUpdateEffectList;
+		projectile.onCollideEffectList = this.onCollideEffectList;
+		
+		for(Entry<String, Double> entry : this.damageMap.entrySet())
+		{
+			damage += entry.getValue();
+		}
+		
+		projectile.damage = damage;
 	}
 }

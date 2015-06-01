@@ -3,6 +3,8 @@ package hemomancy.common.entity.projectile;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
+import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
+import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
 import hemomancy.common.spells.ProjectileFocusToken;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntitySpellProjectile extends Entity implements IProjectile
 {
+	private float potency = 1;
+	
     private int xTile = -1;
     private int yTile = -1;
     private int zTile = -1;
@@ -42,7 +46,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     public Entity shootingEntity;
     private int ticksInGround;
     private int ticksInAir;
-    private double damage = 2.0D;
+    public double damage = 2.0D;
     
     private float gravity = 0.01f;
     /** The amount of knockback an arrow applies when it hits a mob. */
@@ -53,6 +57,9 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     public List<SpellToken> tokenList = new ArrayList();
     
     public ProjectileFocusToken focus = null;
+    
+    public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
+	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
 
     public EntitySpellProjectile(World worldIn)
     {
@@ -439,6 +446,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         
         tagCompound.setTag("tokenList", SpellTokenRegistry.writeSpellTokensToTag(tokenList, new NBTTagCompound()));
         tagCompound.setBoolean("fluidCollide", collideWithFluids);
+        tagCompound.setFloat("potency", potency);
     }
 
     /**
@@ -470,14 +478,16 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         }
         
         this.gravity = tagCompound.getFloat("gravity");
+        this.potency = tagCompound.getFloat("potency");
         
         this.tokenList = SpellTokenRegistry.readSpellTokensFromTag(tagCompound.getCompoundTag("tokenList"));
         IFocusToken focusToken = SpellTokenRegistry.getPreparedFocusFromList(tokenList);
         if(focusToken instanceof ProjectileFocusToken)
         {
         	this.focus = (ProjectileFocusToken)focusToken;
+        	this.focus.prepareProjectileForEntity(worldObj, this, potency);
         }
-        
+                
         collideWithFluids = tagCompound.getBoolean("fluidCollide");
     }
 
