@@ -4,36 +4,35 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
 
-public class BounceToken extends SpellToken implements IProjectileToken
+public class StickyToken extends SpellToken implements IProjectileToken
 {
-
-	public BounceToken() 
+	public StickyToken() 
 	{
-		super("textures/tokens/BounceToken.png");
-		this.setUnlocalizedName("token.tokenBounce.name");
+		super("textures/tokens/StickyToken.png");
+		this.setUnlocalizedName("token.tokenSticky.name");
 	}
 
 	@Override
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
-		focus.bouncesLeft += 5;
+		focus.stickTime = 10 * 20; //10 seconds
 	}
 
 	@Override
 	public SpellToken copy() 
 	{
-		return new BounceToken();
+		return new StickyToken();
 	}
 
 	@Override
-	public float getBloodCostOfToken(IFocusToken token) 
+	public float getBloodCostOfToken(IFocusToken focus) 
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken token) 
+	public float getManaCostOfToken(IFocusToken focus) 
 	{
 		// TODO Auto-generated method stub
 		return 0;

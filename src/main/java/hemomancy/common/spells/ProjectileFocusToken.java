@@ -1,5 +1,6 @@
 package hemomancy.common.spells;
 
+import hemomancy.api.ApiUtils;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
@@ -29,8 +30,12 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
 	
 	public int bouncesLeft = 0;
+	public int stickTime = 0;
 	
 	public Map<String, Double> damageMap = new HashMap();
+	
+	public float manaCost = 0;
+	public float bloodCost = 0;
 	
 	public ProjectileFocusToken() 
 	{
@@ -45,6 +50,8 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		if(token instanceof ProjectileFocusToken || token instanceof IProjectileToken)
 		{
 			tokenList.add(token);
+			this.manaCost += token.getManaCostOfToken(this);
+			this.bloodCost += token.getBloodCostOfToken(this);
 		}
 	}
 
@@ -58,10 +65,13 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) 
 	{
 		float potency = 1;
-		EntitySpellProjectile projectile = new EntitySpellProjectile(world, player, this, tokenList);
+		if(ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
+		{
+			EntitySpellProjectile projectile = new EntitySpellProjectile(world, player, this, tokenList);
 
-		prepareProjectileForEntity(world, projectile, potency);
-		world.spawnEntityInWorld(projectile);
+			prepareProjectileForEntity(world, projectile, potency);
+			world.spawnEntityInWorld(projectile);
+		}
 		
 		return stack;
 	}
@@ -137,5 +147,34 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		projectile.damage = damage;
 		
 		projectile.bouncesLeft = bouncesLeft;
+		projectile.stickyTimer = this.stickTime;
+	}
+	
+	@Override
+	public float getBloodCostOfToken(IFocusToken token) 
+	{
+		// TODO Auto-generated method stub
+		return 10;
+	}
+
+	@Override
+	public float getManaCostOfToken(IFocusToken token) 
+	{
+		// TODO Auto-generated method stub
+		return 3;
+	}
+
+	@Override
+	public float getBloodCost(float potency) 
+	{
+		// TODO Auto-generated method stub
+		return bloodCost * potency*potency;
+	}
+
+	@Override
+	public float getManaCost(float potency) 
+	{
+		// TODO Auto-generated method stub
+		return manaCost * potency*potency;
 	}
 }

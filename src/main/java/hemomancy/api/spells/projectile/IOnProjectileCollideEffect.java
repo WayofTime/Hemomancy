@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 
 public interface IOnProjectileCollideEffect 
 {
-	public void onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity);
+	public void onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency);
 	
 	public void onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency);
 	

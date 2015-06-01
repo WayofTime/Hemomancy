@@ -10,5 +10,5 @@ public interface IOnProjectileUpdateEffect
 {
 	public void onProjectileUpdate(Entity projectile, EntityPlayer shooter, float potency);
 	
-	public void onProjectileStickyUpdate(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, int ticksInGround);
+	public void onProjectileStickyUpdate(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, int ticksInGround, float potency);
 }

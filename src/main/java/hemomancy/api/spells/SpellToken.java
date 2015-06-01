@@ -46,4 +46,8 @@ public abstract class SpellToken
 	{
 		return this == o || (o instanceof SpellToken ? ((SpellToken)o).key.equals(key) : false);
 	}
+	
+	public abstract float getBloodCostOfToken(IFocusToken focus);
+	
+	public abstract float getManaCostOfToken(IFocusToken focus);
 }

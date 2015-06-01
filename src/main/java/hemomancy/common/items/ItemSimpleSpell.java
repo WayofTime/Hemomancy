@@ -3,7 +3,13 @@ package hemomancy.common.items;
 import hemomancy.Hemomancy;
 import hemomancy.api.mana.ISpellCostClient;
 import hemomancy.api.mana.ManaHandler;
-import hemomancy.common.entity.projectile.EntitySpellProjectile;
+import hemomancy.api.spells.IFocusToken;
+import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.SpellTokenRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,18 +32,16 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
         {
         	if(!world.isRemote)
         	{
-//        		ManaHandler.setMaxManaOfPlayer(player, 100);
             	ManaHandler.setManaOfPlayer(player, 100);
         	}
         }else
         {
-//        	if(ApiUtils.drainManaAndBlood(player, 20, 10) && !world.isRemote)
-//        	{
-//        		EntityArrow arrow = new EntityArrow(world, player, 10);
-//        		world.spawnEntityInWorld(arrow);
-//        	}
-        	EntitySpellProjectile projectile = new EntitySpellProjectile(world, player, 1);
-        	world.spawnEntityInWorld(projectile);
+        	IFocusToken focus = getPreparedFocus(itemStack);
+        	
+        	if(focus != null)
+        	{
+        		focus.onItemRightClick(itemStack, world, player);
+        	}
         }
         
         return itemStack;
@@ -46,12 +50,37 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
 	@Override
 	public float getManaCostForClientRender(ItemStack stack) 
 	{
-		return 20;
+		IFocusToken focus = getPreparedFocus(stack);
+    	
+    	if(focus != null)
+    	{
+    		return focus.getManaCost(1);
+    	}
+    	
+    	return 0;
 	}
 
 	@Override
 	public float getBloodCostForClientRender(ItemStack stack) 
 	{
-		return 10;
+		IFocusToken focus = getPreparedFocus(stack);
+    	
+    	if(focus != null)
+    	{
+    		return focus.getBloodCost(1);
+    	}
+    	
+    	return 0;
+	}
+	
+	public IFocusToken getPreparedFocus(ItemStack stack)
+	{
+		List<SpellToken> tokenList = new ArrayList();
+    	tokenList.add(SpellTokenRegistry.getSpellTokenForKey("projectileToken"));
+    	tokenList.add(SpellTokenRegistry.getSpellTokenForKey("explosionToken"));
+    	
+    	IFocusToken focus = SpellTokenRegistry.getPreparedFocusFromList(tokenList);
+    	
+    	return focus;
 	}
 }

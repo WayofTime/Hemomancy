@@ -2,4 +2,7 @@
 item.itemAmpoule.name=Ampoule
 
 #Token localization
-token.tokenProjectile.name=Projectile Token
+token.tokenProjectile.name=Projectile
+token.tokenBounce.name=Bounce
+token.tokenSticky.name=Sticky
+token.tokenExplosion.name=Explosive

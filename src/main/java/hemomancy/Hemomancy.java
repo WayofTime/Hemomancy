@@ -6,7 +6,9 @@ import hemomancy.client.GuiHandler;
 import hemomancy.common.CommonProxy;
 import hemomancy.common.commands.CommandHUD;
 import hemomancy.common.spells.BounceToken;
+import hemomancy.common.spells.ExplosionToken;
 import hemomancy.common.spells.ProjectileFocusToken;
+import hemomancy.common.spells.StickyToken;
 import hemomancy.common.util.PlayerSyncHandler;
 
 import java.io.File;
@@ -94,5 +96,7 @@ public class Hemomancy
     {
     	SpellTokenRegistry.registerSpellToken("projectileToken", new ProjectileFocusToken());
     	SpellTokenRegistry.registerSpellToken("bounceToken", new BounceToken());
+    	SpellTokenRegistry.registerSpellToken("stickyToken", new StickyToken());
+    	SpellTokenRegistry.registerSpellToken("explosionToken", new ExplosionToken());
     }
 }

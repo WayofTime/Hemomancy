@@ -166,6 +166,7 @@ public class SpellTokenRegistry
 			for(SpellToken token : tokenList)
 			{
 				focusToken.addSpellTokenToFocus(token);
+				
 			}
 		}
 		

@@ -585,7 +585,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 
 			for(IOnProjectileUpdateEffect effect : this.onUpdateEffectList)
 			{
-				effect.onProjectileStickyUpdate(this, shooter, pos, state, sideHit, ticksInGround);
+				effect.onProjectileStickyUpdate(this, shooter, pos, state, sideHit, ticksInGround, potency);
 			}
 		}
     }
@@ -686,6 +686,16 @@ public class EntitySpellProjectile extends Entity implements IProjectile
             }
 
             this.setDead();
+        }
+        
+        if(movingobjectposition.entityHit instanceof EntityLivingBase)
+        {
+			EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+
+        	for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
+    		{
+    			effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)movingobjectposition.entityHit, potency);
+    		}
         }
 //        else //Enable to allow bouncing...
 //        {

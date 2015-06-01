@@ -1,5 +1,6 @@
 package hemomancy.common.spells;
 
+import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 
 public class TestingSpellToken extends SpellToken
@@ -13,5 +14,19 @@ public class TestingSpellToken extends SpellToken
 	public SpellToken copy() 
 	{
 		return new TestingSpellToken();
+	}
+
+	@Override
+	public float getBloodCostOfToken(IFocusToken focus) 
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getManaCostOfToken(IFocusToken focus) 
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

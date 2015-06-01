@@ -38,4 +38,8 @@ public interface IFocusToken
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ);
     
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity);  
+    
+    public float getBloodCost(float potency);
+    
+    public float getManaCost(float potency);
 }

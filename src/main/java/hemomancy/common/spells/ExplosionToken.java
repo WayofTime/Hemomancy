@@ -3,26 +3,27 @@ package hemomancy.common.spells;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.projectile.ExplosionProjectileEffect;
 
-public class BounceToken extends SpellToken implements IProjectileToken
+public class ExplosionToken extends SpellToken implements IProjectileToken
 {
-
-	public BounceToken() 
+	public ExplosionToken() 
 	{
-		super("textures/tokens/BounceToken.png");
-		this.setUnlocalizedName("token.tokenBounce.name");
+		super("textures/tokens/ExplosionToken.png");
+		this.setUnlocalizedName("token.tokenExplosion.name");
 	}
 
 	@Override
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
-		focus.bouncesLeft += 5;
+		focus.onCollideEffectList.add(new ExplosionProjectileEffect());
+		focus.onUpdateEffectList.add(new ExplosionProjectileEffect());
 	}
 
 	@Override
 	public SpellToken copy() 
 	{
-		return new BounceToken();
+		return new ExplosionToken();
 	}
 
 	@Override
@@ -36,6 +37,6 @@ public class BounceToken extends SpellToken implements IProjectileToken
 	public float getManaCostOfToken(IFocusToken token) 
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 20;
 	}
 }
