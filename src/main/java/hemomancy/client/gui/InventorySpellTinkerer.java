@@ -33,7 +33,12 @@ public class InventorySpellTinkerer implements IInventory
 
         inventory = tile.inventory;
         
-        this.tokenList = getTokenListOfPlayer(player);
+        for(SpellToken token : SpellTokenRegistry.tokenMap.values())
+        {
+        	tokenList.add(token);
+        }
+        
+//        this.tokenList = getTokenListOfPlayer(player);
     }
     
     public List<SpellToken> getTokenListOfPlayer(EntityPlayer player) //TODO Make this function from server -> client

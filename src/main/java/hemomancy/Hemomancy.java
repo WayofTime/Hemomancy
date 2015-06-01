@@ -1,9 +1,12 @@
 package hemomancy;
 
 import hemomancy.api.ApiUtils;
+import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.client.GuiHandler;
 import hemomancy.common.CommonProxy;
 import hemomancy.common.commands.CommandHUD;
+import hemomancy.common.spells.BounceToken;
+import hemomancy.common.spells.ProjectileFocusToken;
 import hemomancy.common.util.PlayerSyncHandler;
 
 import java.io.File;
@@ -71,6 +74,8 @@ public class Hemomancy
     	proxy.registerRenderers();
     	proxy.initPacketHandlers();
     	proxy.registerTileEntities();
+    	
+    	this.registerSpellTokens();
     }
     
     @EventHandler
@@ -83,5 +88,11 @@ public class Hemomancy
     public void initCommands(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandHUD());
+    }
+    
+    public void registerSpellTokens()
+    {
+    	SpellTokenRegistry.registerSpellToken("projectileToken", new ProjectileFocusToken());
+    	SpellTokenRegistry.registerSpellToken("bounceToken", new BounceToken());
     }
 }

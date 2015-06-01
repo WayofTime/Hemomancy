@@ -1,10 +1,13 @@
 package hemomancy.common;
 
+import hemomancy.Hemomancy;
 import hemomancy.common.blocks.tileEntity.TESpellTinkerer;
+import hemomancy.common.entity.projectile.EntitySpellProjectile;
 import hemomancy.common.network.PacketHandler;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 
@@ -53,7 +56,7 @@ public class CommonProxy
 
     public void registerEntityTrackers()
     {
-
+    	EntityRegistry.registerModEntity(EntitySpellProjectile.class, "entitySpellProjectile", 0, Hemomancy.instance, 128, 1, true);
     }
 
     public void registerTickHandlers()

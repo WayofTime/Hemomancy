@@ -28,11 +28,13 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
 	
+	public int bouncesLeft = 0;
+	
 	public Map<String, Double> damageMap = new HashMap();
 	
 	public ProjectileFocusToken() 
 	{
-		super("");
+		super("textures/tokens/ProjectileToken.png");
 		damageMap.put("default", 5.0);
 	}
 
@@ -132,5 +134,7 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		}
 		
 		projectile.damage = damage;
+		
+		projectile.bouncesLeft = bouncesLeft;
 	}
 }

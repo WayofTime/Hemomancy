@@ -23,6 +23,7 @@ import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -60,6 +61,10 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     
     public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
+	
+	public int bouncesLeft = 1;
+	public int stickyTimer = 100;
+	public EnumFacing sideHit = EnumFacing.NORTH;
 
     public EntitySpellProjectile(World worldIn)
     {
@@ -244,10 +249,13 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 
             if (block == this.inTile && j == this.inData)
             {
-                ++this.ticksInGround;
+                this.onUpdateStuckToBlock(blockpos, iblockstate, this.sideHit);
 
-                if (this.ticksInGround >= 1)
+                ++this.ticksInGround;
+                
+                if (this.ticksInGround >= stickyTimer)
                 {
+                	this.onCollideWithBlock(blockpos, iblockstate, sideHit);
                     this.setDead();
                 }
             }
@@ -262,6 +270,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         }
         else
         {
+        	this.onUpdateEffects();
             ++this.ticksInAir;
             Vec3 vec31 = new Vec3(this.posX, this.posY, this.posZ);
             Vec3 vec3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
@@ -330,31 +339,40 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                 }
                 else //I have hit a block.
                 {
-                    BlockPos blockpos1 = movingobjectposition.getBlockPos();
-                    this.xTile = blockpos1.getX();
-                    this.yTile = blockpos1.getY();
-                    this.zTile = blockpos1.getZ();
-                    iblockstate = this.worldObj.getBlockState(blockpos1);
-                    this.inTile = iblockstate.getBlock();
-                    this.inData = this.inTile.getMetaFromState(iblockstate);
-                    this.motionX = (double)((float)(movingobjectposition.hitVec.xCoord - this.posX));
-                    this.motionY = (double)((float)(movingobjectposition.hitVec.yCoord - this.posY));
-                    this.motionZ = (double)((float)(movingobjectposition.hitVec.zCoord - this.posZ));
-                    f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-                    this.posX -= this.motionX / (double)f3 * 0.05000000074505806D;
-                    this.posY -= this.motionY / (double)f3 * 0.05000000074505806D;
-                    this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
-                    this.inGround = true;
+                	if(!onBounce(movingobjectposition))
+                	{
+                		BlockPos blockpos1 = movingobjectposition.getBlockPos();
+                        this.xTile = blockpos1.getX();
+                        this.yTile = blockpos1.getY();
+                        this.zTile = blockpos1.getZ();
+                        iblockstate = this.worldObj.getBlockState(blockpos1);
+                        this.inTile = iblockstate.getBlock();
+                        this.inData = this.inTile.getMetaFromState(iblockstate);
+                        this.motionX = (double)((float)(movingobjectposition.hitVec.xCoord - this.posX));
+                        this.motionY = (double)((float)(movingobjectposition.hitVec.yCoord - this.posY));
+                        this.motionZ = (double)((float)(movingobjectposition.hitVec.zCoord - this.posZ));
+                        f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+                        this.posX -= this.motionX / (double)f3 * 0.05000000074505806D;
+                        this.posY -= this.motionY / (double)f3 * 0.05000000074505806D;
+                        this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
+                        this.inGround = true;
 
-                    if (this.inTile.getMaterial() != Material.air)
-                    {
-                        this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
-                    }
+                        if (this.inTile.getMaterial() != Material.air)
+                        {
+                            this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
+                        }
+                        
+                		this.sideHit = movingobjectposition.sideHit;
+                        
+                        if(stickyTimer > 0)
+                        {
+                        	this.inGround = true;
+                        }else if(onCollideWithBlock(blockpos1, iblockstate, sideHit))
+                        {
+                        	this.setDead();
+                        }
+                	}
                     
-                    if(onCollideWithBlock(blockpos1, this.inTile, iblockstate))
-                    {
-                    	this.setDead();
-                    }
                 }
             }
 //
@@ -447,6 +465,9 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         tagCompound.setTag("tokenList", SpellTokenRegistry.writeSpellTokensToTag(tokenList, new NBTTagCompound()));
         tagCompound.setBoolean("fluidCollide", collideWithFluids);
         tagCompound.setFloat("potency", potency);
+        tagCompound.setInteger("bouncesLeft", bouncesLeft);
+        tagCompound.setInteger("stickyTimer", stickyTimer);
+        tagCompound.setInteger("sideHit", this.sideHit.getIndex());
     }
 
     /**
@@ -489,6 +510,9 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         }
                 
         collideWithFluids = tagCompound.getBoolean("fluidCollide");
+        bouncesLeft = tagCompound.getInteger("bouncesLeft");
+        stickyTimer = tagCompound.getInteger("stickyTimer");
+        this.sideHit = EnumFacing.getFront(tagCompound.getInteger("sideHit"));
     }
 
     /**
@@ -540,9 +564,90 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         return false;
     }
     
-    public boolean onCollideWithBlock(BlockPos pos, Block block, IBlockState blockState)
+    public void onUpdateEffects()
     {
+    	if(!worldObj.isRemote)
+    	{
+    		EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+
+    		for(IOnProjectileUpdateEffect effect : this.onUpdateEffectList)
+    		{
+    			effect.onProjectileUpdate(this, shooter, potency);
+    		}
+    	}
+    }
+    
+    public void onUpdateStuckToBlock(BlockPos pos, IBlockState state, EnumFacing sideHit)
+    {
+    	if(!this.worldObj.isRemote)
+		{
+			EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+
+			for(IOnProjectileUpdateEffect effect : this.onUpdateEffectList)
+			{
+				effect.onProjectileStickyUpdate(this, shooter, pos, state, sideHit, ticksInGround);
+			}
+		}
+    }
+    
+    public boolean onCollideWithBlock(BlockPos pos, IBlockState state, EnumFacing sideHit)
+    {		
+		if(!this.worldObj.isRemote)
+		{
+			EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+
+			for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
+			{
+				effect.onProjectileCollideWithBlock(this,shooter, pos, state, sideHit, potency);
+			}
+		}
+		
     	return true;
+    }
+    
+    /**
+     * 
+     * @param mop
+     * @return true if the projectile successfully bounces
+     */
+    public boolean onBounce(MovingObjectPosition mop)
+    {
+    	if(this.bouncesLeft > 0)
+    	{
+    		this.bouncesLeft --;
+    		EnumFacing sideHit = mop.sideHit;
+
+    		if(!this.worldObj.isRemote)
+    		{
+    			EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+        		BlockPos pos = mop.getBlockPos();
+        		IBlockState state = this.worldObj.getBlockState(pos);
+
+        		for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
+        		{
+        			effect.onProjectileBounce(this, shooter, pos, state, sideHit, potency);
+        		}
+    		}
+    		
+    		switch(sideHit)
+    		{
+    		case UP:
+    		case DOWN:
+    			this.motionY *= -1;
+    			break;
+    		case EAST:
+    		case WEST:
+    			this.motionX *= -1;
+    			break;
+			case NORTH:
+			case SOUTH:
+				this.motionZ *= -1;
+				break;
+    		}
+    		
+    		return true;
+    	}
+    	return false;
     }
     
     public void onCollideWithEntity(MovingObjectPosition movingobjectposition)
