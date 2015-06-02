@@ -49,7 +49,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     private int ticksInAir;
     public double damage = 2.0D;
     
-    private float gravity = 0.01f;
+    private float gravity = 0.00f;
     /** The amount of knockback an arrow applies when it hits a mob. */
     private int knockbackStrength;
     

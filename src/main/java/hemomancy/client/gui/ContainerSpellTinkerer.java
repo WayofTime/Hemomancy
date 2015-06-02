@@ -1,10 +1,15 @@
 package hemomancy.client.gui;
 
+import hemomancy.ModItems;
 import hemomancy.api.items.IAmpoule;
+import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.common.network.PacketHandler;
 import hemomancy.common.network.TESpellTinkererPacketProcessor;
+
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -79,18 +84,25 @@ public class ContainerSpellTinkerer extends Container
     		ItemStack stack = inventory.getStackInSlot(0);
     		if(stack != null && stack.getItem() instanceof ItemWritableBook)
     		{
-    			ItemStack newStack = SpellTokenRegistry.writeSpellTokensToItemStack(stack, inventory.spellCueList);
-    			newStack.setStackDisplayName("Spell~");
-    			
-    			Slot slotObject = (Slot) inventorySlots.get(0);
-            	slotObject.putStack(newStack);
-            	slotObject.onSlotChanged();
-            	if(player.worldObj.isRemote)
-            	{
-                	sendItemStackToServer(newStack);
-            	}
-            	this.saveInventory(player);
-            	this.detectAndSendChanges();
+    			IFocusToken focus = SpellTokenRegistry.getPreparedFocusFromList(inventory.spellCueList);
+    			if(focus != null)
+    			{
+    				ItemStack newStack = new ItemStack(ModItems.itemSimpleSpell);
+    				newStack = SpellTokenRegistry.writeSpellTokensToItemStack(newStack, inventory.spellCueList);
+        			newStack.setStackDisplayName("Spell~");
+        			
+        			Slot slotObject = (Slot) inventorySlots.get(0);
+                	slotObject.putStack(newStack);
+                	slotObject.onSlotChanged();
+                	if(player.worldObj.isRemote)
+                	{
+                    	sendItemStackToServer(newStack);
+                	}
+                	this.saveInventory(player);
+                	this.detectAndSendChanges();
+                	
+                	this.removeAllFromCue();
+    			}
     		}
     	}	
     }
@@ -170,15 +182,19 @@ public class ContainerSpellTinkerer extends Container
     	if(index >= 0 && index < inventory.tokenList.size())
     	{
     		SpellToken movedToken = inventory.tokenList.get(index);
-    		for(SpellToken token : inventory.spellCueList)
+    		
+    		if(inventory.spellCueList.isEmpty() ? (movedToken instanceof IFocusToken) : !(movedToken instanceof IFocusToken))
     		{
-    			if(!token.isSpellTokenCompatible(movedToken))
-    			{
-    				return false;
-    			}
+    			for(SpellToken token : inventory.spellCueList)
+        		{
+        			if(!token.isSpellTokenCompatible(movedToken))
+        			{
+        				return false;
+        			}
+        		}
+        		inventory.spellCueList.add(inventory.tokenList.remove(index));
+        		return true;
     		}
-    		inventory.spellCueList.add(inventory.tokenList.remove(index));
-    		return true;
     	}
     	
     	return false;
@@ -188,10 +204,42 @@ public class ContainerSpellTinkerer extends Container
     {
     	if(index >= 0 && index < inventory.spellCueList.size())
     	{
-    		inventory.tokenList.add(inventory.spellCueList.remove(index));
+    		SpellToken removedToken = inventory.spellCueList.remove(index);
+    		inventory.tokenList.add(removedToken);
+    		
+    		if(removedToken instanceof IFocusToken)
+    		{
+        		recheckAllTokens();
+    		}
     		return true;
     	}
     	
     	return false;
     }  
+    
+    public void recheckAllTokens()
+    {
+    	boolean removeAll = true;
+    	
+    	for(SpellToken token : inventory.spellCueList)
+		{
+			if(token instanceof IFocusToken)
+			{
+				removeAll = false;
+				break;
+			}
+		}
+    	
+    	if(removeAll)
+    	{
+    		removeAllFromCue();
+    	}
+    }
+    
+    public void removeAllFromCue()
+    {
+    	inventory.tokenList.addAll(inventory.spellCueList);
+    	
+    	inventory.spellCueList = new ArrayList();
+    }
 }

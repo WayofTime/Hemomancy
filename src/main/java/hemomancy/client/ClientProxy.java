@@ -35,6 +35,9 @@ public class ClientProxy extends CommonProxy
     	HUDRenderHelper.hudElementsMap.put("LPBarTest", new TestingHUDElement(testingHudElementX, testingHudElementY, 32, 32));
     	HUDRenderHelper.hudElementsMap.put("ManaBar", new ManaHUDElement(manaHudElementX, manaHudElementY, 64, 64));
     	HUDRenderHelper.hudElementsMap.put("BloodBar", new BloodHUDElement(bloodHudElementX, bloodHudElementY, 64, 64));
+    	
+    	ItemRenderRegistry.registerItemRenderers();
+    	BlockRenderRegistry.registerBlockRenderers();
     }
 
     @Override

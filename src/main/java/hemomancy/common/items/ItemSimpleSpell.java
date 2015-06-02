@@ -4,12 +4,7 @@ import hemomancy.Hemomancy;
 import hemomancy.api.mana.ISpellCostClient;
 import hemomancy.api.mana.ManaHandler;
 import hemomancy.api.spells.IFocusToken;
-import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -75,11 +70,7 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
 	
 	public IFocusToken getPreparedFocus(ItemStack stack)
 	{
-		List<SpellToken> tokenList = new ArrayList();
-    	tokenList.add(SpellTokenRegistry.getSpellTokenForKey("projectileToken"));
-    	tokenList.add(SpellTokenRegistry.getSpellTokenForKey("explosionToken"));
-    	
-    	IFocusToken focus = SpellTokenRegistry.getPreparedFocusFromList(tokenList);
+    	IFocusToken focus = SpellTokenRegistry.getPreparedFocusFromItemStack(stack);
     	
     	return focus;
 	}
