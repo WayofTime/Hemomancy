@@ -167,14 +167,12 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	@Override
 	public float getBloodCost(float potency) 
 	{
-		// TODO Auto-generated method stub
 		return bloodCost * potency*potency;
 	}
 
 	@Override
 	public float getManaCost(float potency) 
 	{
-		// TODO Auto-generated method stub
 		return manaCost * potency*potency;
 	}
 }

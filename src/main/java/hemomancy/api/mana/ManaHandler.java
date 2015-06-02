@@ -44,6 +44,17 @@ public class ManaHandler
 		return drain;
 	}
 	
+	public static float addManaToPlayer(EntityPlayer player, float amount)
+	{
+		float mana = getManaOfPlayer(player);
+		
+		float added = Math.min(getMaxManaOfPlayer(player) - mana, amount);
+		
+		setManaOfPlayer(player, mana + added);
+		
+		return added;
+	}
+	
 	public static void updatePlayerMana(EntityPlayerMP player)
 	{
 		ApiUtils.syncObject.syncPlayerMana(player);

@@ -4,10 +4,14 @@ import hemomancy.client.hud.BloodHUDElement;
 import hemomancy.client.hud.HUDRenderHelper;
 import hemomancy.client.hud.ManaHUDElement;
 import hemomancy.client.hud.TestingHUDElement;
+import hemomancy.client.render.RenderEntitySpellProjectile;
 import hemomancy.common.CommonProxy;
+import hemomancy.common.entity.projectile.EntitySpellProjectile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 
@@ -36,6 +40,9 @@ public class ClientProxy extends CommonProxy
     	HUDRenderHelper.hudElementsMap.put("ManaBar", new ManaHUDElement(manaHudElementX, manaHudElementY, 64, 64));
     	HUDRenderHelper.hudElementsMap.put("BloodBar", new BloodHUDElement(bloodHudElementX, bloodHudElementY, 64, 64));
     	
+    	RenderingRegistry.registerEntityRenderingHandler(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));
+//    	Minecraft.getMinecraft().getRenderManager().entityRenderMap.put(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));
+
     	ItemRenderRegistry.registerItemRenderers();
     	BlockRenderRegistry.registerBlockRenderers();
     }

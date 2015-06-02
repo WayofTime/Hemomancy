@@ -24,6 +24,10 @@ public class EventHandler
 						
 			if(!player.worldObj.isRemote && player instanceof EntityPlayerMP)
 			{
+				if(player.worldObj.getTotalWorldTime() % 20 == 0)
+				{
+					ManaHandler.addManaToPlayer(player, ManaHandler.getMaxManaOfPlayer(player) / 120f);
+				}
 				if(!ManaHandler.isManaSynced(player))
 				{
 					ManaHandler.updatePlayerMana((EntityPlayerMP)player);
