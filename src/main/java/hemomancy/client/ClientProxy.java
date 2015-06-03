@@ -41,7 +41,7 @@ public class ClientProxy extends CommonProxy
     	HUDRenderHelper.hudElementsMap.put("BloodBar", new BloodHUDElement(bloodHudElementX, bloodHudElementY, 64, 64));
     	
     	RenderingRegistry.registerEntityRenderingHandler(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));
-//    	Minecraft.getMinecraft().getRenderManager().entityRenderMap.put(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));
+    	Minecraft.getMinecraft().getRenderManager().entityRenderMap.put(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));
 
     	ItemRenderRegistry.registerItemRenderers();
     	BlockRenderRegistry.registerBlockRenderers();

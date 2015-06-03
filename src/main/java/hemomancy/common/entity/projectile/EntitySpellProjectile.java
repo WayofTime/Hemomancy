@@ -24,7 +24,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
@@ -53,7 +52,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     /** The amount of knockback an arrow applies when it hits a mob. */
     private int knockbackStrength;
     
-    private boolean collideWithFluids = false;
+    public boolean collideWithFluids = true;
     
     public List<SpellToken> tokenList = new ArrayList();
     
@@ -220,7 +219,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     public void onUpdate()
     {
         super.onUpdate();
-
+        
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
         {
             float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -274,7 +273,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
             ++this.ticksInAir;
             Vec3 vec31 = new Vec3(this.posX, this.posY, this.posZ);
             Vec3 vec3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-            MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(vec31, vec3, collideWithFluids, true, false);
+            MovingObjectPosition movingobjectposition = this.worldObj.rayTraceBlocks(vec31, vec3, collideWithFluids, false, false);
             vec31 = new Vec3(this.posX, this.posY, this.posZ);
             vec3 = new Vec3(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
@@ -356,6 +355,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                         this.posY -= this.motionY / (double)f3 * 0.05000000074505806D;
                         this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
                         this.inGround = true;
+                        
+                        System.out.println(this.inTile);
 
                         if (this.inTile.getMaterial() != Material.air)
                         {
@@ -415,16 +416,16 @@ public class EntitySpellProjectile extends Entity implements IProjectile
             f3 = 0.99F;
             f1 = this.getGravity();
 
-            if (this.isInWater())
-            {
-                for (int l = 0; l < 4; ++l)
-                {
-                    f4 = 0.25F;
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ, new int[0]);
-                }
-
-                f3 = 0.6F;
-            }
+//            if (this.isInWater())
+//            {
+//                for (int l = 0; l < 4; ++l)
+//                {
+//                    f4 = 0.25F;
+//                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ, new int[0]);
+//                }
+//
+//                f3 = 0.6F;
+//            }
 
             if (this.isWet())
             {

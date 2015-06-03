@@ -1,8 +1,13 @@
 package hemomancy.common.util;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import hemomancy.api.ApiUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 public class Utils extends ApiUtils
 {
@@ -39,5 +44,18 @@ public class Utils extends ApiUtils
 	{
 		NBTTagCompound data = ApiUtils.getPersistentDataTag(player);
 		data.setBoolean(IDTag + "IsExpSynced", bool);
+	}
+	
+	public static boolean freezeBlock(World world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+
+		if(block == Blocks.water || block == Blocks.flowing_water)
+		{
+			return world.setBlockState(pos, Blocks.ice.getDefaultState(), 3);
+		}
+		
+		return false;
 	}
 }

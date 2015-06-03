@@ -7,6 +7,8 @@ import hemomancy.common.CommonProxy;
 import hemomancy.common.commands.CommandHUD;
 import hemomancy.common.spells.BounceToken;
 import hemomancy.common.spells.ExplosionToken;
+import hemomancy.common.spells.IceToken;
+import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.ProjectileFocusToken;
 import hemomancy.common.spells.StickyToken;
 import hemomancy.common.util.PlayerSyncHandler;
@@ -76,6 +78,7 @@ public class Hemomancy
     	proxy.registerRenderers();
     	proxy.initPacketHandlers();
     	proxy.registerTileEntities();
+    	proxy.registerEntityTrackers();
     	
     	this.registerSpellTokens();
     }
@@ -98,5 +101,7 @@ public class Hemomancy
     	SpellTokenRegistry.registerSpellToken("bounceToken", new BounceToken());
     	SpellTokenRegistry.registerSpellToken("stickyToken", new StickyToken());
     	SpellTokenRegistry.registerSpellToken("explosionToken", new ExplosionToken());
+    	SpellTokenRegistry.registerSpellToken("liquidToken", new LiquidToken());
+    	SpellTokenRegistry.registerSpellToken("iceToken", new IceToken());
     }
 }

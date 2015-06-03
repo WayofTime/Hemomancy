@@ -6,3 +6,5 @@ token.tokenProjectile.name=Projectile
 token.tokenBounce.name=Bounce
 token.tokenSticky.name=Sticky
 token.tokenExplosion.name=Explosive
+token.tokenLiquid.name=Pass Through Liquid
+token.tokenIce.name=Ice
