@@ -11,6 +11,7 @@ import hemomancy.common.spells.IceToken;
 import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.ProjectileFocusToken;
 import hemomancy.common.spells.StickyToken;
+import hemomancy.common.spells.TestingSpellToken;
 import hemomancy.common.util.PlayerSyncHandler;
 
 import java.io.File;
@@ -103,5 +104,7 @@ public class Hemomancy
     	SpellTokenRegistry.registerSpellToken("explosionToken", new ExplosionToken());
     	SpellTokenRegistry.registerSpellToken("liquidToken", new LiquidToken());
     	SpellTokenRegistry.registerSpellToken("iceToken", new IceToken());
+    	SpellTokenRegistry.registerSpellToken("testingToken", new TestingSpellToken());
+    	
     }
 }
