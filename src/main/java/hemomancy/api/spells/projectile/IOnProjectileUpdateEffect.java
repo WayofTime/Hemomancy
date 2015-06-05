@@ -8,7 +8,7 @@ import net.minecraft.util.EnumFacing;
 
 public interface IOnProjectileUpdateEffect 
 {
-	public void onProjectileUpdate(Entity projectile, EntityPlayer shooter, float potency);
+	public boolean onProjectileUpdate(Entity projectile, EntityPlayer shooter, float potency);
 	
-	public void onProjectileStickyUpdate(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, int ticksInGround, float potency);
+	public boolean onProjectileStickyUpdate(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, int ticksInGround, float potency);
 }

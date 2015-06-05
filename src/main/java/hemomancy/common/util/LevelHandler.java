@@ -17,8 +17,9 @@ public class LevelHandler
 			int maxMana = ManaHandler.getMaxManaForLevel(curLevel);
 			ManaHandler.setMaxManaOfPlayer(player, maxMana);
 			ManaHandler.setManaOfPlayer(player, maxMana);
-			Utils.setExpToNext(player, curLevel);
+			Utils.setExpToNext(player, getExpToNextForLevel(curLevel));
 			Utils.setCurrentExp(player, 0);
+			System.out.println("Level up!");
 		}
 	}
 	

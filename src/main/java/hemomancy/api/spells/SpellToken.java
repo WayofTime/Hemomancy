@@ -50,4 +50,9 @@ public abstract class SpellToken
 	public abstract float getBloodCostOfToken(IFocusToken focus);
 	
 	public abstract float getManaCostOfToken(IFocusToken focus);
+	
+	public float expForSituationSuccess(SpellSituation situation)
+	{
+		return 1;
+	}
 }

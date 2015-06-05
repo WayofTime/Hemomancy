@@ -1,10 +1,12 @@
 package hemomancy.common.entity.projectile;
 
 import hemomancy.api.spells.IFocusToken;
+import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
+import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.ProjectileFocusToken;
 
 import java.util.ArrayList;
@@ -356,8 +358,6 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                         this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
                         this.inGround = true;
                         
-                        System.out.println(this.inTile);
-
                         if (this.inTile.getMaterial() != Material.air)
                         {
                             this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
@@ -597,9 +597,19 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 		{
 			EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
 
+			boolean success = false;
+			
 			for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
 			{
-				effect.onProjectileCollideWithBlock(this,shooter, pos, state, sideHit, potency);
+				if(effect.onProjectileCollideWithBlock(this,shooter, pos, state, sideHit, potency))
+				{
+					success = true;
+				}
+			}
+			
+			if(success)
+			{
+				ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, SpellSituation.PROJECTILE_COLLIDE_BLOCK);
 			}
 		}
 		
@@ -624,6 +634,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         		BlockPos pos = mop.getBlockPos();
         		IBlockState state = this.worldObj.getBlockState(pos);
 
+//        		boolean success = 
+        		
         		for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
         		{
         			effect.onProjectileBounce(this, shooter, pos, state, sideHit, potency);
@@ -666,6 +678,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
             damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
         }
 
+		EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+        
         if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float)k))
         {
             if (movingobjectposition.entityHit instanceof EntityLivingBase)
@@ -685,18 +699,28 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                     ((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
                 }
             }
+            
+            ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, SpellSituation.PROJECTILE_ATTACK);
 
             this.setDead();
         }
         
         if(movingobjectposition.entityHit instanceof EntityLivingBase)
         {
-			EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
-
+			boolean success = false;
+			
         	for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
     		{
-    			effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)movingobjectposition.entityHit, potency);
+    			if(effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)movingobjectposition.entityHit, potency))
+    			{
+    				success = true;
+    			}
     		}
+        	
+        	if(success)
+        	{
+        		ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, SpellSituation.PROJECTILE_COLLIDE_ENTITY);
+        	}
         }
 //        else //Enable to allow bouncing...
 //        {

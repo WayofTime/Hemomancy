@@ -178,7 +178,7 @@ public class ApiUtils
 		NBTTagCompound data = ApiUtils.getPersistentDataTag(player);
 		if(data.hasKey(IDTag + "NextExp"))
 		{
-			return data.getInteger(IDTag + "CurExp");
+			return data.getInteger(IDTag + "NextExp");
 		}
 		
 		return 0;

@@ -1,0 +1,12 @@
+package hemomancy.api.spells;
+
+public enum SpellSituation 
+{
+	PROJECTILE_BOUNCE,
+	PROJECTILE_COLLIDE_BLOCK,
+	PROJECTILE_COLLIDE_ENTITY,
+	PROJECTILE_ATTACK,
+	PROJECTILE_UPDATE,
+	
+	;
+}

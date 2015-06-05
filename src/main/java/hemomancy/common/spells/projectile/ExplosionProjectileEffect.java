@@ -12,38 +12,45 @@ import net.minecraft.util.EnumFacing;
 public class ExplosionProjectileEffect implements IOnProjectileUpdateEffect, IOnProjectileCollideEffect
 {
 	@Override
-	public void onProjectileUpdate(Entity projectile, EntityPlayer shooter, float potency){}
+	public boolean onProjectileUpdate(Entity projectile, EntityPlayer shooter, float potency)
+	{
+		return false;
+	}
 
 	@Override
-	public void onProjectileStickyUpdate(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, int ticksInGround, float potency) 
+	public boolean onProjectileStickyUpdate(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, int ticksInGround, float potency) 
 	{
 		if(ticksInGround >= 100)
 		{
 			this.createExplosionAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
 			projectile.setDead();
+			return true;
 		}
+		
+		return false;
 	}
 
 	@Override
-	public void onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency) 
+	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency) 
 	{
-		this.createExplosionAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
+		return this.createExplosionAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
 	}
 
 	@Override
-	public void onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
+	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
 	{
-		this.createExplosionAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
+		return this.createExplosionAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
 	}
 
 	@Override
-	public void onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
+	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
 	{
-		this.createExplosionAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 3.0f);
+		return this.createExplosionAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 3.0f);
 	}
 	
-	private void createExplosionAtPoint(Entity projectile, EntityPlayer shooter, double x, double y, double z, float potency)
+	private boolean createExplosionAtPoint(Entity projectile, EntityPlayer shooter, double x, double y, double z, float potency)
 	{
 		projectile.worldObj.createExplosion(shooter, x, y, z, 5 * potency, false);
+		return true;
 	}
 }

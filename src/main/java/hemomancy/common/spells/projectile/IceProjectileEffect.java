@@ -12,24 +12,24 @@ import net.minecraft.util.EnumFacing;
 public class IceProjectileEffect implements IOnProjectileCollideEffect
 {
 	@Override
-	public void onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency) 
+	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency) 
 	{
-		this.createIceAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
+		return this.createIceAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
 	}
 
 	@Override
-	public void onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
+	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
 	{
-		this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
+		return this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
 	}
 
 	@Override
-	public void onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
+	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
 	{
-		this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 3.0f);
+		return this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 3.0f);
 	}
 	
-	private void createIceAtPoint(Entity projectile, EntityPlayer shooter, double x, double y, double z, float potency)
+	private boolean createIceAtPoint(Entity projectile, EntityPlayer shooter, double x, double y, double z, float potency)
 	{
 		int xPos = (int) Math.floor(x);
 		int yPos = (int) Math.floor(y);
@@ -37,17 +37,7 @@ public class IceProjectileEffect implements IOnProjectileCollideEffect
 		
 		int radius = getRadiusOfIce(potency);
 		
-		for(int i=-radius; i<=radius; i++)
-		{
-			for(int j=-radius; j<=radius; j++)
-			{
-				for(int k=-radius; k<=radius; k++)
-				{
-					BlockPos pos = new BlockPos(xPos + i, yPos + j, zPos + k);
-					Utils.freezeBlock(projectile.worldObj, pos);
-				}
-			}
-		}
+		return Utils.freezeBlocksInSphere(projectile.worldObj, new BlockPos(xPos, yPos, zPos), radius, 0.30f, 1);
 	}
 	
 	private int getRadiusOfIce(float potency)
