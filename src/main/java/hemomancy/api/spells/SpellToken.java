@@ -51,7 +51,7 @@ public abstract class SpellToken
 	
 	public abstract float getManaCostOfToken(IFocusToken focus);
 	
-	public float expForSituationSuccess(SpellSituation situation)
+	public float expForSituationSuccess(SpellSituation situation, float potency)
 	{
 		return 1;
 	}

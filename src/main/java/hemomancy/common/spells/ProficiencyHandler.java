@@ -10,9 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class ProficiencyHandler 
 {
-	public static void handleSuccessfulSpellCast(EntityPlayer player, List<SpellToken> tokenList, SpellSituation situation)
-	{		System.out.println("" + situation);
-
+	public static void handleSuccessfulSpellCast(EntityPlayer player, List<SpellToken> tokenList, float potency, SpellSituation situation)
+	{
 		if(player == null || tokenList.isEmpty())
 		{
 			return;
@@ -23,7 +22,7 @@ public class ProficiencyHandler
 		
 		for(SpellToken token : tokenList)
 		{
-			exp += Math.abs(token.expForSituationSuccess(situation));
+			exp += Math.abs(token.expForSituationSuccess(situation, potency));
 		}
 		
 		int intExp = (int)exp;

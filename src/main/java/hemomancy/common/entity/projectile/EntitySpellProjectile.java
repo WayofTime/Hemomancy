@@ -6,6 +6,7 @@ import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
+import hemomancy.api.spells.projectile.IProjectileDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.ProjectileFocusToken;
 
@@ -62,6 +63,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     
     public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
+	public List<IProjectileDamageModifier> damageModifierList = new ArrayList();
 	
 	public int bouncesLeft = 1;
 	public int stickyTimer = 100;
@@ -609,7 +611,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 			
 			if(success)
 			{
-				ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, SpellSituation.PROJECTILE_COLLIDE_BLOCK);
+				ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_COLLIDE_BLOCK);
 			}
 		}
 		
@@ -634,11 +636,19 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         		BlockPos pos = mop.getBlockPos();
         		IBlockState state = this.worldObj.getBlockState(pos);
 
-//        		boolean success = 
+        		boolean success = false;
         		
         		for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
         		{
-        			effect.onProjectileBounce(this, shooter, pos, state, sideHit, potency);
+        			if(effect.onProjectileBounce(this, shooter, pos, state, sideHit, potency))
+        			{
+        				success = true;
+        			}
+        		}
+        		
+        		if(success)
+        		{
+        			ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_BOUNCE);
         		}
     		}
     		
@@ -665,7 +675,14 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     
     public void onCollideWithEntity(MovingObjectPosition movingobjectposition)
     {
-        int k = MathHelper.ceiling_double_int(this.damage);
+    	float newDamage = (float) this.damage;
+    	
+    	for(IProjectileDamageModifier modifier : this.damageModifierList)
+    	{
+    		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, movingobjectposition.entityHit, this.damage, potency);
+    	}
+    	
+        float k = newDamage;
 
         DamageSource damagesource;
 
@@ -700,7 +717,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                 }
             }
             
-            ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, SpellSituation.PROJECTILE_ATTACK);
+            ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_ATTACK);
 
             this.setDead();
         }
@@ -719,7 +736,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         	
         	if(success)
         	{
-        		ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, SpellSituation.PROJECTILE_COLLIDE_ENTITY);
+        		ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_COLLIDE_ENTITY);
         	}
         }
 //        else //Enable to allow bouncing...

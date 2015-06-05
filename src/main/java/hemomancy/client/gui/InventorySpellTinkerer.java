@@ -1,5 +1,6 @@
 package hemomancy.client.gui;
 
+import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.common.blocks.tileEntity.TESpellTinkerer;
@@ -21,6 +22,8 @@ public class InventorySpellTinkerer implements IInventory
 	public List<SpellToken> tokenList = new ArrayList();
 	public List<SpellToken> spellCueList = new ArrayList();
 	
+	public List<String> darkenedList = new ArrayList();
+	
     protected ItemStack[] inventory;
     public final TESpellTinkerer tile;
 
@@ -35,8 +38,17 @@ public class InventorySpellTinkerer implements IInventory
         
         for(SpellToken token : SpellTokenRegistry.tokenMap.values())
         {
-        	tokenList.add(token);
+        	if(token instanceof IFocusToken)
+        		tokenList.add(token);
         }
+        
+        for(SpellToken token : SpellTokenRegistry.tokenMap.values())
+        {
+        	if(!(token instanceof IFocusToken))
+        		tokenList.add(token);
+        }
+        
+        
         
 //        this.tokenList = getTokenListOfPlayer(player);
     }

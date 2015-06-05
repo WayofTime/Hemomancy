@@ -1,6 +1,7 @@
 package hemomancy.common.spells.projectile;
 
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
+import hemomancy.common.util.DamageCounterExtendedProperties;
 import hemomancy.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -14,7 +15,9 @@ public class IceProjectileEffect implements IOnProjectileCollideEffect
 	@Override
 	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency) 
 	{
-		return this.createIceAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
+		boolean bool1 = DamageCounterExtendedProperties.get(hitEntity).addToIceCounter(1, 3);
+		boolean bool2 = this.createIceAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
+		return bool1 || bool2;
 	}
 
 	@Override

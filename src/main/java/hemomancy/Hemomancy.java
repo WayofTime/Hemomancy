@@ -7,6 +7,7 @@ import hemomancy.common.CommonProxy;
 import hemomancy.common.commands.CommandHUD;
 import hemomancy.common.spells.BounceToken;
 import hemomancy.common.spells.ExplosionToken;
+import hemomancy.common.spells.FireToken;
 import hemomancy.common.spells.IceToken;
 import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.ProjectileFocusToken;
@@ -104,6 +105,7 @@ public class Hemomancy
     	SpellTokenRegistry.registerSpellToken("explosionToken", new ExplosionToken());
     	SpellTokenRegistry.registerSpellToken("liquidToken", new LiquidToken());
     	SpellTokenRegistry.registerSpellToken("iceToken", new IceToken());
+    	SpellTokenRegistry.registerSpellToken("fireToken", new FireToken());
     	SpellTokenRegistry.registerSpellToken("testingToken", new TestingSpellToken());
     	
     }

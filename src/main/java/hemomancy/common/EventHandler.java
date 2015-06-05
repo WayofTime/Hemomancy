@@ -3,9 +3,12 @@ package hemomancy.common;
 import hemomancy.api.ApiUtils;
 import hemomancy.api.mana.BloodHandler;
 import hemomancy.api.mana.ManaHandler;
+import hemomancy.common.util.DamageCounterExtendedProperties;
 import hemomancy.common.util.Utils;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -57,6 +60,15 @@ public class EventHandler
 		{		
 			ManaHandler.setManaSynced(event.player, false);
 			ApiUtils.setClientBloodSynced(event.player, false);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onEntityConstructing(EntityConstructing event)
+	{
+		if(event.entity instanceof EntityLivingBase)
+		{
+			DamageCounterExtendedProperties.register((EntityLivingBase)event.entity);
 		}
 	}
 	

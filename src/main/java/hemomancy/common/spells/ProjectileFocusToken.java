@@ -6,6 +6,7 @@ import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
+import hemomancy.api.spells.projectile.IProjectileDamageModifier;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	private List<SpellToken> tokenList = new ArrayList();
 	public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
+	public List<IProjectileDamageModifier> damageModifierList = new ArrayList();
 	
 	public int bouncesLeft = 0;
 	public int stickTime = 0;
@@ -139,6 +141,7 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		
 		projectile.onUpdateEffectList = this.onUpdateEffectList;
 		projectile.onCollideEffectList = this.onCollideEffectList;
+		projectile.damageModifierList = this.damageModifierList;
 		
 		for(Entry<String, Double> entry : this.damageMap.entrySet())
 		{

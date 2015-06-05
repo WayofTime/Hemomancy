@@ -3,32 +3,32 @@ package hemomancy.common.spells;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
-import hemomancy.common.spells.projectile.IceProjectileEffect;
+import hemomancy.common.spells.projectile.FireProjectileEffect;
 
-public class IceToken extends SpellToken implements IProjectileToken
+public class FireToken extends SpellToken implements IProjectileToken
 {
-	public IceToken() 
+	public FireToken() 
 	{
-		super("textures/tokens/IceToken.png");
-		this.setUnlocalizedName("token.tokenIce.name");
+		super("textures/tokens/FireToken.png");
+		this.setUnlocalizedName("token.tokenFire.name");
 	}
 
 	@Override
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
-		focus.onCollideEffectList.add(new IceProjectileEffect());
+		focus.damageModifierList.add(new FireProjectileEffect());
 	}
 
 	@Override
 	public SpellToken copy() 
 	{
-		return new IceToken();
+		return new FireToken();
 	}
 	
 	@Override
 	public boolean isSpellTokenCompatible(SpellToken token)
 	{
-		return !(token instanceof FireToken);
+		return !(token instanceof IceToken);
 	}
 
 	@Override

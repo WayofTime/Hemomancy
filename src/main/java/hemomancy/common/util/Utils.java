@@ -6,6 +6,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -106,5 +107,10 @@ public class Utils extends ApiUtils
         }
 		
 		return hasPlacedBlock;
+	}
+	
+	public static int getNumberOfDamageTokens(EntityLivingBase entity, String name)
+	{
+		return 0;
 	}
 }
