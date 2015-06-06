@@ -1,5 +1,6 @@
 package hemomancy.client.gui;
 
+import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 
 import java.io.IOException;
@@ -110,8 +111,7 @@ public class GuiSpellTinkerer extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        //draw your Gui here, only thing you need to change is the path
-        
+        //draw your Gui here, only thing you need to change is the path    	
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(resourceLocation);
         int x = (width - xSize) / 2;
@@ -133,9 +133,21 @@ public class GuiSpellTinkerer extends GuiContainer
             		break;
             	}
             	
+            	boolean darkened = ((ContainerSpellTinkerer)this.inventorySlots).inventory.darkenedList.contains(token.key) || !canFitInCueList(token);
+            	
+            	if(darkened)
+            	{
+                    GL11.glColor4f(0.5F, 0.5F, 1.0F, 0.5F);
+            	}
+
             	this.mc.getTextureManager().bindTexture(token.getResourceLocation());
             	
             	this.drawTexturedModalRect((x + tokenWindowStartX + 1 + xIndex * 18)*16, (y + tokenWindowStartY + 1 + yIndex * 18)*16, 0, 0, 256, 256);
+            	
+            	if(darkened)
+            	{
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            	}
             }
         }
         
@@ -157,7 +169,22 @@ public class GuiSpellTinkerer extends GuiContainer
 	        }
         }
         
-        GL11.glPopMatrix();
+        GL11.glPopMatrix(); 
+    }
+    
+    public boolean canFitInCueList(SpellToken token)
+    {
+    	boolean canFit = ((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList.isEmpty() ? token instanceof IFocusToken : !(token instanceof IFocusToken);
+    	for(SpellToken cueToken : ((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList)
+    	{
+    		canFit = token.isSpellTokenCompatible(cueToken);
+    		if(!canFit)
+    		{
+    			return canFit;
+    		}
+    	}
+    	
+    	return canFit;
     }
     
     public boolean clickTokenAtMousePosition(int mouseX, int mouseY)

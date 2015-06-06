@@ -183,7 +183,7 @@ public class ContainerSpellTinkerer extends Container
     	{
     		SpellToken movedToken = inventory.tokenList.get(index);
     		
-    		if(inventory.spellCueList.isEmpty() ? (movedToken instanceof IFocusToken) : !(movedToken instanceof IFocusToken))
+    		if((inventory.spellCueList.isEmpty() ? (movedToken instanceof IFocusToken) : !(movedToken instanceof IFocusToken)) && !inventory.darkenedList.contains(movedToken.key))
     		{
     			for(SpellToken token : inventory.spellCueList)
         		{
@@ -192,7 +192,9 @@ public class ContainerSpellTinkerer extends Container
         				return false;
         			}
         		}
-        		inventory.spellCueList.add(inventory.tokenList.remove(index));
+    			    			
+        		inventory.spellCueList.add(movedToken);
+        		inventory.darkenedList.add(movedToken.key);
         		return true;
     		}
     	}
@@ -205,7 +207,7 @@ public class ContainerSpellTinkerer extends Container
     	if(index >= 0 && index < inventory.spellCueList.size())
     	{
     		SpellToken removedToken = inventory.spellCueList.remove(index);
-    		inventory.tokenList.add(removedToken);
+    		inventory.darkenedList.remove(removedToken.key);
     		
     		if(removedToken instanceof IFocusToken)
     		{
