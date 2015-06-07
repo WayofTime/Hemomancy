@@ -113,4 +113,14 @@ public class Utils extends ApiUtils
 	{
 		return 0;
 	}
+	
+	public static boolean digBlock(World world, BlockPos pos, IBlockState state, int fortune, boolean silkTouch)
+	{
+		Block block = state.getBlock();
+		
+		block.dropBlockAsItem(world, pos, state, 0);
+		world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
+		
+		return true;
+	}
 }

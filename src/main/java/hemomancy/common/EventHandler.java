@@ -50,6 +50,11 @@ public class EventHandler
 				}
 			}
 		}
+		
+		if(event.entityLiving.worldObj.isRemote && DamageCounterExtendedProperties.get(event.entityLiving).getIceCounters() > 0)
+		{
+			System.out.println("I has ice counter");
+		}
 	}
 	
 	//Used to sync the client's mana levels on login
@@ -60,6 +65,7 @@ public class EventHandler
 		{		
 			ManaHandler.setManaSynced(event.player, false);
 			ApiUtils.setClientBloodSynced(event.player, false);
+			Utils.setExpSynced(event.player, false);
 		}
 	}
 	

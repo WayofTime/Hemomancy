@@ -137,7 +137,7 @@ public class GuiSpellTinkerer extends GuiContainer
             	
             	if(darkened)
             	{
-                    GL11.glColor4f(0.5F, 0.5F, 1.0F, 0.5F);
+                    GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
             	}
 
             	this.mc.getTextureManager().bindTexture(token.getResourceLocation());
@@ -177,7 +177,7 @@ public class GuiSpellTinkerer extends GuiContainer
     	boolean canFit = ((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList.isEmpty() ? token instanceof IFocusToken : !(token instanceof IFocusToken);
     	for(SpellToken cueToken : ((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList)
     	{
-    		canFit = token.isSpellTokenCompatible(cueToken);
+    		canFit = token.isSpellTokenCompatible(((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList, cueToken);
     		if(!canFit)
     		{
     			return canFit;

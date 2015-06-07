@@ -1,6 +1,7 @@
 package hemomancy.client;
 
 import hemomancy.client.hud.BloodHUDElement;
+import hemomancy.client.hud.ExpHUDElement;
 import hemomancy.client.hud.HUDRenderHelper;
 import hemomancy.client.hud.ManaHUDElement;
 import hemomancy.client.hud.TestingHUDElement;
@@ -26,6 +27,9 @@ public class ClientProxy extends CommonProxy
 	public static float bloodHudElementX = 0;
 	public static float bloodHudElementY = 0.6f;
 	
+	public static float expHudElementX = 0;
+	public static float expHudElementY = 0.7f;
+	
     @Override
     public void registerPostSideObjects()
     {
@@ -39,6 +43,7 @@ public class ClientProxy extends CommonProxy
     	HUDRenderHelper.hudElementsMap.put("LPBarTest", new TestingHUDElement(testingHudElementX, testingHudElementY, 32, 32));
     	HUDRenderHelper.hudElementsMap.put("ManaBar", new ManaHUDElement(manaHudElementX, manaHudElementY, 64, 64));
     	HUDRenderHelper.hudElementsMap.put("BloodBar", new BloodHUDElement(bloodHudElementX, bloodHudElementY, 64, 64));
+    	HUDRenderHelper.hudElementsMap.put("ExpBar", new ExpHUDElement(expHudElementX, expHudElementY, 64, 64));
     	
     	RenderingRegistry.registerEntityRenderingHandler(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));
     	Minecraft.getMinecraft().getRenderManager().entityRenderMap.put(EntitySpellProjectile.class, new RenderEntitySpellProjectile(Minecraft.getMinecraft().getRenderManager()));

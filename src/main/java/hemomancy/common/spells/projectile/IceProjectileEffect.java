@@ -12,8 +12,15 @@ import net.minecraft.util.EnumFacing;
 
 public class IceProjectileEffect implements IOnProjectileCollideEffect
 {
+	public float potency;
+	
+	public IceProjectileEffect(float potency)
+	{
+		this.potency = potency;
+	}
+	
 	@Override
-	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity, float potency) 
+	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity) 
 	{
 		boolean bool1 = DamageCounterExtendedProperties.get(hitEntity).addToIceCounter(1, 3);
 		boolean bool2 = this.createIceAtPoint(projectile, shooter, hitEntity.posX, hitEntity.posY + hitEntity.getEyeHeight()/2.0, hitEntity.posZ, potency);
@@ -21,13 +28,13 @@ public class IceProjectileEffect implements IOnProjectileCollideEffect
 	}
 
 	@Override
-	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
+	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
 	{
 		return this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
 	}
 
 	@Override
-	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency) 
+	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
 	{
 		return this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 3.0f);
 	}
@@ -46,5 +53,11 @@ public class IceProjectileEffect implements IOnProjectileCollideEffect
 	private int getRadiusOfIce(float potency)
 	{
 		return 2;
+	}
+	
+	@Override
+	public float getPotency() 
+	{
+		return this.potency;
 	}
 }

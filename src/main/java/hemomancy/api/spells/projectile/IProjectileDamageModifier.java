@@ -4,5 +4,7 @@ import net.minecraft.entity.Entity;
 
 public interface IProjectileDamageModifier 
 {
-	public float getDamageAgainstEntity(Entity shooter, Entity hitEntity, double originalDamage, float potency);
+	public float getDamageAgainstEntity(Entity shooter, Entity hitEntity, double originalDamage);
+	
+	public float getPotency();
 }

@@ -187,7 +187,7 @@ public class ContainerSpellTinkerer extends Container
     		{
     			for(SpellToken token : inventory.spellCueList)
         		{
-        			if(!token.isSpellTokenCompatible(movedToken))
+        			if(!token.isSpellTokenCompatible(inventory.spellCueList, movedToken))
         			{
         				return false;
         			}

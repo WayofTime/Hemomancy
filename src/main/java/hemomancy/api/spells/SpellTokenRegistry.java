@@ -73,6 +73,7 @@ public class SpellTokenRegistry
             {
                 NBTTagCompound tokenTag = new NBTTagCompound();
                 tokenTag.setString("key", getKeyForSpellToken(tokenList.get(i)));
+                tokenTag.setFloat("potency", tokenList.get(i).getPotencyOfToken());
                 inventoryList.appendTag(tokenTag);
             }
         }
@@ -89,10 +90,12 @@ public class SpellTokenRegistry
         {
             NBTTagCompound tokenTag = inventoryList.getCompoundTagAt(i);
             String key = tokenTag.getString("key");
+            float potency = tokenTag.getFloat("potency");
             SpellToken token = getSpellTokenForKey(key);
             
             if(token != null)
             {
+            	token.setPotencyOfToken(potency);
             	tempTokenMap.put(key, token);
             }
         }

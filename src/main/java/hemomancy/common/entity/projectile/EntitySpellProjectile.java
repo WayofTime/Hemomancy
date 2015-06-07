@@ -340,42 +340,45 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                 {
                     this.onCollideWithEntity(movingobjectposition);
                 }
-                else //I have hit a block.
+                else//I have hit a block.
                 {
-                	if(!onBounce(movingobjectposition))
-                	{
-                		BlockPos blockpos1 = movingobjectposition.getBlockPos();
-                        this.xTile = blockpos1.getX();
-                        this.yTile = blockpos1.getY();
-                        this.zTile = blockpos1.getZ();
-                        iblockstate = this.worldObj.getBlockState(blockpos1);
-                        this.inTile = iblockstate.getBlock();
-                        this.inData = this.inTile.getMetaFromState(iblockstate);
-                        this.motionX = (double)((float)(movingobjectposition.hitVec.xCoord - this.posX));
-                        this.motionY = (double)((float)(movingobjectposition.hitVec.yCoord - this.posY));
-                        this.motionZ = (double)((float)(movingobjectposition.hitVec.zCoord - this.posZ));
-                        f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-                        this.posX -= this.motionX / (double)f3 * 0.05000000074505806D;
-                        this.posY -= this.motionY / (double)f3 * 0.05000000074505806D;
-                        this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
-                        this.inGround = true;
-                        
-                        if (this.inTile.getMaterial() != Material.air)
-                        {
-                            this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
-                        }
-                        
-                		this.sideHit = movingobjectposition.sideHit;
-                        
-                        if(stickyTimer > 0)
-                        {
-                        	this.inGround = true;
-                        }else if(onCollideWithBlock(blockpos1, iblockstate, sideHit))
-                        {
-                        	this.setDead();
-                        }
-                	}
-                    
+            		BlockPos blockpos1 = movingobjectposition.getBlockPos();
+
+//            		if(!worldObj.isAirBlock(blockpos1))
+            		{
+		            	if(!onBounce(movingobjectposition))
+		            	{
+		                    this.xTile = blockpos1.getX();
+		                    this.yTile = blockpos1.getY();
+		                    this.zTile = blockpos1.getZ();
+		                    iblockstate = this.worldObj.getBlockState(blockpos1);
+		                    this.inTile = iblockstate.getBlock();
+		                    this.inData = this.inTile.getMetaFromState(iblockstate);
+		                    this.motionX = (double)((float)(movingobjectposition.hitVec.xCoord - this.posX));
+		                    this.motionY = (double)((float)(movingobjectposition.hitVec.yCoord - this.posY));
+		                    this.motionZ = (double)((float)(movingobjectposition.hitVec.zCoord - this.posZ));
+		                    f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+		                    this.posX -= this.motionX / (double)f3 * 0.05000000074505806D;
+		                    this.posY -= this.motionY / (double)f3 * 0.05000000074505806D;
+		                    this.posZ -= this.motionZ / (double)f3 * 0.05000000074505806D;
+		                    this.inGround = true;
+		                    
+		                    if (this.inTile.getMaterial() != Material.air)
+		                    {
+		                        this.inTile.onEntityCollidedWithBlock(this.worldObj, blockpos1, iblockstate, this);
+		                    }
+		                    
+		            		this.sideHit = movingobjectposition.sideHit;
+		                    
+		                    if(stickyTimer > 0)
+		                    {
+		                    	this.inGround = true;
+		                    }else if(onCollideWithBlock(blockpos1, iblockstate, sideHit))
+		                    {
+		                    	this.setDead();
+		                    }
+		            	}
+            		}
                 }
             }
 //
@@ -575,7 +578,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 
     		for(IOnProjectileUpdateEffect effect : this.onUpdateEffectList)
     		{
-    			effect.onProjectileUpdate(this, shooter, potency);
+    			effect.onProjectileUpdate(this, shooter);
     		}
     	}
     }
@@ -588,7 +591,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 
 			for(IOnProjectileUpdateEffect effect : this.onUpdateEffectList)
 			{
-				effect.onProjectileStickyUpdate(this, shooter, pos, state, sideHit, ticksInGround, potency);
+				effect.onProjectileStickyUpdate(this, shooter, pos, state, sideHit, ticksInGround);
 			}
 		}
     }
@@ -603,7 +606,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 			
 			for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
 			{
-				if(effect.onProjectileCollideWithBlock(this,shooter, pos, state, sideHit, potency))
+				if(effect.onProjectileCollideWithBlock(this,shooter, pos, state, sideHit))
 				{
 					success = true;
 				}
@@ -640,7 +643,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         		
         		for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
         		{
-        			if(effect.onProjectileBounce(this, shooter, pos, state, sideHit, potency))
+        			if(effect.onProjectileBounce(this, shooter, pos, state, sideHit))
         			{
         				success = true;
         			}
@@ -679,7 +682,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     	
     	for(IProjectileDamageModifier modifier : this.damageModifierList)
     	{
-    		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, movingobjectposition.entityHit, this.damage, potency);
+    		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, movingobjectposition.entityHit, this.damage);
     	}
     	
         float k = newDamage;
@@ -728,7 +731,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 			
         	for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
     		{
-    			if(effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)movingobjectposition.entityHit, potency))
+    			if(effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)movingobjectposition.entityHit))
     			{
     				success = true;
     			}

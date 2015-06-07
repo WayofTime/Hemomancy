@@ -38,6 +38,10 @@ public class HemomancyConfiguration
 		
 		ClientProxy.bloodHudElementX = (float) config.get("ClientSettings", "BloodHUDxOffset", 0.0f).getDouble();
 		ClientProxy.bloodHudElementY = (float) config.get("ClientSettings", "BloodHUDyOffset", 0.6f).getDouble();
+		
+		ClientProxy.expHudElementX = (float) config.get("ClientSettings", "ExpHUDxOffset", 0.0f).getDouble();
+		ClientProxy.expHudElementY = (float) config.get("ClientSettings", "ExpHUDyOffset", 0.07f).getDouble();
+		
 		config.save();
 	}
 }

@@ -33,7 +33,7 @@ public class LevelHandler
 	
 	public static int getExpToNextForLevel(int level)
 	{
-		return (int)(Math.pow(1.2, level-1) * 10);
+		return (int)(Math.pow(1.2, level-1) * 100);
 	}
 	
 	public static void setLevel(EntityPlayer player, int amount)

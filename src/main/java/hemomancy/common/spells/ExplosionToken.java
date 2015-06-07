@@ -16,8 +16,8 @@ public class ExplosionToken extends SpellToken implements IProjectileToken
 	@Override
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
-		focus.onCollideEffectList.add(new ExplosionProjectileEffect());
-		focus.onUpdateEffectList.add(new ExplosionProjectileEffect());
+		focus.onCollideEffectList.add(new ExplosionProjectileEffect(potency));
+		focus.onUpdateEffectList.add(new ExplosionProjectileEffect(potency));
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class ExplosionToken extends SpellToken implements IProjectileToken
 	public float getBloodCostOfToken(IFocusToken token) 
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 5;
 	}
 
 	@Override

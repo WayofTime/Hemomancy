@@ -1,5 +1,7 @@
 package hemomancy.api.spells;
 
+import java.util.List;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
@@ -9,6 +11,8 @@ public abstract class SpellToken
 	public String key = ""; //This key is used for quick look-up in the SpellTokenRegistry for SpellToken -> key. It is set when the token is registered.
 	private String unlocalizedName = "";
 	
+	private float potency = 0; 	//The potency of the spell token. This is set by the spell whenever the spell needs a specific potency. 
+								//The potency is saved to the NBT of the spell, and is changed on a new cast.
 	public SpellToken(String location)
 	{
 		this(new ResourceLocation("hemomancy", location));
@@ -36,7 +40,7 @@ public abstract class SpellToken
 	
 	public abstract SpellToken copy();
 	
-	public boolean isSpellTokenCompatible(SpellToken token)
+	public boolean isSpellTokenCompatible(List<SpellToken> tokenList, SpellToken token)
 	{
 		return true;
 	}
@@ -54,5 +58,15 @@ public abstract class SpellToken
 	public float expForSituationSuccess(SpellSituation situation, float potency)
 	{
 		return 1;
+	}
+	
+	public float getPotencyOfToken()
+	{
+		return this.potency;
+	}
+	
+	public void setPotencyOfToken(float potency)
+	{
+		this.potency = potency;
 	}
 }

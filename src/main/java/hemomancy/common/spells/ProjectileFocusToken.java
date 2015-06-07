@@ -1,6 +1,7 @@
 package hemomancy.common.spells;
 
 import hemomancy.api.ApiUtils;
+import hemomancy.api.events.SpellCastEvent;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ProjectileFocusToken extends SpellToken implements IFocusToken
 {
@@ -68,6 +70,18 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) 
 	{
 		float potency = 1;
+		
+		for(SpellToken token : tokenList)
+		{
+			token.setPotencyOfToken(potency);
+		}
+		
+		SpellCastEvent castEvent = new SpellCastEvent(player, tokenList, potency);
+		if(MinecraftForge.EVENT_BUS.post(castEvent))
+		{
+			return stack;
+		}
+		
 		if(ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
 		{
 			EntitySpellProjectile projectile = new EntitySpellProjectile(world, player, this, tokenList);
@@ -159,14 +173,14 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	public float getBloodCostOfToken(IFocusToken token) 
 	{
 		// TODO Auto-generated method stub
-		return 10;
+		return 5;
 	}
 
 	@Override
 	public float getManaCostOfToken(IFocusToken token) 
 	{
 		// TODO Auto-generated method stub
-		return 3;
+		return 8;
 	}
 
 	@Override
