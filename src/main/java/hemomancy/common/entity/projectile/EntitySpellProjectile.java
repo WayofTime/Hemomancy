@@ -65,8 +65,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
 	public List<IProjectileDamageModifier> damageModifierList = new ArrayList();
 	
-	public int bouncesLeft = 1;
-	public int stickyTimer = 100;
+	public int bouncesLeft = 0;
+	public int stickyTimer = 0;
 	public EnumFacing sideHit = EnumFacing.NORTH;
 
     public EntitySpellProjectile(World worldIn)
