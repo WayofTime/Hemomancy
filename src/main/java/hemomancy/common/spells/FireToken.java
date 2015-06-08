@@ -37,17 +37,17 @@ public class FireToken extends SpellToken implements IProjectileToken, IElementa
 	}
 
 	@Override
-	public float getBloodCostOfToken(IFocusToken token) 
+	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 1;
+		return 1 * potency*potency;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken token) 
+	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 7;
+		return 7 * potency*potency;
 	}
 
 	@Override

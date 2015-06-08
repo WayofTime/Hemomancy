@@ -37,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntitySpellProjectile extends Entity implements IProjectile
 {
-	private float potency = 1;
+	public float potency = 1;
 	
     private int xTile = -1;
     private int yTile = -1;

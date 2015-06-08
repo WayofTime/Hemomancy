@@ -25,16 +25,16 @@ public class StickyToken extends SpellToken implements IProjectileToken
 	}
 
 	@Override
-	public float getBloodCostOfToken(IFocusToken focus) 
+	public float getBloodCostOfToken(IFocusToken focus, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 0 * potency*potency;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken focus) 
+	public float getManaCostOfToken(IFocusToken focus, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 0 * potency*potency;
 	}
 }

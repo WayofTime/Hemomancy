@@ -39,48 +39,48 @@ public class BlockBreakProjectileEffect implements IOnProjectileCollideEffect
 	
 	public boolean breakBlocksAtLocation(World world, BlockPos pos, IBlockState state, EnumFacing sideHit, float potency)
 	{
-		switch(sideHit)
+		int width = this.getWidthForPotency(potency);
+		int height = this.getHeightForPotency(potency);
+		int depth = this.getDepthForPotency(potency);
+		
+		int harvestLevel = 2;
+		
+		boolean success = false;
+		
+		for(int i = 0; i <= depth; i++)
 		{
-		case DOWN:
-			
-			break;
-			
-		case UP:
-			
-			break;
-			
-		case EAST:
-			
-			break;
-			
-		case NORTH:
-			
-			break;
-			
-		case SOUTH:
-			
-			break;
-			
-		case WEST:
-			
-			break;
+			for(int j = -height; j <= height; j++)
+			{
+				for(int k = -width; k <= width; k++)
+				{
+					//This is "rotation" logic to rotate the block based on the facing hit
+					BlockPos newPos = pos.add(sideHit.getFrontOffsetX() != 0 ? (-i * sideHit.getFrontOffsetX()) : (sideHit.getFrontOffsetZ() != 0 ? k : j), sideHit.getFrontOffsetY() != 0 ? -i * sideHit.getFrontOffsetY() : j, sideHit.getFrontOffsetZ() != 0 ? (-i * sideHit.getFrontOffsetZ()) : (k));
+					IBlockState newState = world.getBlockState(newPos);
+					
+					if(Utils.digBlock(world, newPos, newState, harvestLevel, 0, false))
+					{
+						success = true;
+					}
+				}
+			}
 		}
-		return Utils.digBlock(world, pos, state, 0, false);
+		
+		return success;
 	}
 	
 	public int getWidthForPotency(float potency)
 	{
-		return 0;
+		return 1;
 	}
 	
 	public int getDepthForPotency(float potency)
 	{
-		return 1;
+		return 4;
 	}
 	
 	public int getHeightForPotency(float potency)
 	{
-		return 1;
+		return 2;
 	}
 
 	@Override

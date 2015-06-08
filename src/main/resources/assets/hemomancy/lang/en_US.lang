@@ -9,3 +9,5 @@ token.tokenExplosion.name=Explosive
 token.tokenLiquid.name=Pass Through Liquid
 token.tokenIce.name=Ice
 token.tokenFire.name=Fire
+token.tokenFireSmelt.name=Fire Smelting
+token.tokenBlockBreak.name=Dig

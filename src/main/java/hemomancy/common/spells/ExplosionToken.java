@@ -27,16 +27,16 @@ public class ExplosionToken extends SpellToken implements IProjectileToken
 	}
 
 	@Override
-	public float getBloodCostOfToken(IFocusToken token) 
+	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 5;
+		return 5 * potency*potency;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken token) 
+	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 20;
+		return 20 * potency*potency;
 	}
 }

@@ -1,6 +1,7 @@
 package hemomancy.common;
 
 import hemomancy.Hemomancy;
+import hemomancy.common.blocks.tileEntity.TEPlasma;
 import hemomancy.common.blocks.tileEntity.TESpellTinkerer;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;
 import hemomancy.common.network.PacketHandler;
@@ -52,6 +53,7 @@ public class CommonProxy
     public void registerTileEntities()
     {
     	GameRegistry.registerTileEntity(TESpellTinkerer.class, "tileSpellTinkerer");
+    	GameRegistry.registerTileEntity(TEPlasma.class, "tilePlasma");
     }
 
     public void registerEntityTrackers()

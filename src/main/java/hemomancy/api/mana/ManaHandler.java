@@ -8,7 +8,7 @@ public class ManaHandler
 {
 	public static int getMaxManaForLevel(int level)
 	{
-		return (int)(Math.pow(1.2, level - 1) * 100);
+		return (int)(Math.pow(1.4, level - 1) * 100);
 	}
 	
 	public static float getManaOfPlayer(EntityPlayer player)

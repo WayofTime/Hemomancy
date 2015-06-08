@@ -36,17 +36,17 @@ public class BlockBreakToken extends SpellToken implements IProjectileToken, IEl
 	}
 
 	@Override
-	public float getBloodCostOfToken(IFocusToken token) 
+	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 1;
+		return 1 * potency*potency;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken token) 
+	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 5;
+		return 5 * potency*potency;
 	}
 
 	@Override

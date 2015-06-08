@@ -1,33 +1,33 @@
 package hemomancy.common.spells;
 
-import java.util.List;
-
 import hemomancy.api.spells.EnumElement;
 import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
-import hemomancy.common.spells.projectile.IceProjectileEffect;
+import hemomancy.common.spells.projectile.PlasmaBombProjectileEffect;
 
-public class IceToken extends SpellToken implements IProjectileToken, IElementalToken
+import java.util.List;
+
+public class PlasmaBombToken extends SpellToken implements IProjectileToken, IElementalToken
 {
-	public IceToken() 
+	public PlasmaBombToken() 
 	{
-		super("textures/tokens/IceToken.png");
-		this.setUnlocalizedName("token.tokenIce.name");
+		super("textures/tokens/FireToken.png");
+		this.setUnlocalizedName("token.tokenPlasmaBomb.name");
 	}
 
 	@Override
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
-		focus.onCollideEffectList.add(new IceProjectileEffect(potency));
-		focus.damageMap.put("iceAttack", (double) (5 * potency));
+//		focus.damageMap.put("fire", (double) (5 * potency));
+		focus.onCollideEffectList.add(new PlasmaBombProjectileEffect(potency));
 	}
 
 	@Override
 	public SpellToken copy() 
 	{
-		return new IceToken();
+		return new PlasmaBombToken();
 	}
 	
 	@Override
@@ -39,18 +39,20 @@ public class IceToken extends SpellToken implements IProjectileToken, IElemental
 	@Override
 	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
-		return 3 * potency*potency;
+		// TODO Auto-generated method stub
+		return 75 * potency*potency;
 	}
 
 	@Override
 	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
-		return 5 * potency*potency;
+		// TODO Auto-generated method stub
+		return 150 * potency*potency;
 	}
 
 	@Override
 	public EnumElement getElement() 
 	{
-		return EnumElement.ICE;
+		return EnumElement.PLASMA;
 	}
 }

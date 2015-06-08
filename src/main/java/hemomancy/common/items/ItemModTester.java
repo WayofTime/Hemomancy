@@ -24,7 +24,7 @@ public class ItemModTester extends Item
         if (player.isSneaking())
         {
             player.openGui(Hemomancy.instance, GuiHandler.MANA_GUI, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-            LevelHandler.forcePlayerLevel(player, 1);
+            LevelHandler.forcePlayerLevel(player, 5);
             return itemStack;
         }else
         {

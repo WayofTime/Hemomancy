@@ -2,7 +2,7 @@ package hemomancy.api.spells;
 
 public enum EnumElement 
 {
-	FIRE, WATER, EARTH, AIR, ICE;
+	FIRE, WATER, EARTH, AIR, ICE, PLASMA;
 	
 	public static boolean canElementBePaired()
 	{

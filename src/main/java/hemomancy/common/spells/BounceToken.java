@@ -26,14 +26,14 @@ public class BounceToken extends SpellToken implements IProjectileToken
 	}
 
 	@Override
-	public float getBloodCostOfToken(IFocusToken token) 
+	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken token) 
+	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
 		return 0;

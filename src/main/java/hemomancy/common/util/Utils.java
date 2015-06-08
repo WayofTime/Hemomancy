@@ -6,9 +6,12 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -109,18 +112,80 @@ public class Utils extends ApiUtils
 		return hasPlacedBlock;
 	}
 	
-	public static int getNumberOfDamageTokens(EntityLivingBase entity, String name)
-	{
-		return 0;
-	}
-	
-	public static boolean digBlock(World world, BlockPos pos, IBlockState state, int fortune, boolean silkTouch)
+	public static boolean digBlock(World world, BlockPos pos, IBlockState state, int harvestLevel, int fortune, boolean silkTouch)
 	{
 		Block block = state.getBlock();
+		
+		int hlvl = block.getHarvestLevel(state);
+		
+		if(hlvl > harvestLevel)
+		{
+			return false;
+		}
 		
 		block.dropBlockAsItem(world, pos, state, 0);
 		world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
 		
 		return true;
+	}
+	
+	public static boolean smeltBlocksInSphere(World world, BlockPos pos, int radius, float featheringChance, float featheringDepth, boolean dropIfItem)
+	{
+        boolean hasPlacedBlock = false;
+
+		for (int i = -radius; i <= radius; i++)
+        {
+            for (int j = -radius; j <= radius; j++)
+            {
+                for (int k = -radius; k <= radius; k++)
+                {
+                    if (i * i + j * j + k * k >= (radius + 0.50f) * (radius + 0.50f))
+                    {
+                        continue;
+                    }
+                    
+                    if(i * i + j * j + k * k >= (radius + 0.50f - featheringDepth) * (radius + 0.50f - featheringDepth) && rand.nextFloat() < featheringChance)
+                    {
+                    	continue;
+                    }
+                    
+                    if(smeltBlockInWorld(world, pos.add(i, j, k), dropIfItem))
+                    {
+                    	hasPlacedBlock = true;
+                    }
+                }
+            }
+        }
+		
+		return hasPlacedBlock;
+	}
+	
+	public static boolean smeltBlockInWorld(World world, BlockPos pos, boolean dropIfItem)
+	{
+		if(!world.isAirBlock(pos))
+		{
+			IBlockState state = world.getBlockState(pos);
+			ItemStack blockStack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+			ItemStack itemStack = ItemStack.copyItemStack(FurnaceRecipes.instance().getSmeltingResult(blockStack));
+			
+			if(itemStack != null)
+			{
+				if(itemStack.getItem() instanceof ItemBlock)
+				{
+					Block newBlock = ((ItemBlock)itemStack.getItem()).getBlock();
+					IBlockState newState = newBlock.getStateFromMeta(itemStack.getItemDamage());
+					
+					world.setBlockState(pos, newState);
+					
+					return true;
+				}else if(dropIfItem)
+				{
+					world.spawnEntityInWorld(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemStack));
+					world.setBlockToAir(pos);
+				}
+			}
+		}
+		
+		return false;
 	}
 }

@@ -55,8 +55,8 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		if(token instanceof ProjectileFocusToken || token instanceof IProjectileToken)
 		{
 			tokenList.add(token);
-			this.manaCost += token.getManaCostOfToken(this);
-			this.bloodCost += token.getBloodCostOfToken(this);
+			this.manaCost += token.getManaCostOfToken(this, 1);
+			this.bloodCost += token.getBloodCostOfToken(this, 1);
 		}
 	}
 
@@ -167,31 +167,33 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		projectile.bouncesLeft = bouncesLeft;
 		projectile.stickyTimer = this.stickTime;
 		projectile.collideWithFluids = this.collideWithFluids;
+		
+		projectile.potency = potency;
 	}
 	
 	@Override
-	public float getBloodCostOfToken(IFocusToken token) 
+	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 5;
+		return 5 * potency*potency;
 	}
 
 	@Override
-	public float getManaCostOfToken(IFocusToken token) 
+	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 8;
+		return 8 * potency*potency;
 	}
 
 	@Override
 	public float getBloodCost(float potency) 
 	{
-		return bloodCost * potency*potency;
+		return bloodCost;
 	}
 
 	@Override
 	public float getManaCost(float potency) 
 	{
-		return manaCost * potency*potency;
+		return manaCost;
 	}
 }
