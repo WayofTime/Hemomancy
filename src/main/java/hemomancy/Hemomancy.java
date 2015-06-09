@@ -14,6 +14,7 @@ import hemomancy.common.spells.IceToken;
 import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.PlasmaBombToken;
 import hemomancy.common.spells.ProjectileFocusToken;
+import hemomancy.common.spells.PushToken;
 import hemomancy.common.spells.StickyToken;
 import hemomancy.common.spells.TestingSpellToken;
 import hemomancy.common.util.PlayerSyncHandler;
@@ -113,5 +114,6 @@ public class Hemomancy
     	SpellTokenRegistry.registerSpellToken("blockBreakToken", new BlockBreakToken());
     	SpellTokenRegistry.registerSpellToken("fireSmeltToken", new FireSmeltToken());
     	SpellTokenRegistry.registerSpellToken("plasmaBombToken", new PlasmaBombToken());
+    	SpellTokenRegistry.registerSpellToken("pushToken", new PushToken());
     }
 }

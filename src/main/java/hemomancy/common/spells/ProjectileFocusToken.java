@@ -42,6 +42,8 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	public float manaCost = 0;
 	public float bloodCost = 0;
 	
+	public float knockbackStrength = 0;
+	
 	public ProjectileFocusToken() 
 	{
 		super("textures/tokens/ProjectileToken.png");
@@ -167,6 +169,7 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		projectile.bouncesLeft = bouncesLeft;
 		projectile.stickyTimer = this.stickTime;
 		projectile.collideWithFluids = this.collideWithFluids;
+		projectile.knockbackStrength = this.knockbackStrength;
 		
 		projectile.potency = potency;
 	}

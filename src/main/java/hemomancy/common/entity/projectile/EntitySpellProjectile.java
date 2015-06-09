@@ -53,7 +53,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     
     private float gravity = 0.00f;
     /** The amount of knockback an arrow applies when it hits a mob. */
-    private int knockbackStrength;
+    public float knockbackStrength;
     
     public boolean collideWithFluids = true;
     
@@ -710,7 +710,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 
                     if (velocity > 0.0F)
                     {
-                        movingobjectposition.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6000000238418579D / (double)velocity, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6000000238418579D / (double)velocity);
+                        movingobjectposition.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6 / (double)velocity, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6 / (double)velocity);
                     }
                 }
 
