@@ -103,5 +103,6 @@ public class Hemomancy
     	SpellTokenRegistry.registerSpellToken("fireSmeltToken", new FireSmeltToken());
     	SpellTokenRegistry.registerSpellToken("plasmaBombToken", new PlasmaBombToken());
     	SpellTokenRegistry.registerSpellToken("pushToken", new PushToken());
+        SpellTokenRegistry.registerSpellToken("waterToken", new WaterToken());
     }
 }

@@ -19,4 +19,4 @@ token.tokenIce.name=Ice
 token.tokenFire.name=Fire
 token.tokenFireSmelt.name=Fire Smelting
 token.tokenBlockBreak.name=Dig
-token.antiGravity.name=Anti-Gravity
+token.tokenWater.name=Water
