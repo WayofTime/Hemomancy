@@ -29,13 +29,13 @@ public class WaterProjectileEffect implements IOnProjectileCollideEffect
     @Override
     public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit)
     {
-        return this.createWaterAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
+        return this.createWaterAtPoint(projectile, shooter, pos.getX() + sideHit.getFrontOffsetX(), pos.getY() + sideHit.getFrontOffsetY(), pos.getZ() + sideHit.getFrontOffsetZ(), potency);
     }
 
     @Override
     public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit)
     {
-        return this.createWaterAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
+        return this.createWaterAtPoint(projectile, shooter, pos.getX() + sideHit.getFrontOffsetX(), pos.getY() + sideHit.getFrontOffsetY(), pos.getZ() + sideHit.getFrontOffsetZ(), potency);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class WaterProjectileEffect implements IOnProjectileCollideEffect
         int xPos = (int) Math.floor(x);
         int yPos = (int) Math.floor(y);
         int zPos = (int) Math.floor(z);
-        int intPotency = (int) potency;
+        int intPotency = getRadiusForPotency(potency);
         World world = projectile.worldObj;
         boolean placed = false;
 
@@ -62,12 +62,20 @@ public class WaterProjectileEffect implements IOnProjectileCollideEffect
                     BlockPos blockPos = new BlockPos(i, j, k);
                     if (world.isAirBlock(blockPos))
                     {
-                        placed = true;
-                        world.setBlockState(blockPos, Blocks.water.getDefaultState());
+                        if(world.setBlockState(blockPos, Blocks.flowing_water.getDefaultState()))
+                        {
+                        	placed = true;
+                        }
                     }
                 }
             }
         }
+        
         return placed;
+    }
+    
+    public int getRadiusForPotency(float potency)
+    {
+    	return Math.max(0, (int)potency - 1);
     }
 }
