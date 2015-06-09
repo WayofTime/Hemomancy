@@ -1,5 +1,13 @@
+#Creative tab
+itemGroup.tabHemomancy=Hemomancy
+
 #Item localization
 item.itemAmpoule.name=Ampoule
+item.itemModTester.name=Mod Tester
+item.itemSimpleSpell.name=Simple Spell
+
+#Block localization
+tile.blockSpellTinkerer.name=Spell Tinkerer
 
 #Token localization
 token.tokenProjectile.name=Projectile
@@ -11,3 +19,4 @@ token.tokenIce.name=Ice
 token.tokenFire.name=Fire
 token.tokenFireSmelt.name=Fire Smelting
 token.tokenBlockBreak.name=Dig
+token.antiGravity.name=Anti-Gravity
