@@ -11,6 +11,7 @@ import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.ProjectileFocusToken;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -67,6 +68,11 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 	
 	public int bouncesLeft = 0;
 	public int stickyTimer = 0;
+	
+	public int chainAttackNumber = 1;
+	
+	public double chainSize = 2;
+	
 	public EnumFacing sideHit = EnumFacing.NORTH;
 
     public EntitySpellProjectile(World worldIn)
@@ -678,78 +684,114 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     
     public void onCollideWithEntity(MovingObjectPosition movingobjectposition)
     {
-    	float newDamage = (float) this.damage;
+    	boolean sendProficiencyAttack = false;
+    	boolean sendProficiencyCollide = false;
     	
-    	for(IProjectileDamageModifier modifier : this.damageModifierList)
+    	List<MovingObjectPosition> hitList = new LinkedList();
+    	
+		EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
+    	
+    	if(this.chainAttackNumber > 1)
     	{
-    		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, movingobjectposition.entityHit, this.damage);
+    		List<EntityLivingBase> entityList = worldObj.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(this.posX - chainSize, this.posY - chainSize, this.posZ - chainSize, this.posX + chainSize, this.posY + chainSize, this.posZ + chainSize));
+
+    		int addedNumber = 0;
+    		
+    		for(EntityLivingBase entityLiving : entityList)
+    		{
+    			if(addedNumber >= this.chainAttackNumber)
+    			{
+    				break;
+    			}
+    			
+    			MovingObjectPosition mop = new MovingObjectPosition(entityLiving);
+    			hitList.add(mop);
+    			addedNumber++;
+    		}
+    	}else
+    	{
+    		hitList.add(movingobjectposition);
     	}
     	
-        float k = newDamage;
+    	float numberAttacked = 0;
+    	
+    	for(MovingObjectPosition mop : hitList)
+    	{
+    		numberAttacked++;
+    		
+    		float newDamage = (float) this.damage;
+        	
+        	for(IProjectileDamageModifier modifier : this.damageModifierList)
+        	{
+        		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, mop.entityHit, this.damage);
+        	}
+        	
+            float k = newDamage / numberAttacked;
 
-        DamageSource damagesource;
+            DamageSource damagesource;
 
-        if (this.shootingEntity == null)
-        {
-            damagesource = DamageSource.causeThrownDamage(this, this);
-        }
-        else
-        {
-            damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
-        }
-
-		EntityPlayer shooter = this.shootingEntity instanceof EntityPlayer ? (EntityPlayer)shootingEntity : null;
-        
-        if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float)k))
-        {
-            if (movingobjectposition.entityHit instanceof EntityLivingBase)
+            if (this.shootingEntity == null)
             {
-                if (this.knockbackStrength > 0)
-                {
-                    float velocity = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+                damagesource = DamageSource.causeThrownDamage(this, this);
+            }
+            else
+            {
+                damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
+            }
 
-                    if (velocity > 0.0F)
+            
+            if (mop.entityHit.attackEntityFrom(damagesource, (float)k))
+            {
+                if (mop.entityHit instanceof EntityLivingBase)
+                {
+                    if (this.knockbackStrength > 0)
                     {
-                        movingobjectposition.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6 / (double)velocity, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6 / (double)velocity);
+                        float velocity = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+
+                        if (velocity > 0.0F)
+                        {
+                            mop.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6 / (double)velocity / numberAttacked, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6 / (double)velocity / numberAttacked);
+                        }
+                    }
+
+                    if (this.shootingEntity != null && mop.entityHit != this.shootingEntity && mop.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
+                    {
+                        ((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
                     }
                 }
+                
+                sendProficiencyAttack = true;
 
-                if (this.shootingEntity != null && movingobjectposition.entityHit != this.shootingEntity && movingobjectposition.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
-                {
-                    ((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
-                }
+                this.setDead();
             }
             
+            if(mop.entityHit instanceof EntityLivingBase)
+            {
+    			boolean success = false;
+    			
+            	for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
+        		{
+        			if(effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)mop.entityHit))
+        			{
+        				success = true;
+        			}
+        		}
+            	
+            	if(success)
+            	{
+            		sendProficiencyCollide = true;
+            	}
+            }
+    	}
+    	
+    	if(sendProficiencyAttack)
+    	{
             ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_ATTACK);
-
-            this.setDead();
-        }
-        
-        if(movingobjectposition.entityHit instanceof EntityLivingBase)
-        {
-			boolean success = false;
-			
-        	for(IOnProjectileCollideEffect effect : this.onCollideEffectList)
-    		{
-    			if(effect.onProjectileHitEntity(this, shooter, (EntityLivingBase)movingobjectposition.entityHit))
-    			{
-    				success = true;
-    			}
-    		}
-        	
-        	if(success)
-        	{
-        		ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_COLLIDE_ENTITY);
-        	}
-        }
-//        else //Enable to allow bouncing...
-//        {
-//            this.motionX *= -0.10000000149011612D;
-//            this.motionY *= -0.10000000149011612D;
-//            this.motionZ *= -0.10000000149011612D;
-//            this.rotationYaw += 180.0F;
-//            this.prevRotationYaw += 180.0F;
-//            this.ticksInAir = 0;
-//        }
+    	}
+    	
+    	if(sendProficiencyCollide)
+    	{
+    		ProficiencyHandler.handleSuccessfulSpellCast(shooter, tokenList, potency, SpellSituation.PROJECTILE_COLLIDE_ENTITY);
+    	}
     }
 }

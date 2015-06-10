@@ -35,6 +35,10 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	
 	public int bouncesLeft = 0;
 	public int stickTime = 0;
+	
+	public int chainAttackNumber = 0;
+	public double chainSize = 2;
+
 	public boolean collideWithFluids = true;
 	
 	public Map<String, Double> damageMap = new HashMap();
@@ -170,6 +174,9 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		projectile.stickyTimer = this.stickTime;
 		projectile.collideWithFluids = this.collideWithFluids;
 		projectile.knockbackStrength = this.knockbackStrength;
+		
+		projectile.chainAttackNumber = this.chainAttackNumber;
+		projectile.chainSize = this.chainSize;
 		
 		projectile.potency = potency;
 	}
