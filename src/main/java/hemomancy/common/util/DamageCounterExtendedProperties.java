@@ -4,11 +4,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class DamageCounterExtendedProperties implements IExtendedEntityProperties
-{
+{	
 	public static final String EXT_PROP_NAME = "HemomancyCounter";
 	
 	public final EntityLivingBase entityLiving;
@@ -69,10 +68,7 @@ public class DamageCounterExtendedProperties implements IExtendedEntityPropertie
 		
 		if(!entityLiving.worldObj.isRemote)
 		{
-			if (entityLiving.worldObj instanceof WorldServer) //Need to send a packet to the entity to set the stuffs
-            {
-//                ((WorldServer)entityLiving.worldObj).getEntityTracker().sendToAllTrackingEntity(entityLiving, new S0BPacketAnimation(entityLiving, 0));
-            }
+			
 		}
 		
 		return added > 0;
@@ -81,5 +77,12 @@ public class DamageCounterExtendedProperties implements IExtendedEntityPropertie
 	public void clearIceCounter()
 	{
 		this.iceCounter = 0;
+	}
+	
+	public void sendInfoToClient()
+	{
+		this.entityLiving.getEntityId();
+		
+		
 	}
 }

@@ -739,7 +739,6 @@ public class EntitySpellProjectile extends Entity implements IProjectile
                 damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
             }
 
-            
             if (mop.entityHit.attackEntityFrom(damagesource, (float)k))
             {
                 if (mop.entityHit instanceof EntityLivingBase)
