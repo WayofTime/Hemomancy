@@ -5,6 +5,7 @@ import hemomancy.api.ApiUtils;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -184,6 +185,21 @@ public class Utils extends ApiUtils
 					world.setBlockToAir(pos);
 				}
 			}
+		}
+		
+		return false;
+	}
+	
+	public static boolean growPlantAtBlock(World world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		
+		if(block instanceof IGrowable)
+		{
+			((IGrowable)block).grow(world, rand, pos, state);
+			
+			return true;
 		}
 		
 		return false;

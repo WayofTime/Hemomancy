@@ -11,6 +11,7 @@ import hemomancy.common.spells.ChainToken;
 import hemomancy.common.spells.ExplosionToken;
 import hemomancy.common.spells.FireSmeltToken;
 import hemomancy.common.spells.FireToken;
+import hemomancy.common.spells.GrowthToken;
 import hemomancy.common.spells.IceToken;
 import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.PlasmaBombToken;
@@ -123,5 +124,6 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("chainToken", new ChainToken());
         SpellTokenRegistry.registerSpellToken("spiritForceToken", new SpiritForceToken());
         SpellTokenRegistry.registerSpellToken("undeadTurnToken", new UndeadTurnToken());
+        SpellTokenRegistry.registerSpellToken("growthToken", new GrowthToken());
     }
 }
