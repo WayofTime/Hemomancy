@@ -5,8 +5,26 @@ import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.client.GuiHandler;
 import hemomancy.common.CommonProxy;
 import hemomancy.common.commands.CommandHUD;
-import hemomancy.common.spells.*;
+import hemomancy.common.spells.BlockBreakToken;
+import hemomancy.common.spells.BounceToken;
+import hemomancy.common.spells.ChainToken;
+import hemomancy.common.spells.ExplosionToken;
+import hemomancy.common.spells.FireSmeltToken;
+import hemomancy.common.spells.FireToken;
+import hemomancy.common.spells.IceToken;
+import hemomancy.common.spells.LiquidToken;
+import hemomancy.common.spells.PlasmaBombToken;
+import hemomancy.common.spells.ProjectileFocusToken;
+import hemomancy.common.spells.PushToken;
+import hemomancy.common.spells.SpiritForceToken;
+import hemomancy.common.spells.StickyToken;
+import hemomancy.common.spells.TestingSpellToken;
+import hemomancy.common.spells.UndeadTurnToken;
+import hemomancy.common.spells.WaterToken;
 import hemomancy.common.util.PlayerSyncHandler;
+
+import java.io.File;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -20,8 +38,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-
-import java.io.File;
 
 
 @Mod(modid = "Hemomancy", name = "Hemomancy", version = "v0.0.1")
@@ -106,5 +122,6 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("waterToken", new WaterToken());
         SpellTokenRegistry.registerSpellToken("chainToken", new ChainToken());
         SpellTokenRegistry.registerSpellToken("spiritForceToken", new SpiritForceToken());
+        SpellTokenRegistry.registerSpellToken("undeadTurnToken", new UndeadTurnToken());
     }
 }

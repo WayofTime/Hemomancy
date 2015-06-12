@@ -1,16 +1,20 @@
 package hemomancy.common.spells;
 
-import hemomancy.api.spells.*;
-import hemomancy.common.spells.projectile.SpiritForceProjectileEffect;
+import hemomancy.api.spells.EnumElement;
+import hemomancy.api.spells.IElementalToken;
+import hemomancy.api.spells.IFocusToken;
+import hemomancy.api.spells.IProjectileToken;
+import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.projectile.UndeadTurnProjectileEffect;
 
 import java.util.List;
 
-public class SpiritForceToken extends SpellToken implements IProjectileToken, IElementalToken
+public class UndeadTurnToken extends SpellToken implements IProjectileToken, IElementalToken
 {
-    public SpiritForceToken()
+    public UndeadTurnToken()
     {
         super("textures/tokens/TestingToken.png");
-        this.setUnlocalizedName("token.tokenSpiritForce.name");
+        this.setUnlocalizedName("token.tokenUndeadTurn.name");
     }
 
     @Override
@@ -22,7 +26,7 @@ public class SpiritForceToken extends SpellToken implements IProjectileToken, IE
     @Override
     public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency)
     {
-        focus.damageModifierList.add(new SpiritForceProjectileEffect(potency));
+    	focus.onCollideEffectList.add(new UndeadTurnProjectileEffect(potency));
     }
 
     @Override
@@ -34,7 +38,7 @@ public class SpiritForceToken extends SpellToken implements IProjectileToken, IE
     @Override
     public SpellToken copy()
     {
-        return new SpiritForceToken();
+        return new UndeadTurnToken();
     }
 
     @Override
