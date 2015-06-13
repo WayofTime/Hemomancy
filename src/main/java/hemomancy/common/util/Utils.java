@@ -5,6 +5,7 @@ import hemomancy.api.ApiUtils;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -190,14 +191,22 @@ public class Utils extends ApiUtils
 		return false;
 	}
 	
+	/**
+	 * Gives a bonemeal growth effect to the plant in question. Does not work on BlockBush because they appear to pop off on tall pushes.
+	 * @param world
+	 * @param pos
+	 * @return
+	 */
 	public static boolean growPlantAtBlock(World world, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 		
-		if(block instanceof IGrowable)
+		if(block instanceof IGrowable && !(block instanceof BlockBush))
 		{
 			((IGrowable)block).grow(world, rand, pos, state);
+			
+//			block.updateTick(world, pos, state, world.rand);
 			
 			return true;
 		}
