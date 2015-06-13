@@ -1,7 +1,9 @@
 package hemomancy.common.util;
 
 import hemomancy.api.ApiUtils;
+import hemomancy.api.harvest.HarvestRegistry;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -212,5 +214,39 @@ public class Utils extends ApiUtils
 		}
 		
 		return false;
+	}
+		
+	public static boolean harvestPlantAtBlock(World world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+		
+		return HarvestRegistry.harvestBlock(world, block, state, pos);
+	}
+	
+	public static void dropItemsAtPosition(World world, double x, double y, double z, List<ItemStack> dropList)
+	{
+		for (ItemStack item : dropList)
+        {
+            if (item != null && item.stackSize > 0)
+            {
+                float rx = rand.nextFloat() * 0.8F - 0.4F;
+                float ry = rand.nextFloat() * 0.8F - 0.4F;
+                float rz = rand.nextFloat() * 0.8F - 0.4F;
+                EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z + rz, new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
+
+                if (item.hasTagCompound())
+                {
+                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
+                }
+
+                float factor = 0.05F;
+                entityItem.motionX = rand.nextGaussian() * factor;
+                entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
+                entityItem.motionZ = rand.nextGaussian() * factor;
+                world.spawnEntityInWorld(entityItem);
+                item.stackSize = 0;
+            }
+        }
 	}
 }
