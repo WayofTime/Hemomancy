@@ -17,11 +17,11 @@ public class HarvestRegistry
 		harvestHandlerList.add(handler);
 	}
 	
-	public static boolean harvestBlock(World world, Block block, IBlockState state, BlockPos pos)
+	public static boolean harvestBlock(World world, Block block, IBlockState state, BlockPos pos, boolean replantSeed)
 	{
 		for(HarvestHandler handler : harvestHandlerList)
 		{
-			if(handler.harvestBlock(world, block, state, pos))
+			if(handler.harvestBlock(world, block, state, pos, replantSeed))
 			{
 				return true;
 			}

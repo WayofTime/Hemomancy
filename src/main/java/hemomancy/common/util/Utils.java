@@ -216,12 +216,12 @@ public class Utils extends ApiUtils
 		return false;
 	}
 		
-	public static boolean harvestPlantAtBlock(World world, BlockPos pos)
+	public static boolean harvestPlantAtBlock(World world, BlockPos pos, boolean replantSeed)
 	{
 		IBlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 		
-		return HarvestRegistry.harvestBlock(world, block, state, pos);
+		return HarvestRegistry.harvestBlock(world, block, state, pos, replantSeed);
 	}
 	
 	public static void dropItemsAtPosition(World world, double x, double y, double z, List<ItemStack> dropList)

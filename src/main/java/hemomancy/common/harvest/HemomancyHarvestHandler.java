@@ -30,11 +30,11 @@ public class HemomancyHarvestHandler extends HarvestHandler
 	}
 		
 	@Override
-	public boolean harvestBlock(World world, Block block, IBlockState state, BlockPos pos) 
+	public boolean harvestBlock(World world, Block block, IBlockState state, BlockPos pos, boolean replantSeed) 
 	{
 		if(canHarvestBlock(block, state))
 		{
-			IPlantable seed = getItemSeedFromBlock(block);
+			IPlantable seed = replantSeed ? getItemSeedFromBlock(block) : null;
 			List<ItemStack> dropList = block.getDrops(world, pos, state, 0);
 			boolean hasTakenSeed = true;
 			
@@ -71,6 +71,9 @@ public class HemomancyHarvestHandler extends HarvestHandler
 				{
 					IBlockState newState = seed.getPlant(world, pos);
 					world.setBlockState(pos, newState, 3);
+				}else
+				{
+					world.setBlockToAir(pos);
 				}
 				
 				Utils.dropItemsAtPosition(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, dropList);

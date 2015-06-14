@@ -54,7 +54,7 @@ public class HarvestProjectileEffect implements IOnProjectileCollideEffect
 			{
 				for(int k = -radius; k <= radius; k++)
 				{
-					if(Utils.harvestPlantAtBlock(projectile.worldObj, pos.add(i, j, k)))
+					if(Utils.harvestPlantAtBlock(projectile.worldObj, pos.add(i, j, k), false))
 					{
 						success = true;
 					}
