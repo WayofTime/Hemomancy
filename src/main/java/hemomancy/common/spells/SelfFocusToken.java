@@ -25,7 +25,7 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
 
     public float manaCost = 0;
     public float bloodCost = 0;
-    public int focusUseDuration = 0;
+    public int focusUseDuration = 50;
 
     public SelfFocusToken()
     {
@@ -99,7 +99,7 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     @Override
     public EnumAction getItemUseAction(ItemStack stack)
     {
-        return null;
+        return EnumAction.BOW;
     }
 
     @Override
