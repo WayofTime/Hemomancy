@@ -48,6 +48,8 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	
 	public float knockbackStrength = 0;
 	
+	public boolean dealDamage = true;
+	
 	public ProjectileFocusToken() 
 	{
 		super("textures/tokens/ProjectileToken.png");
@@ -177,6 +179,8 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 		
 		projectile.chainAttackNumber = this.chainAttackNumber;
 		projectile.chainSize = this.chainSize;
+		
+		projectile.dealDamage = this.dealDamage;
 		
 		projectile.potency = potency;
 	}

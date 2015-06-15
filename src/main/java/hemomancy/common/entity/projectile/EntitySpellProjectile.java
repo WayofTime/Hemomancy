@@ -73,6 +73,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 	
 	public double chainSize = 2;
 	
+	public boolean dealDamage = true;
+	
 	public EnumFacing sideHit = EnumFacing.NORTH;
 
     public EntitySpellProjectile(World worldIn)
@@ -480,6 +482,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         tagCompound.setInteger("bouncesLeft", bouncesLeft);
         tagCompound.setInteger("stickyTimer", stickyTimer);
         tagCompound.setInteger("sideHit", this.sideHit.getIndex());
+        
+        tagCompound.setBoolean("dealDamage", dealDamage);
     }
 
     /**
@@ -525,6 +529,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
         bouncesLeft = tagCompound.getInteger("bouncesLeft");
         stickyTimer = tagCompound.getInteger("stickyTimer");
         this.sideHit = EnumFacing.getFront(tagCompound.getInteger("sideHit"));
+        this.dealDamage = tagCompound.getBoolean("dealDamage");
     }
 
     /**
@@ -719,50 +724,54 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     	{
     		numberAttacked++;
     		
-    		float newDamage = (float) this.damage;
-        	
-        	for(IProjectileDamageModifier modifier : this.damageModifierList)
-        	{
-        		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, mop.entityHit, this.damage);
-        	}
-        	
-            float k = newDamage / numberAttacked;
-
-            DamageSource damagesource;
-
-            if (this.shootingEntity == null)
-            {
-                damagesource = DamageSource.causeThrownDamage(this, this);
-            }
-            else
-            {
-                damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
-            }
-
-            if (mop.entityHit.attackEntityFrom(damagesource, (float)k))
-            {
-                if (mop.entityHit instanceof EntityLivingBase)
-                {
-                    if (this.knockbackStrength > 0)
-                    {
-                        float velocity = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-
-                        if (velocity > 0.0F)
-                        {
-                            mop.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6 / (double)velocity / numberAttacked, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6 / (double)velocity / numberAttacked);
-                        }
-                    }
-
-                    if (this.shootingEntity != null && mop.entityHit != this.shootingEntity && mop.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
-                    {
-                        ((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
-                    }
-                }
-                
-                sendProficiencyAttack = true;
-
-                this.setDead();
-            }
+    		if(this.dealDamage)
+    		{
+				float newDamage = (float) this.damage;
+		    	
+		    	for(IProjectileDamageModifier modifier : this.damageModifierList)
+		    	{
+		    		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, mop.entityHit, this.damage);
+		    	}
+		    	
+		        float k = newDamage / numberAttacked;
+		
+		        DamageSource damagesource;
+		
+		        if (this.shootingEntity == null)
+		        {
+		            damagesource = DamageSource.causeThrownDamage(this, this);
+		        }
+		        else
+		        {
+		            damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
+		        }
+		
+		        if (mop.entityHit.attackEntityFrom(damagesource, (float)k))
+		        {
+		            if (mop.entityHit instanceof EntityLivingBase)
+		            {
+		                if (this.knockbackStrength > 0)
+		                {
+		                    float velocity = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+		
+		                    if (velocity > 0.0F)
+		                    {
+		                        mop.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6 / (double)velocity / numberAttacked, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6 / (double)velocity / numberAttacked);
+		                    }
+		                }
+		
+		                if (this.shootingEntity != null && mop.entityHit != this.shootingEntity && mop.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
+		                {
+		                    ((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
+		                }
+		            }
+		            
+		            sendProficiencyAttack = true;
+		
+		            this.setDead();
+		        }
+    		}
+            
             
             if(mop.entityHit instanceof EntityLivingBase)
             {
