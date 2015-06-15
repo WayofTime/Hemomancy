@@ -30,6 +30,11 @@ public class ApiUtils
 	
 	public static boolean drainManaAndBlood(EntityPlayer player, float mana, float blood)
 	{
+		if(player.capabilities.isCreativeMode)
+		{
+			return true;
+		}
+		
 		float curMana = ManaHandler.getManaOfPlayer(player);
 		float curBlood = BloodHandler.getBloodOfPlayer(player);
 		
