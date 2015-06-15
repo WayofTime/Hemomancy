@@ -25,7 +25,7 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
     @Override
     public void applyEffectToPlayer(World world, EntityPlayer player, SelfFocusToken focus, float potency)
     {
-        player.heal(potency);
+        player.heal(3 * potency);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
 
     public SelfFocusToken()
     {
-        super("textures/tokens/TestingToken.png");
+        super("textures/tokens/SelfToken.png");
         setUnlocalizedName("token.tokenSelf.name");
     }
 
