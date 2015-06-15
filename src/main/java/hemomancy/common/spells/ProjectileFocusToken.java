@@ -206,4 +206,10 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	{
 		return manaCost;
 	}
+	
+	@Override
+	public boolean isSpellTokenCompatible(List<SpellToken> tokenList, SpellToken token)
+	{
+		return token instanceof IProjectileToken;
+	}
 }

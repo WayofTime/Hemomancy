@@ -177,7 +177,7 @@ public class GuiSpellTinkerer extends GuiContainer
     	boolean canFit = ((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList.isEmpty() ? token instanceof IFocusToken : !(token instanceof IFocusToken);
     	for(SpellToken cueToken : ((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList)
     	{
-    		canFit = token.isSpellTokenCompatible(((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList, cueToken);
+    		canFit = canFit && token.isSpellTokenCompatible(((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList, cueToken) && cueToken.isSpellTokenCompatible(((ContainerSpellTinkerer)this.inventorySlots).inventory.spellCueList, token);
     		if(!canFit)
     		{
     			return canFit;
