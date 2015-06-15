@@ -11,6 +11,8 @@ tile.blockSpellTinkerer.name=Spell Tinkerer
 
 #Token localization
 token.tokenProjectile.name=Projectile
+token.tokenSelf.name=Self
+
 token.tokenBounce.name=Bounce
 token.tokenSticky.name=Sticky
 token.tokenExplosion.name=Explosive
