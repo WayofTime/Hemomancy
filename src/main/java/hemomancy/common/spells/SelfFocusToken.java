@@ -5,10 +5,6 @@ import hemomancy.api.events.SpellCastEvent;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.ISelfToken;
 import hemomancy.api.spells.SpellToken;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +14,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelfFocusToken extends SpellToken implements IFocusToken
 {
@@ -64,29 +63,6 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World world, EntityPlayer player)
     {
-        float potency = 1;
-        for (SpellToken token : tokenList)
-        {
-            token.setPotencyOfToken(potency);
-        }
-
-        SpellCastEvent castEvent = new SpellCastEvent(player, tokenList, potency);
-        if (MinecraftForge.EVENT_BUS.post(castEvent))
-        {
-            return stack;
-        }
-
-        if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
-        {
-            for (SpellToken token : tokenList)
-            {
-                if (token instanceof ISelfToken)
-                {
-                    ((ISelfToken) token).applyEffectToPlayer(world, player, this, potency);
-                }
-            }
-            return stack;
-        }
         return stack;
     }
 
@@ -111,12 +87,34 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     @Override
     public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int timeLeft)
     {
+        float potency = 1;
+        float potencyMultiplier = 1 - (getMaxItemUseDuration(stack) - timeLeft) / getMaxItemUseDuration(stack);
 
+        for (SpellToken token : tokenList)
+        {
+            token.setPotencyOfToken(potency * potencyMultiplier);
+        }
+
+        SpellCastEvent castEvent = new SpellCastEvent(player, tokenList, potency * potencyMultiplier);
+        if (MinecraftForge.EVENT_BUS.post(castEvent))
+        {
+            return;
+        }
+
+        if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency * potencyMultiplier), this.getBloodCost(potency * potencyMultiplier)))
+        {
+            for (SpellToken token : tokenList)
+            {
+                if (token instanceof ISelfToken)
+                {
+                    ((ISelfToken) token).applyEffectToPlayer(world, player, this, potency * potencyMultiplier);
+                }
+            }
+        }
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
-                                  float hitX, float hitY, float hitZ)
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         return false;
     }
@@ -158,10 +156,10 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     {
         return new SelfFocusToken();
     }
-    
-	@Override
-	public boolean isSpellTokenCompatible(List<SpellToken> tokenList, SpellToken token)
-	{
-		return token instanceof ISelfToken;
-	}
+
+    @Override
+    public boolean isSpellTokenCompatible(List<SpellToken> tokenList, SpellToken token)
+    {
+        return token instanceof ISelfToken;
+    }
 }

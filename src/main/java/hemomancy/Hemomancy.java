@@ -114,6 +114,7 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("undeadTurnToken", new UndeadTurnToken());
         SpellTokenRegistry.registerSpellToken("growthToken", new GrowthToken());
         SpellTokenRegistry.registerSpellToken("harvestToken", new HarvestToken());
+        SpellTokenRegistry.registerSpellToken("healToken", new HealToken());
     }
 
     public void registerHarvestHandlers()
