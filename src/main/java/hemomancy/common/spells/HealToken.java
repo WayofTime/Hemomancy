@@ -1,13 +1,16 @@
 package hemomancy.common.spells;
 
+import hemomancy.api.spells.EnumElement;
+import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.ISelfToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.projectile.HealProjectileEffect;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class HealToken extends SpellToken implements IProjectileToken, ISelfToken
+public class HealToken extends SpellToken implements IProjectileToken, ISelfToken, IElementalToken
 {
     public HealToken()
     {
@@ -19,7 +22,7 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
     public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency)
     {
         focus.dealDamage = false;
-        focus.damageMap.put("heal", (double) -1 * potency);
+        focus.onCollideEffectList.add(new HealProjectileEffect(potency));
     }
 
     @Override
@@ -51,4 +54,10 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
     {
         return 5;
     }
+
+	@Override
+	public EnumElement getElement() 
+	{
+		return EnumElement.SPIRIT;
+	}
 }
