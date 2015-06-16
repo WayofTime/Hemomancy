@@ -1,12 +1,15 @@
 package hemomancy.common.blocks.tileEntity;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 public class TESpellTinkerer extends TileEntity implements IInventory
@@ -172,5 +175,11 @@ public class TESpellTinkerer extends TileEntity implements IInventory
 	public void clear() 
 	{
 		
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) 
+	{
+		return oldState.getBlock() != newState.getBlock();
 	}
 }

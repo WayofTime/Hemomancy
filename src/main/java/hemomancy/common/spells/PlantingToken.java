@@ -13,7 +13,7 @@ public class PlantingToken extends SpellToken implements IProjectileToken, IElem
 {
 	public PlantingToken() 
 	{
-		super("textures/tokens/TestingToken.png");
+		super("textures/tokens/PlantToken.png");
 		this.setUnlocalizedName("token.tokenPlanting.name");
 	}
 

@@ -13,7 +13,7 @@ public class GrowthToken extends SpellToken implements IProjectileToken, IElemen
 {
 	public GrowthToken() 
 	{
-		super("textures/tokens/TestingToken.png");
+		super("textures/tokens/GrowthToken.png");
 		this.setUnlocalizedName("token.tokenGrowth.name");
 	}
 
