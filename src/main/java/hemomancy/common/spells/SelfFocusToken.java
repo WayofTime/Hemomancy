@@ -63,6 +63,33 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World world, EntityPlayer player)
     {
+    	float potency = 1;
+        float potencyMultiplier = 1;
+        
+        System.out.println("Activate!");
+
+        for (SpellToken token : tokenList)
+        {
+            token.setPotencyOfToken(potency * potencyMultiplier);
+        }
+
+        SpellCastEvent castEvent = new SpellCastEvent(player, tokenList, potency * potencyMultiplier);
+        if (MinecraftForge.EVENT_BUS.post(castEvent))
+        {
+            return stack;
+        }
+
+        if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency * potencyMultiplier), this.getBloodCost(potency * potencyMultiplier)))
+        {
+            for (SpellToken token : tokenList)
+            {
+                if (token instanceof ISelfToken)
+                {
+                    ((ISelfToken) token).applyEffectToPlayer(world, player, this, potency * potencyMultiplier);
+                }
+            }
+        }
+        
         return stack;
     }
 
@@ -87,36 +114,13 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     @Override
     public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int timeLeft)
     {
-        float potency = 1;
-        float potencyMultiplier = 1 - (getMaxItemUseDuration(stack) - timeLeft) / getMaxItemUseDuration(stack);
-
-        for (SpellToken token : tokenList)
-        {
-            token.setPotencyOfToken(potency * potencyMultiplier);
-        }
-
-        SpellCastEvent castEvent = new SpellCastEvent(player, tokenList, potency * potencyMultiplier);
-        if (MinecraftForge.EVENT_BUS.post(castEvent))
-        {
-            return;
-        }
-
-        if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency * potencyMultiplier), this.getBloodCost(potency * potencyMultiplier)))
-        {
-            for (SpellToken token : tokenList)
-            {
-                if (token instanceof ISelfToken)
-                {
-                    ((ISelfToken) token).applyEffectToPlayer(world, player, this, potency * potencyMultiplier);
-                }
-            }
-        }
+        
     }
 
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        return false;
+    	return false;
     }
 
     @Override

@@ -239,9 +239,8 @@ public class ContainerSpellTinkerer extends Container
     }
     
     public void removeAllFromCue()
-    {
-    	inventory.tokenList.addAll(inventory.spellCueList);
-    	
+    {    	
     	inventory.spellCueList = new ArrayList();
+    	inventory.darkenedList = new ArrayList();
     }
 }
