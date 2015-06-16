@@ -9,7 +9,7 @@ public class WaterToken extends SpellToken implements IProjectileToken, IElement
 {
     public WaterToken()
     {
-        super("textures/tokens/TestingToken.png");
+        super("textures/tokens/WaterToken.png");
         this.setUnlocalizedName("token.tokenWater.name");
     }
 

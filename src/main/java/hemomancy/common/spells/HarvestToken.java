@@ -13,7 +13,7 @@ public class HarvestToken extends SpellToken implements IProjectileToken, IEleme
 {
 	public HarvestToken() 
 	{
-		super("textures/tokens/TestingToken.png");
+		super("textures/tokens/HarvestToken.png");
 		this.setUnlocalizedName("token.tokenHarvest.name");
 	}
 

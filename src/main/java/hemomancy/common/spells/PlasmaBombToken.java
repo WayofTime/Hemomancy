@@ -13,7 +13,7 @@ public class PlasmaBombToken extends SpellToken implements IProjectileToken, IEl
 {
 	public PlasmaBombToken() 
 	{
-		super("textures/tokens/FireToken.png");
+		super("textures/tokens/PlasmaBombToken.png");
 		this.setUnlocalizedName("token.tokenPlasmaBomb.name");
 	}
 
