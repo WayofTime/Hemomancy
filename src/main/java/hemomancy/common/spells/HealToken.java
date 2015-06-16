@@ -14,7 +14,7 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
 {
     public HealToken()
     {
-        super("textures/tokens/TestingToken.png");
+        super("textures/tokens/HealToken.png");
         setUnlocalizedName("token.tokenHeal.name");
     }
 
