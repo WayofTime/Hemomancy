@@ -13,7 +13,7 @@ public class UndeadTurnToken extends SpellToken implements IProjectileToken, IEl
 {
     public UndeadTurnToken()
     {
-        super("textures/tokens/TestingToken.png");
+        super("textures/tokens/TurnUndeadToken.png");
         this.setUnlocalizedName("token.tokenUndeadTurn.name");
     }
 

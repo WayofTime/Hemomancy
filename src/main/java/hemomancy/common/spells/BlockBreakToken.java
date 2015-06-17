@@ -13,7 +13,7 @@ public class BlockBreakToken extends SpellToken implements IProjectileToken, IEl
 {
 	public BlockBreakToken() 
 	{
-		super("textures/tokens/TestingToken.png");
+		super("textures/tokens/DigToken.png");
 		this.setUnlocalizedName("token.tokenBlockBreak.name");
 	}
 

@@ -9,7 +9,7 @@ public class SpiritForceToken extends SpellToken implements IProjectileToken, IE
 {
     public SpiritForceToken()
     {
-        super("textures/tokens/TestingToken.png");
+        super("textures/tokens/SpiritForceToken.png");
         this.setUnlocalizedName("token.tokenSpiritForce.name");
     }
 

@@ -1,5 +1,7 @@
 package hemomancy.common.spells;
 
+import java.util.List;
+
 import hemomancy.api.spells.EnumElement;
 import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
@@ -55,6 +57,12 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
         return 5;
     }
 
+    @Override
+    public boolean isSpellTokenCompatible(List<SpellToken> tokenList, SpellToken token)
+    {
+        return token instanceof IElementalToken ? ((IElementalToken) token).getElement().equals(this.getElement()) : true;
+    }
+    
 	@Override
 	public EnumElement getElement() 
 	{

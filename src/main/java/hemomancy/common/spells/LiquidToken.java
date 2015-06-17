@@ -9,7 +9,7 @@ public class LiquidToken extends SpellToken implements IProjectileToken
 
     public LiquidToken()
     {
-        super("textures/tokens/LiquidPassToken.png");
+        super("textures/tokens/PassThroughLiquidToken.png");
         this.setUnlocalizedName("token.tokenLiquid.name");
     }
 

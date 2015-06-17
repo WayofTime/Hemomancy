@@ -13,7 +13,7 @@ public class FireSmeltToken extends SpellToken implements IProjectileToken, IEle
 {
 	public FireSmeltToken() 
 	{
-		super("textures/tokens/FireToken.png");
+		super("textures/tokens/SmeltingToken.png");
 		this.setUnlocalizedName("token.tokenFireSmelt.name");
 	}
 
