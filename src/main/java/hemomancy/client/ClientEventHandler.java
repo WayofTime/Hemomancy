@@ -6,7 +6,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -14,18 +13,18 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler
 {
 	private Minecraft mc = FMLClientHandler.instance().getClient();
 	ResourceLocation tempResource = new ResourceLocation("hemomancy", "textures/spells/self/TestingSelfWave.png");
+	
+	boolean allowTestRender = false;
 	
 	@SubscribeEvent
     public void onTick(RenderTickEvent event)
@@ -35,37 +34,39 @@ public class ClientEventHandler
             return;
         }else if ((mc.inGameHasFocus || mc.currentScreen == null) && !mc.gameSettings.showDebugInfo)
 		{
-        	
-    		ScaledResolution scaled = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        	if(allowTestRender)
+        	{
+        		float worldTime = event.renderTickTime;
+    			double tickRate = 1000;
+    			double cornerX = worldTime / tickRate;
+    			double cornerY = worldTime / tickRate;
+    			
+        		ScaledResolution scaled = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
-			GL11.glPushMatrix();
-			RenderManager renderManager = mc.getRenderManager();
-			
-			double sizeModifier = 100;
-			
-//    			int x = (int)(xPos * scaled.getScaledWidth()) * 4;
-//    	        int y = (int)(yPos * scaled.getScaledHeight()) * 4;
-			
-	        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-//    	        GL11.glScalef(0.1f, 0.1f, 0.1f);
-	        mc.getTextureManager().bindTexture(tempResource);
-	        Tessellator tes = Tessellator.getInstance();
-//    	        GL11.glRotatef(180.0F - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-//    	        GL11.glRotatef(-renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-//    	        WorldRenderer wr = tes.getWorldRenderer();
-//    	        wr.startDrawingQuads();
-//    	        wr.setNormal(0.0F, 1.0F, 0.0F);
-//    	        wr.addVertexWithUV(0, 0, 0.0D, 0, 1);
-//    	        wr.addVertexWithUV(sizeModifier, 0, 0.0D, 1, 1);
-//    	        wr.addVertexWithUV(sizeModifier, sizeModifier, 0.0D, 1, 0);
-//    	        wr.addVertexWithUV(0, sizeModifier, 0.0D, 0, 0);
-//    	        tes.draw();
-	        
-	        drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-	        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-	        GL11.glPopMatrix();
-        	
-			
+    			GL11.glPushMatrix();
+    			
+    			GL11.glDisable(GL11.GL_DEPTH_TEST);
+    			GL11.glDepthMask(false);
+    			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    			GL11.glDisable(GL11.GL_ALPHA_TEST);
+    			mc.getTextureManager().bindTexture(tempResource);
+    			Tessellator tessellator = Tessellator.getInstance();
+    			WorldRenderer wr = tessellator.getWorldRenderer();
+    			wr.startDrawingQuads();
+    			wr.addVertexWithUV(0.0D, (double)scaled.getScaledHeight(), -90.0D, 0.0D + cornerX, 1.0D + cornerY);
+    			wr.addVertexWithUV((double)scaled.getScaledWidth(), (double)scaled.getScaledHeight(), -90.0D, 1.0D + cornerX, 1.0D + cornerY);
+    			wr.addVertexWithUV((double)scaled.getScaledWidth(), 0.0D, -90.0D, 1.0D + cornerX, 0.0D + cornerY);
+    			wr.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D + cornerX, 0.0D + cornerY);
+    			tessellator.draw();
+    			GL11.glDepthMask(true);
+    			GL11.glEnable(GL11.GL_DEPTH_TEST);
+    			GL11.glEnable(GL11.GL_ALPHA_TEST);
+    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+    	        GL11.glPopMatrix();
+        	}
+        				
 			if (!HUDRenderHelper.renderHUDElements(mc))
 	        {
 	        	return;
@@ -91,7 +92,7 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public void renderLivingEvent(RenderLivingEvent.Pre event)
 	{
-		if(event.entity instanceof EntityPlayer)
+		if(allowTestRender && event.entity instanceof EntityPlayer)
 		{
 			long worldTime = event.entity.worldObj.getWorldTime();
 			double tickRate = 30;
