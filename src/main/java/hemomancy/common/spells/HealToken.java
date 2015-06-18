@@ -8,6 +8,8 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.ISelfToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
+import hemomancy.common.spells.focus.SelfFocusToken;
 import hemomancy.common.spells.projectile.HealProjectileEffect;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

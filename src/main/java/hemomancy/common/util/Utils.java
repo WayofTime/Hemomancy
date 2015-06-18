@@ -18,6 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Utils extends ApiUtils
@@ -249,4 +252,27 @@ public class Utils extends ApiUtils
             }
         }
 	}
+	
+	public static MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer player, boolean useLiquids)
+    {
+        float f = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch);
+        float f1 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw);
+        double d0 = player.prevPosX + (player.posX - player.prevPosX);
+        double d1 = player.prevPosY + (player.posY - player.prevPosY) + (double)player.getEyeHeight();
+        double d2 = player.prevPosZ + (player.posZ - player.prevPosZ);
+        Vec3 vec3 = new Vec3(d0, d1, d2);
+        float f2 = MathHelper.cos(-f1 * 0.017453292F - (float)Math.PI);
+        float f3 = MathHelper.sin(-f1 * 0.017453292F - (float)Math.PI);
+        float f4 = -MathHelper.cos(-f * 0.017453292F);
+        float f5 = MathHelper.sin(-f * 0.017453292F);
+        float f6 = f3 * f4;
+        float f7 = f2 * f4;
+        double d3 = 5.0D;
+        if (player instanceof net.minecraft.entity.player.EntityPlayerMP)
+        {
+            d3 = ((net.minecraft.entity.player.EntityPlayerMP)player).theItemInWorldManager.getBlockReachDistance();
+        }
+        Vec3 vec31 = vec3.addVector((double)f6 * d3, (double)f5 * d3, (double)f7 * d3);
+        return world.rayTraceBlocks(vec3, vec31, useLiquids, !useLiquids, false);
+    }
 }

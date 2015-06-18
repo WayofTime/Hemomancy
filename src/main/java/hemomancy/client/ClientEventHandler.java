@@ -36,35 +36,36 @@ public class ClientEventHandler
 		{
         	if(allowTestRender)
         	{
-        		float worldTime = event.renderTickTime;
-    			double tickRate = 1000;
-    			double cornerX = worldTime / tickRate;
-    			double cornerY = worldTime / tickRate;
-    			
-        		ScaledResolution scaled = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-
-    			GL11.glPushMatrix();
-    			
-    			GL11.glDisable(GL11.GL_DEPTH_TEST);
-    			GL11.glDepthMask(false);
-    			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-    			GL11.glDisable(GL11.GL_ALPHA_TEST);
-    			mc.getTextureManager().bindTexture(tempResource);
-    			Tessellator tessellator = Tessellator.getInstance();
-    			WorldRenderer wr = tessellator.getWorldRenderer();
-    			wr.startDrawingQuads();
-    			wr.addVertexWithUV(0.0D, (double)scaled.getScaledHeight(), -90.0D, 0.0D + cornerX, 1.0D + cornerY);
-    			wr.addVertexWithUV((double)scaled.getScaledWidth(), (double)scaled.getScaledHeight(), -90.0D, 1.0D + cornerX, 1.0D + cornerY);
-    			wr.addVertexWithUV((double)scaled.getScaledWidth(), 0.0D, -90.0D, 1.0D + cornerX, 0.0D + cornerY);
-    			wr.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D + cornerX, 0.0D + cornerY);
-    			tessellator.draw();
-    			GL11.glDepthMask(true);
-    			GL11.glEnable(GL11.GL_DEPTH_TEST);
-    			GL11.glEnable(GL11.GL_ALPHA_TEST);
-    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-    	        GL11.glPopMatrix();
+//        		EntityPlayer d;
+//        		float worldTime = event.renderTickTime;
+//    			double tickRate = 1000;
+//    			double cornerX = worldTime / tickRate;
+//    			double cornerY = worldTime / tickRate;
+//    			
+//        		ScaledResolution scaled = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+//
+//    			GL11.glPushMatrix();
+//    			
+//    			GL11.glDisable(GL11.GL_DEPTH_TEST);
+//    			GL11.glDepthMask(false);
+//    			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+//    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//    			GL11.glDisable(GL11.GL_ALPHA_TEST);
+//    			mc.getTextureManager().bindTexture(tempResource);
+//    			Tessellator tessellator = Tessellator.getInstance();
+//    			WorldRenderer wr = tessellator.getWorldRenderer();
+//    			wr.startDrawingQuads();
+//    			wr.addVertexWithUV(0.0D, (double)scaled.getScaledHeight(), -90.0D, 0.0D + cornerX, 1.0D + cornerY);
+//    			wr.addVertexWithUV((double)scaled.getScaledWidth(), (double)scaled.getScaledHeight(), -90.0D, 1.0D + cornerX, 1.0D + cornerY);
+//    			wr.addVertexWithUV((double)scaled.getScaledWidth(), 0.0D, -90.0D, 1.0D + cornerX, 0.0D + cornerY);
+//    			wr.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D + cornerX, 0.0D + cornerY);
+//    			tessellator.draw();
+//    			GL11.glDepthMask(true);
+//    			GL11.glEnable(GL11.GL_DEPTH_TEST);
+//    			GL11.glEnable(GL11.GL_ALPHA_TEST);
+//    			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//
+//    	        GL11.glPopMatrix();
         	}
         				
 			if (!HUDRenderHelper.renderHUDElements(mc))

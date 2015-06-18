@@ -1,4 +1,4 @@
-package hemomancy.common.spells;
+package hemomancy.common.spells.focus;
 
 import hemomancy.api.ApiUtils;
 import hemomancy.api.events.SpellCastEvent;
@@ -47,19 +47,7 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
             }
         }
     }
-
-    @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        return false;
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {
-        return stack;
-    }
-
+    
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World world, EntityPlayer player)
     {
@@ -90,6 +78,18 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
             }
         }
         
+        return stack;
+    }
+
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        return false;
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    {
         return stack;
     }
 

@@ -1,4 +1,4 @@
-package hemomancy.common.spells;
+package hemomancy.common.spells.focus;
 
 import hemomancy.api.ApiUtils;
 import hemomancy.api.events.SpellCastEvent;

@@ -20,14 +20,15 @@ import hemomancy.common.spells.IceToken;
 import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.PlantingToken;
 import hemomancy.common.spells.PlasmaBombToken;
-import hemomancy.common.spells.ProjectileFocusToken;
 import hemomancy.common.spells.PushToken;
-import hemomancy.common.spells.SelfFocusToken;
 import hemomancy.common.spells.SpiritForceToken;
 import hemomancy.common.spells.StickyToken;
 import hemomancy.common.spells.TestingSpellToken;
 import hemomancy.common.spells.UndeadTurnToken;
 import hemomancy.common.spells.WaterToken;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
+import hemomancy.common.spells.focus.SelfFocusToken;
+import hemomancy.common.spells.focus.TouchFocusToken;
 import hemomancy.common.util.PlayerSyncHandler;
 
 import java.io.File;
@@ -117,6 +118,7 @@ public class Hemomancy
     {
         SpellTokenRegistry.registerSpellToken("projectileToken", new ProjectileFocusToken());
         SpellTokenRegistry.registerSpellToken("selfToken", new SelfFocusToken());
+        SpellTokenRegistry.registerSpellToken("touchToken", new TouchFocusToken());
 
         SpellTokenRegistry.registerSpellToken("bounceToken", new BounceToken());
         SpellTokenRegistry.registerSpellToken("stickyToken", new StickyToken());

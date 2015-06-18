@@ -3,6 +3,7 @@ package hemomancy.common.spells;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.projectile.ExplosionProjectileEffect;
 
 public class ExplosionToken extends SpellToken implements IProjectileToken

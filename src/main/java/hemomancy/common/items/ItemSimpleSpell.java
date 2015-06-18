@@ -5,7 +5,7 @@ import hemomancy.api.mana.ISpellCostClient;
 import hemomancy.api.mana.ManaHandler;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellTokenRegistry;
-import hemomancy.common.spells.SelfFocusToken;
+import hemomancy.common.spells.focus.SelfFocusToken;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;

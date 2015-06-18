@@ -1,6 +1,7 @@
 package hemomancy.common.spells;
 
 import hemomancy.api.spells.*;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.projectile.WaterProjectileEffect;
 
 import java.util.List;

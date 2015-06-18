@@ -8,5 +8,7 @@ public enum SpellSituation
 	PROJECTILE_ATTACK,
 	PROJECTILE_UPDATE,
 	
+	TOUCH_BLOCK,
+	TOUCH_ENTITY,
 	;
 }

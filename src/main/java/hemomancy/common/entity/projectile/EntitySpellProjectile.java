@@ -8,7 +8,7 @@ import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
 import hemomancy.api.spells.projectile.IProjectileDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
-import hemomancy.common.spells.ProjectileFocusToken;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

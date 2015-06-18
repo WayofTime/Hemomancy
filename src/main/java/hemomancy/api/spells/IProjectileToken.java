@@ -1,6 +1,6 @@
 package hemomancy.api.spells;
 
-import hemomancy.common.spells.ProjectileFocusToken;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
 
 public interface IProjectileToken 
 {

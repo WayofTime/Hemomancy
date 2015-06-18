@@ -5,6 +5,7 @@ import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.projectile.HarvestProjectileEffect;
 
 import java.util.List;
