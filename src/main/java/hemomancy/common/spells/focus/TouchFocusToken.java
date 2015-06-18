@@ -56,9 +56,7 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityPlayer player) 
 	{
 		float potency = 1;
-		
-		System.out.println("Called");
-		
+				
 		for(SpellToken token : tokenList)
 		{
 			token.setPotencyOfToken(potency);
@@ -68,6 +66,14 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 		if(MinecraftForge.EVENT_BUS.post(castEvent))
 		{
 			return stack;
+		}
+		
+		for(SpellToken token : this.tokenList)
+		{
+			if(token instanceof ITouchToken)
+			{
+				((ITouchToken)token).manipulateTouchFocus(this, potency);
+			}
 		}
 		
 		boolean flag = true;
@@ -82,6 +88,7 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
         {
         	if((mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK || mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) && ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
         	{
+
 				boolean success = false;
 
         		switch(mop.typeOfHit)
@@ -96,6 +103,8 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 					{
 						if(effect.clickBlock(world, player, pos, state, block, sideHit))
 						{
+			        		System.out.println("Called");
+
 							success = true;
 						}
 					}
@@ -128,6 +137,8 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
+    	player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+        
         return stack;
     }
 
@@ -177,14 +188,14 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
