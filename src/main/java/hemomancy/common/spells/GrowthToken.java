@@ -4,13 +4,16 @@ import hemomancy.api.spells.EnumElement;
 import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
+import hemomancy.api.spells.ITouchToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
+import hemomancy.common.spells.focus.TouchFocusToken;
 import hemomancy.common.spells.projectile.GrowthProjectileEffect;
+import hemomancy.common.spells.touch.GrowthTouchEffect;
 
 import java.util.List;
 
-public class GrowthToken extends SpellToken implements IProjectileToken, IElementalToken
+public class GrowthToken extends SpellToken implements IProjectileToken, ITouchToken, IElementalToken
 {
 	public GrowthToken() 
 	{
@@ -22,6 +25,12 @@ public class GrowthToken extends SpellToken implements IProjectileToken, IElemen
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
 		focus.onCollideEffectList.add(new GrowthProjectileEffect(potency));
+	}
+
+	@Override
+	public void manipulateTouchFocus(TouchFocusToken focus, float potency) 
+	{
+		focus.blockEffects.add(new GrowthTouchEffect(potency));
 	}
 
 	@Override

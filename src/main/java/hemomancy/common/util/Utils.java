@@ -125,7 +125,7 @@ public class Utils extends ApiUtils
 		
 		int hlvl = block.getHarvestLevel(state);
 		
-		if(hlvl > harvestLevel)
+		if(hlvl > harvestLevel || block.getBlockHardness(world, pos) < 0)
 		{
 			return false;
 		}
