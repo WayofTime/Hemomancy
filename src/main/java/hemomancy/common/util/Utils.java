@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -258,7 +260,13 @@ public class Utils extends ApiUtils
         return getMovingObjectPositionFromPlayer(world, player, useLiquids, 5.0d, false);
     }
 	
+	//TODO Add similar method that will also search for entities along the path.
 	public static MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer player, boolean useLiquids, double distance, boolean ignorePlayerBlockReach)
+	{
+		return getMovingObjectPositionFromPlayer(world, player, useLiquids, distance, ignorePlayerBlockReach, false);
+	}
+	
+	public static MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer player, boolean useLiquids, double distance, boolean ignorePlayerBlockReach, boolean searchForEntities)
 	{
 		float f = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch);
         float f1 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw);
@@ -278,6 +286,49 @@ public class Utils extends ApiUtils
             d3 = ((net.minecraft.entity.player.EntityPlayerMP)player).theItemInWorldManager.getBlockReachDistance();
         }
         Vec3 vec31 = vec3.addVector((double)f6 * d3, (double)f5 * d3, (double)f7 * d3);
-        return world.rayTraceBlocks(vec3, vec31, useLiquids, !useLiquids, false);
+        MovingObjectPosition mop = world.rayTraceBlocks(vec3, vec31, useLiquids, !useLiquids, false);
+        
+        if(searchForEntities)
+        {
+        	double searchDistance = d3;
+        	if(mop != null && mop.typeOfHit.equals(MovingObjectPosition.MovingObjectType.BLOCK))
+        	{        		
+        		double newDistance = mop.hitVec.distanceTo(vec3);
+        		
+        		if(newDistance < searchDistance)
+        		{
+        			searchDistance = newDistance;
+        		}
+        	}
+        	
+        	for(double i = 0; i < searchDistance; i++)
+        	{
+        		double hitX = vec3.xCoord + i*f6;
+        		double hitY = vec3.yCoord + i*f5;
+        		double hitZ = vec3.zCoord + i*f7;
+        		
+        		Entity closestEntity = null;
+        		double closestDistance = searchDistance;
+        		
+        		List<Entity> entityList = world.getEntitiesWithinAABBExcludingEntity(player, new AxisAlignedBB(hitX - 0.5, hitY - 0.5, hitZ - 0.5, hitX + 0.5, hitY + 0.5, hitZ + 0.5));
+        		
+        		for(Entity entity : entityList)
+        		{
+        			double testDistance = entity.getPositionVector().distanceTo(vec3);
+        			if(testDistance < closestDistance)
+        			{
+            			closestEntity = entity;
+            			closestDistance = testDistance;
+        			}
+        		}
+        		
+        		if(closestEntity != null)
+        		{
+        			return new MovingObjectPosition(closestEntity);
+        		}
+        	}
+        }
+        
+        return mop;
 	}
 }

@@ -10,5 +10,8 @@ public enum SpellSituation
 	
 	TOUCH_BLOCK,
 	TOUCH_ENTITY,
+	
+	BEAM_BLOCK,
+	BEAM_ENTITY
 	;
 }

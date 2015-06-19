@@ -276,7 +276,6 @@ public class FXBeam extends EntityFX
       double var37 = this.length * size * var9 + var35;
       
       GL11.glRotatef(60.0F, 0.0F, 1.0F, 0.0F);
-      System.out.println("t: " + t);
       wr.startDrawingQuads();
       wr.setBrightness(200);
       wr.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, op);
@@ -284,9 +283,7 @@ public class FXBeam extends EntityFX
       wr.addVertexWithUV(var44, 0.0D, 0.0D, var33, var35);
       wr.addVertexWithUV(var17, 0.0D, 0.0D, var31, var35);
       wr.addVertexWithUV(var17b, var29, 0.0D, var31, var37);
-//      wr.finishDrawing();
       tessellator.draw();
-//      tessellator.func_78381_a();
     }
     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     GL11.glDepthMask(true);
@@ -299,11 +296,8 @@ public class FXBeam extends EntityFX
     if (this.impact > 0) {
 //      renderImpact(tessellator, f, f1, f2, f3, f4, f5);
     }
-//    Minecraft.getMinecraft().renderEngine.bindTexture(UtilsFX.getParticleTexture());
-//    wr.finishDrawing();
-//    tessellator.draw();
+
     wr.startDrawingQuads();
-//    tessellator.startDrawingQuads();
     this.prevSize = size;
   }
   

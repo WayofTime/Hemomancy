@@ -48,6 +48,23 @@ public class ApiUtils
 		return false;
 	}
 	
+	public static boolean canDrainManaAndBlood(EntityPlayer player, float mana, float blood)
+	{
+		if(player.capabilities.isCreativeMode)
+		{
+			return true;
+		}
+		
+		float curMana = ManaHandler.getManaOfPlayer(player);
+		float curBlood = player.worldObj.isRemote ? ApiUtils.getClientBloodOfPlayer(player) : BloodHandler.getBloodOfPlayer(player);
+		
+		if(mana <= curMana && blood <= curBlood)
+		{			
+			return true;
+		}
+		return false;
+	}
+	
 	public static NBTTagCompound getManaInventoryTagOfPlayer(EntityPlayer player)
 	{
 		NBTTagCompound data = ApiUtils.getPersistentDataTag(player);

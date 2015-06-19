@@ -8,6 +8,7 @@ import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.beam.IBeamToken;
+import hemomancy.common.spells.beam.IBlockBeamEffect;
 import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;
@@ -33,7 +34,12 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	private List<SpellToken> tokenList = new ArrayList();
 	
 	private static HashMap<String, Object> beam = new HashMap();
-
+	
+	public List<IBlockBeamEffect> blockEffects = new ArrayList();
+	
+	private double beamLength = 10.0;
+	public boolean ignoreEntities = false;
+	
 	public float manaCost = 0;
 	public float bloodCost = 0;
 
@@ -177,20 +183,27 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 				((IBeamToken)token).manipulateBeamFocus(this, potency);
 			}
 		}
-		
-		this.renderBeam(player);
-		
-		if(!ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
+				
+		if(!ApiUtils.canDrainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
 		{
-			player.clearItemInUse();
+			player.stopUsingItem();
 			return;
 		}
 		
-		boolean flag = true;
+		this.renderBeam(player);
+		
+		if(player.worldObj.getTotalWorldTime() % 5 == 0 && !ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
+		{
+			System.out.println("what?");
+//			player.clearItemInUse();
+			return;
+		}
+		
+		boolean flag = false;
 		
 		World world = player.worldObj;
 		
-		MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, flag, 10, true);
+		MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, flag, beamLength, true, !ignoreEntities);
 
         if (mop == null)
         {
@@ -200,7 +213,6 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
         {
         	if((mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK || mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY))
         	{
-
 				boolean success = false;
 
         		switch(mop.typeOfHit)
@@ -211,25 +223,25 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 					Block block = state.getBlock();
 					EnumFacing sideHit = mop.sideHit;
 					
-//					for(IClickBlockTouchEffect effect : blockEffects)
-//					{
-//						if(effect.clickBlock(world, player, pos, state, block, sideHit))
-//						{
-//			        		System.out.println("Called");
-//
-//							success = true;
-//						}
-//					}
+					for(IBlockBeamEffect effect : blockEffects)
+					{
+						if(effect.collideWithBlock(world, player, pos, state, block, sideHit))
+						{
+			        		System.out.println("Called");
+
+							success = true;
+						}
+					}
 					
 					if(success)
 					{
-						ProficiencyHandler.handleSuccessfulSpellCast(player, tokenList, potency, SpellSituation.TOUCH_BLOCK);
+						ProficiencyHandler.handleSuccessfulSpellCast(player, tokenList, potency, SpellSituation.BEAM_BLOCK);
 					}
 					
 					break;
 					
 				case ENTITY:
-					
+//					mop.entityHit.attackEntityFrom(DamageSource.cactus, 3);
 					break;
 				default:
 					return;

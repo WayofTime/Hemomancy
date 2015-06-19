@@ -6,6 +6,9 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.ITouchToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.beam.BlockBreakBlockBeamEffect;
+import hemomancy.common.spells.beam.IBeamToken;
+import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.focus.TouchFocusToken;
 import hemomancy.common.spells.projectile.BlockBreakProjectileEffect;
@@ -13,7 +16,7 @@ import hemomancy.common.spells.touch.BlockBreakTouchEffect;
 
 import java.util.List;
 
-public class BlockBreakToken extends SpellToken implements IProjectileToken, ITouchToken, IElementalToken
+public class BlockBreakToken extends SpellToken implements IProjectileToken, ITouchToken, IBeamToken, IElementalToken
 {
 	public BlockBreakToken() 
 	{
@@ -63,5 +66,12 @@ public class BlockBreakToken extends SpellToken implements IProjectileToken, ITo
 	public EnumElement getElement() 
 	{
 		return EnumElement.EARTH;
+	}
+
+	@Override
+	public void manipulateBeamFocus(BeamFocusToken focus, float potency) 
+	{
+		focus.ignoreEntities = true;
+		focus.blockEffects.add(new BlockBreakBlockBeamEffect(potency));
 	}
 }
