@@ -27,7 +27,8 @@ public class FXBeam extends EntityFX
   public FXBeam(World par1World, EntityPlayer player, double tx, double ty, double tz, float red, float green, float blue, int age)
   {
     super(par1World, player.posX, player.posY, player.posZ, 0.0D, 0.0D, 0.0D);
-    if (player.getEntityId() != Minecraft.getMinecraft().getRenderViewEntity().getEntityId()) {
+//    if (player.getEntityId() != Minecraft.getMinecraft().getRenderViewEntity().getEntityId()) 
+    {
       this.offset = (player.height / 2.0F + 0.25D);
     }
     this.particleRed = red;
@@ -43,7 +44,7 @@ public class FXBeam extends EntityFX
     this.tY = ty;
     this.tZ = tz;
     float xd = (float)(player.posX - this.tX);
-    float yd = (float)(player.posY + this.offset - this.tY);
+    float yd = (float)(player.posY - this.tY);
     float zd = (float)(player.posZ - this.tZ);
     this.length = MathHelper.sqrt_float(xd * xd + yd * yd + zd * zd);
     double var7 = MathHelper.sqrt_double(xd * xd + zd * zd);
@@ -126,7 +127,6 @@ public class FXBeam extends EntityFX
   private float rotPitch = 0.0F;
   private float prevYaw = 0.0F;
   private float prevPitch = 0.0F;
-  private Entity targetEntity = null;
   private double tX = 0.0D;
   private double tY = 0.0D;
   private double tZ = 0.0D;
@@ -223,7 +223,9 @@ public class FXBeam extends EntityFX
     float var12 = -var11 * 0.2F - MathHelper.floor_float(-var11 * 0.1F);
     
     GL11.glEnable(3042);
-    GL11.glBlendFunc(770, 1);
+//    GL11.glBlendFunc(770, 1);
+    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
 //    GL11.glDepthMask(false);
     
     double prex = this.player.prevPosX;
@@ -325,7 +327,6 @@ public class FXBeam extends EntityFX
     float var13 = (float)(this.ptX + (this.tX - this.ptX) * f - interpPosX);
     float var14 = (float)(this.ptY + (this.tY - this.ptY) * f - interpPosY);
     float var15 = (float)(this.ptZ + (this.tZ - this.ptZ) * f - interpPosZ);
-    float var16 = 1.0F;
     
     wr.startDrawingQuads();
     wr.setBrightness(200);

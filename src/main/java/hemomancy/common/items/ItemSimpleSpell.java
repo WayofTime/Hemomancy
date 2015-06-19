@@ -55,7 +55,7 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
             MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, false);
             Vec3 vec = player.getLookVec();
             double tx = player.posX + vec.xCoord * 10.0;
-            double ty = player.posY + vec.yCoord * 10.0;
+            double ty = player.posY + player.height + vec.yCoord * 10.0;
             double tz = player.posZ + vec.zCoord * 10.0;
             int impact = 0;
             
@@ -68,18 +68,12 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
             
             if(player.worldObj.isRemote)
             {
-            	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty + player.height, tz, 2, 65382, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
+            	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty, tz, 2, 0x0cff00, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
             }
             
             if (focus != null)
             {
-                if (focus.getMaxItemUseDuration(itemStack) > 0 && focus instanceof SelfFocusToken)
-                {
-                    player.setItemInUse(itemStack, focus.getMaxItemUseDuration(itemStack));
-                } else
-                {
-                    focus.onItemRightClick(itemStack, world, player);
-                }
+                focus.onItemRightClick(itemStack, world, player);
             }
         }
 
@@ -98,7 +92,7 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
         MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false);
         Vec3 vec = player.getLookVec();
         double tx = player.posX + vec.xCoord * 10.0;
-        double ty = player.posY + vec.yCoord * 10.0;
+        double ty = player.posY + player.height + vec.yCoord * 10.0;
         double tz = player.posZ + vec.zCoord * 10.0;
         int impact = 0;
         
@@ -111,7 +105,7 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
         
         if(player.worldObj.isRemote)
         {
-        	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty + player.height, tz, 2, 65382, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
+        	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty, tz, 2, 0x0cff00, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
         }
     }
 

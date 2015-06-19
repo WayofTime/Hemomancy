@@ -90,6 +90,8 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
+    	player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+    	
         return stack;
     }
 
