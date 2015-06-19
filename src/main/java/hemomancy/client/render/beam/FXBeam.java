@@ -223,8 +223,7 @@ public class FXBeam extends EntityFX
     float var12 = -var11 * 0.2F - MathHelper.floor_float(-var11 * 0.1F);
     
     GL11.glEnable(3042);
-//    GL11.glBlendFunc(770, 1);
-    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    GL11.glBlendFunc(770, 1);
 
 //    GL11.glDepthMask(false);
     
@@ -293,6 +292,8 @@ public class FXBeam extends EntityFX
     GL11.glDepthMask(true);
     GL11.glDisable(3042);
     GL11.glEnable(2884);
+    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
     
     GL11.glPopMatrix();
     if (this.impact > 0) {

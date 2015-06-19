@@ -39,6 +39,8 @@ public interface IFocusToken
     
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity);  
     
+    public void onUsingTick(ItemStack stack, EntityPlayer player, int count);
+    
     public float getBloodCost(float potency);
     
     public float getManaCost(float potency);

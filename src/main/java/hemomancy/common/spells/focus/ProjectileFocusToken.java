@@ -216,4 +216,10 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 	{
 		return token instanceof IProjectileToken;
 	}
+
+	@Override
+	public void onUsingTick(ItemStack stack, EntityPlayer player, int count) 
+	{
+		
+	}
 }

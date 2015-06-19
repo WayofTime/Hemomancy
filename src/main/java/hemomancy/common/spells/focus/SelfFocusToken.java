@@ -168,4 +168,10 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
     {
         return token instanceof ISelfToken;
     }
+
+	@Override
+	public void onUsingTick(ItemStack stack, EntityPlayer player, int count) 
+	{
+		
+	}
 }
