@@ -6,9 +6,14 @@ import hemomancy.client.hud.HUDRenderHelper;
 import hemomancy.client.hud.ManaHUDElement;
 import hemomancy.client.hud.TestingHUDElement;
 import hemomancy.client.render.RenderEntitySpellProjectile;
+import hemomancy.client.render.beam.FXBeam;
 import hemomancy.common.CommonProxy;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;
+
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -71,5 +76,33 @@ public class ClientProxy extends CommonProxy
     	Object ob = new ClientEventHandler();
         FMLCommonHandler.instance().bus().register(ob);
         MinecraftForge.EVENT_BUS.register(ob);
+    }
+    
+    @Override
+    public Object beamCont(World worldObj, EntityPlayer p, double tx, double ty, double tz, int type, int color, boolean reverse, float endmod, Object input, int impact)
+    {
+	     FXBeam beamcon = null;
+	     Color c = new Color(color);
+	     if ((input instanceof FXBeam)) 
+	     {
+	    	 beamcon = (FXBeam)input;
+	     }
+	     if ((beamcon == null) || (beamcon.isDead))
+	     {
+		     beamcon = new FXBeam(worldObj, p, tx, ty, tz, c.getRed() / 255.0F, c.getGreen() / 255.0F, c.getBlue() / 255.0F, 8);
+		       
+		     beamcon.setType(type);
+		     beamcon.setEndMod(endmod);
+		     beamcon.setReverse(reverse);
+		     FMLClientHandler.instance().getClient().effectRenderer.addEffect(beamcon);
+	     }
+	     else
+	     {
+		     beamcon.updateBeam(tx, ty, tz);
+		     beamcon.setEndMod(endmod);
+		     beamcon.impact = impact;
+	     }
+	     
+	     return beamcon;
     }
 }

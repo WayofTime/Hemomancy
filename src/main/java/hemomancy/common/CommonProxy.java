@@ -5,6 +5,7 @@ import hemomancy.common.blocks.tileEntity.TEPlasma;
 import hemomancy.common.blocks.tileEntity.TESpellTinkerer;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;
 import hemomancy.common.network.PacketHandler;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -74,4 +75,9 @@ public class CommonProxy
     {
     	PacketHandler.init();
     }
+
+    public Object beamCont(World worldObj, EntityPlayer p, double tx, double ty, double tz, int type, int color, boolean reverse, float endmod, Object input, int impact)
+    {
+		return null;
+	}
 }

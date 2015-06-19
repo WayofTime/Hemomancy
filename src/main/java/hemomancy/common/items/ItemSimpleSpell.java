@@ -6,6 +6,10 @@ import hemomancy.api.mana.ManaHandler;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.common.spells.focus.SelfFocusToken;
+import hemomancy.common.util.Utils;
+
+import java.util.HashMap;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -13,10 +17,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class ItemSimpleSpell extends Item implements ISpellCostClient
 {
+	private static HashMap<String, Object> beam = new HashMap();
+	
     public ItemSimpleSpell()
     {
         super();
@@ -38,6 +46,31 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
         {
             IFocusToken focus = getPreparedFocus(itemStack);
 
+            String pp = "R" + player.getName();
+            if (!player.worldObj.isRemote) 
+            {
+            	pp = "S" + player.getName();
+            }
+            
+            MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, false);
+            Vec3 vec = player.getLookVec();
+            double tx = player.posX + vec.xCoord * 10.0;
+            double ty = player.posY + vec.yCoord * 10.0;
+            double tz = player.posZ + vec.zCoord * 10.0;
+            int impact = 0;
+            
+            if(mop != null)
+            {
+            	tx = mop.hitVec.xCoord;
+            	ty = mop.hitVec.yCoord;
+            	tz = mop.hitVec.zCoord;
+            }
+            
+            if(player.worldObj.isRemote)
+            {
+            	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty + player.height, tz, 2, 65382, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
+            }
+            
             if (focus != null)
             {
                 if (focus.getMaxItemUseDuration(itemStack) > 0 && focus instanceof SelfFocusToken)
@@ -51,6 +84,35 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
         }
 
         return itemStack;
+    }
+    
+    @Override
+    public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
+    {
+    	String pp = "R" + player.getName();
+        if (!player.worldObj.isRemote) 
+        {
+        	pp = "S" + player.getName();
+        }
+        
+        MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false);
+        Vec3 vec = player.getLookVec();
+        double tx = player.posX + vec.xCoord * 10.0;
+        double ty = player.posY + vec.yCoord * 10.0;
+        double tz = player.posZ + vec.zCoord * 10.0;
+        int impact = 0;
+        
+        if(mop != null)
+        {
+        	tx = mop.hitVec.xCoord;
+        	ty = mop.hitVec.yCoord;
+        	tz = mop.hitVec.zCoord;
+        }
+        
+        if(player.worldObj.isRemote)
+        {
+        	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty + player.height, tz, 2, 65382, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
+        }
     }
 
     @Override
@@ -124,29 +186,39 @@ public class ItemSimpleSpell extends Item implements ISpellCostClient
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         IFocusToken focus = getPreparedFocus(stack);
 
+        
+        
         if (focus != null)
         {
-            return focus.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+            return focus.onItemUse(stack, player, worldIn, pos, side, hitX, hitY, hitZ);
         }
 
-        return super.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+        return super.onItemUse(stack, player, worldIn, pos, side, hitX, hitY, hitZ);
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer playerIn, int timeLeft)
+    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer player, int timeLeft)
     {
         IFocusToken focus = getPreparedFocus(stack);
 
         if (focus != null)
         {
-            focus.onPlayerStoppedUsing(stack, worldIn, playerIn, timeLeft);
+            focus.onPlayerStoppedUsing(stack, worldIn, player, timeLeft);
         }
+        
+        String pp = "R" + player.getName();
+        if (!player.worldObj.isRemote) 
+        {
+        	pp = "S" + player.getName();
+        }
+        
+        beam.put(pp, null);
 
-        super.onPlayerStoppedUsing(stack, worldIn, playerIn, timeLeft);
+        super.onPlayerStoppedUsing(stack, worldIn, player, timeLeft);
     }
 
     @Override
