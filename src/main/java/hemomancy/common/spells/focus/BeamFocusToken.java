@@ -40,6 +40,8 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	private double beamLength = 10.0;
 	public boolean ignoreEntities = false;
 	
+	public boolean collideWithLiquids = true;
+	
 	public float manaCost = 0;
 	public float bloodCost = 0;
 
@@ -198,12 +200,10 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 //			player.clearItemInUse();
 			return;
 		}
-		
-		boolean flag = false;
-		
+				
 		World world = player.worldObj;
 		
-		MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, flag, beamLength, true, !ignoreEntities);
+		MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, collideWithLiquids, beamLength, true, !ignoreEntities);
 
         if (mop == null)
         {

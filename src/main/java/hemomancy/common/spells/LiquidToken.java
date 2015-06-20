@@ -3,9 +3,11 @@ package hemomancy.common.spells;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.beam.IBeamToken;
+import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 
-public class LiquidToken extends SpellToken implements IProjectileToken
+public class LiquidToken extends SpellToken implements IProjectileToken, IBeamToken
 {
 
     public LiquidToken()
@@ -39,4 +41,10 @@ public class LiquidToken extends SpellToken implements IProjectileToken
         // TODO Auto-generated method stub
         return 3 * potency * potency;
     }
+
+	@Override
+	public void manipulateBeamFocus(BeamFocusToken focus, float potency) 
+	{
+		focus.collideWithLiquids = false;
+	}
 }
