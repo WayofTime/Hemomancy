@@ -23,6 +23,7 @@ public class FireToken extends SpellToken implements IProjectileToken, IElementa
 	{
 		focus.damageMap.put("fire", (double) (5 * potency));
 		focus.damageModifierList.add(new FireProjectileEffect(potency));
+		focus.onCollideEffectList.add(new FireProjectileEffect(potency));
 	}
 
 	@Override

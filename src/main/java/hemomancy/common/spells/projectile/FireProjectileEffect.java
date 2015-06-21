@@ -1,11 +1,16 @@
 package hemomancy.common.spells.projectile;
 
+import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IProjectileDamageModifier;
 import hemomancy.common.util.DamageCounterExtendedProperties;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
-public class FireProjectileEffect implements IProjectileDamageModifier
+public class FireProjectileEffect implements IProjectileDamageModifier, IOnProjectileCollideEffect
 {
     public float potency;
 
@@ -19,7 +24,6 @@ public class FireProjectileEffect implements IProjectileDamageModifier
     {
         if (hitEntity instanceof EntityLivingBase)
         {
-            hitEntity.setFire(2 * (int) potency);
             DamageCounterExtendedProperties properties = DamageCounterExtendedProperties.get((EntityLivingBase) hitEntity);
             int iceCounter = properties.getIceCounters();
             if (iceCounter > 0)
@@ -37,4 +41,24 @@ public class FireProjectileEffect implements IProjectileDamageModifier
     {
         return this.potency;
     }
+
+	@Override
+	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity) 
+	{
+        hitEntity.setFire(2 * (int) potency);
+
+		return !hitEntity.isImmuneToFire();
+	}
+
+	@Override
+	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
+	{
+		return false;
+	}
+
+	@Override
+	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
+	{
+		return false;
+	}
 }
