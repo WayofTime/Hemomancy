@@ -24,7 +24,6 @@ import hemomancy.common.spells.PushToken;
 import hemomancy.common.spells.SpiritForceToken;
 import hemomancy.common.spells.StaticElectricityToken;
 import hemomancy.common.spells.StickyToken;
-import hemomancy.common.spells.TestingSpellToken;
 import hemomancy.common.spells.UndeadTurnToken;
 import hemomancy.common.spells.WaterToken;
 import hemomancy.common.spells.focus.BeamFocusToken;
@@ -129,7 +128,6 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("liquidToken", new LiquidToken());
         SpellTokenRegistry.registerSpellToken("iceToken", new IceToken());
         SpellTokenRegistry.registerSpellToken("fireToken", new FireToken());
-        SpellTokenRegistry.registerSpellToken("testingToken", new TestingSpellToken());
         SpellTokenRegistry.registerSpellToken("blockBreakToken", new BlockBreakToken());
         SpellTokenRegistry.registerSpellToken("fireSmeltToken", new FireSmeltToken());
         SpellTokenRegistry.registerSpellToken("plasmaBombToken", new PlasmaBombToken());

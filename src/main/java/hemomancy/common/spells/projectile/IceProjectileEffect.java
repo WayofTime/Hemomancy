@@ -30,13 +30,13 @@ public class IceProjectileEffect implements IOnProjectileCollideEffect
 	@Override
 	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
 	{
-		return this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
+		return this.createIceAtPoint(projectile, shooter, pos.getX(), pos.getY(), pos.getZ(), potency);
 	}
 
 	@Override
 	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
 	{
-		return this.createIceAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 3.0f);
+		return this.createIceAtPoint(projectile, shooter, pos.getX(), pos.getY(), pos.getZ(), potency / 3.0f);
 	}
 	
 	private boolean createIceAtPoint(Entity projectile, EntityPlayer shooter, double x, double y, double z, float potency)

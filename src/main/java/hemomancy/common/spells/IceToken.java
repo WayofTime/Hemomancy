@@ -1,16 +1,19 @@
 package hemomancy.common.spells;
 
-import java.util.List;
-
 import hemomancy.api.spells.EnumElement;
 import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.beam.IBeamToken;
+import hemomancy.common.spells.beam.IceBlockBeamEffect;
+import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.projectile.IceProjectileEffect;
 
-public class IceToken extends SpellToken implements IProjectileToken, IElementalToken
+import java.util.List;
+
+public class IceToken extends SpellToken implements IProjectileToken, IBeamToken, IElementalToken
 {
 	public IceToken() 
 	{
@@ -53,5 +56,11 @@ public class IceToken extends SpellToken implements IProjectileToken, IElemental
 	public EnumElement getElement() 
 	{
 		return EnumElement.ICE;
+	}
+
+	@Override
+	public void manipulateBeamFocus(BeamFocusToken focus, float potency) 
+	{
+		focus.blockEffects.add(new IceBlockBeamEffect(potency));
 	}
 }

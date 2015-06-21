@@ -90,7 +90,7 @@ public class ProjectileFocusToken extends SpellToken implements IFocusToken
 			return stack;
 		}
 		
-		if(ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
+		if(!world.isRemote && ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
 		{
 			EntitySpellProjectile projectile = new EntitySpellProjectile(world, player, this, tokenList);
 

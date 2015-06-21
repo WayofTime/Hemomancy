@@ -34,13 +34,13 @@ public class PlantingProjectileEffect implements IOnProjectileCollideEffect
 	@Override
 	public boolean onProjectileCollideWithBlock(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
 	{
-		return this.growPlantsAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency);
+		return this.growPlantsAtPoint(projectile, shooter, pos.getX(), pos.getY(), pos.getZ(), potency);
 	}
 
 	@Override
 	public boolean onProjectileBounce(Entity projectile, EntityPlayer shooter, BlockPos pos, IBlockState state, EnumFacing sideHit) 
 	{
-		return this.growPlantsAtPoint(projectile, shooter, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, potency / 2.0f);
+		return this.growPlantsAtPoint(projectile, shooter, pos.getX(), pos.getY(), pos.getZ(), potency / 2.0f);
 	}
 	
 	private boolean growPlantsAtPoint(Entity projectile, EntityPlayer shooter, double x, double y, double z, float potency)
