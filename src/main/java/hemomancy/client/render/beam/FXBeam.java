@@ -127,10 +127,10 @@ public class FXBeam extends EntityFX
   private float rotPitch = 0.0F;
   private float prevYaw = 0.0F;
   private float prevPitch = 0.0F;
-  private double tX = 0.0D;
+  private double tX = 0.0D; //Positions
   private double tY = 0.0D;
   private double tZ = 0.0D;
-  private double ptX = 0.0D;
+  private double ptX = 0.0D; //Previous positions
   private double ptY = 0.0D;
   private double ptZ = 0.0D;
   private int type = 0;

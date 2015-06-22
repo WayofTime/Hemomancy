@@ -34,6 +34,7 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	private List<SpellToken> tokenList = new ArrayList();
 	
 	private static HashMap<String, Object> beam = new HashMap();
+	private static HashMap<String, Object> circle = new HashMap();
 	
 	public List<IBlockBeamEffect> blockEffects = new ArrayList();
 	
@@ -103,13 +104,38 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
     @Override
     public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int timeLeft)
     {
-    	String pp = "R" + player.getName();
-        if (!player.worldObj.isRemote) 
-        {
-        	pp = "S" + player.getName();
-        }
+    	String pp = getStringForPlayer(player);
         
         beam.put(pp, null);
+        circle.put(pp, null);
+        
+        BlockPos pos = lastPosMap.get(pp);
+        int timer = hitCount.containsKey(pp) ? hitCount.get(pp) : 0;
+        if(timer > 0 && pos != null)
+        {
+        	float potency = 1;
+    		
+    		for(SpellToken token : tokenList)
+    		{
+    			token.setPotencyOfToken(potency);
+    		}
+    		
+    		SpellCastEvent castEvent = new SpellCastEvent(player, tokenList, potency);
+    		if(MinecraftForge.EVENT_BUS.post(castEvent))
+    		{
+    			return;
+    		}
+    		
+    		for(SpellToken token : this.tokenList)
+    		{
+    			if(token instanceof IBeamToken)
+    			{
+    				((IBeamToken)token).manipulateBeamFocus(this, potency);
+    			}
+    		}
+    		
+    		
+        }
     }
 
     @Override
@@ -162,6 +188,10 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 		return token instanceof IBeamToken;
 	}
 
+	static HashMap<String, BlockPos> lastPosMap = new HashMap();
+	static HashMap<String, Integer> hitCount = new HashMap();
+	static HashMap<String, EnumFacing> lastSideMap = new HashMap();
+	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count) 
 	{
@@ -196,7 +226,6 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 		
 		if(player.worldObj.getTotalWorldTime() % 5 == 0 && !ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
 		{
-			System.out.println("what?");
 //			player.clearItemInUse();
 			return;
 		}
@@ -252,13 +281,9 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	
 	public void renderBeam(EntityPlayer player)
 	{
-		String pp = "R" + player.getName();
-        if (!player.worldObj.isRemote) 
-        {
-        	pp = "S" + player.getName();
-        }
+		String pp = getStringForPlayer(player);
         
-        MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false);
+        MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, collideWithLiquids, beamLength, true, !ignoreEntities);
         Vec3 vec = player.getLookVec();
         double tx = player.posX + vec.xCoord * 10.0;
         double ty = player.posY + player.height + vec.yCoord * 10.0;
@@ -275,6 +300,21 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
         if(player.worldObj.isRemote)
         {
         	beam.put(pp, Hemomancy.proxy.beamCont(player.worldObj, player, tx, ty, tz, 2, 0x0cff00, false, impact > 0 ? 2.0F : 0.0F, beam.get(pp), impact));
+        	if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+        	{
+        		circle.put(pp, Hemomancy.proxy.beamContact(player.worldObj, player, mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ(), mop.sideHit, 2, 0x0cff00, false, impact > 0 ? 2.0F : 0.0F, circle.get(pp), impact));
+        	}
         }
+	}
+	
+	public static String getStringForPlayer(EntityPlayer player)
+	{
+		String pp = "R" + player.getName();
+        if (!player.worldObj.isRemote) 
+        {
+        	pp = "S" + player.getName();
+        }
+        
+        return pp;
 	}
 }

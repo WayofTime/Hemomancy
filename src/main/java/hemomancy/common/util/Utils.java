@@ -20,6 +20,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -255,12 +256,56 @@ public class Utils extends ApiUtils
         }
 	}
 	
+	public static boolean spawnEarthPillarAtPoint(World world, BlockPos pos, EnumFacing sideHit, int height, float radius, float featheringChance, float featheringDepth)
+	{
+		if(height <= 0)
+		{
+			return false;
+		}
+		
+		boolean success = false;
+		
+		int intRadius = (int)Math.ceil(radius);
+		for(int i = 0; i <= height; i++)
+		{
+			float effectiveRadius = radius - i * radius / (float)height;
+			
+			for(int j = -intRadius; j <= intRadius; j++)
+			{
+				for(int k = -intRadius; k <= intRadius; k++)
+				{					
+					if (j * j + k * k >= (effectiveRadius + 0.50f) * (effectiveRadius + 0.50f))
+                    {
+                        continue;
+                    }
+                    
+                    if(j * j + k * k >= (effectiveRadius + 0.50f - featheringDepth) * (effectiveRadius + 0.50f - featheringDepth) && rand.nextFloat() < featheringChance)
+                    {
+                    	continue;
+                    }
+                    
+					//This is "rotation" logic to rotate the block based on the facing hit
+					BlockPos newPos = pos.add(sideHit.getFrontOffsetX() != 0 ? (i * sideHit.getFrontOffsetX()) : (sideHit.getFrontOffsetZ() != 0 ? k : j), sideHit.getFrontOffsetY() != 0 ? i * sideHit.getFrontOffsetY() : j, sideHit.getFrontOffsetZ() != 0 ? (i * sideHit.getFrontOffsetZ()) : (k));
+//					IBlockState newState = world.getBlockState(newPos);
+					
+					if(world.isAirBlock(newPos))
+					{
+						world.setBlockState(newPos, Blocks.stone.getDefaultState());
+						
+						success = true;
+					}
+				}
+			}
+		}
+		
+		return success;
+	}
+	
 	public static MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer player, boolean useLiquids)
     {
         return getMovingObjectPositionFromPlayer(world, player, useLiquids, 5.0d, false);
     }
 	
-	//TODO Add similar method that will also search for entities along the path.
 	public static MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer player, boolean useLiquids, double distance, boolean ignorePlayerBlockReach)
 	{
 		return getMovingObjectPositionFromPlayer(world, player, useLiquids, distance, ignorePlayerBlockReach, false);

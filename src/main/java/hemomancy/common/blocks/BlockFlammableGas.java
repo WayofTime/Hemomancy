@@ -29,7 +29,7 @@ public class BlockFlammableGas extends BlockContainer
     {
         if (!world.isRemote)
         {
-        	world.createExplosion(explosion.getExplosivePlacedBy(), pos.getX(), pos.getY(), pos.getZ(), 3, false);
+        	world.createExplosion(explosion.getExplosivePlacedBy(), pos.getX(), pos.getY(), pos.getZ(), 3, true);
         }
     }
 	
