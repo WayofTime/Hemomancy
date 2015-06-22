@@ -13,6 +13,7 @@ import hemomancy.common.spells.ChainToken;
 import hemomancy.common.spells.ExplosionToken;
 import hemomancy.common.spells.FireSmeltToken;
 import hemomancy.common.spells.FireToken;
+import hemomancy.common.spells.FlameGasToken;
 import hemomancy.common.spells.GrowthToken;
 import hemomancy.common.spells.HarvestToken;
 import hemomancy.common.spells.HealToken;
@@ -141,6 +142,7 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("plantingToken", new PlantingToken());
         SpellTokenRegistry.registerSpellToken("healToken", new HealToken());
         SpellTokenRegistry.registerSpellToken("staticElectricityToken", new StaticElectricityToken());
+        SpellTokenRegistry.registerSpellToken("flameGasToken", new FlameGasToken());
     }
 
     public void registerHarvestHandlers()
