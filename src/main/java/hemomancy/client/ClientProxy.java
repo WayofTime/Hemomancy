@@ -122,14 +122,11 @@ public class ClientProxy extends CommonProxy
 		     beamcon = new FXFloatingCircle(worldObj, p, tx, ty, tz, sideHit, c.getRed() / 255.0F, c.getGreen() / 255.0F, c.getBlue() / 255.0F, 8);
 		       
 		     beamcon.setType(type);
-		     beamcon.setEndMod(endmod);
-		     beamcon.setReverse(reverse);
 		     FMLClientHandler.instance().getClient().effectRenderer.addEffect(beamcon);
 	     }
 	     else
 	     {
 		     beamcon.updateCircle(tx, ty, tz, sideHit);
-		     beamcon.setEndMod(endmod);
 		     beamcon.impact = impact;
 	     }
 	     

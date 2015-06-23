@@ -324,7 +324,7 @@ public class GuiSpellTinkerer extends GuiContainer
 		switch(clickedButton.id)
 		{
 		case 20:
-			startingIndex = Math.min(startingIndex + 1, Math.max((int)Math.ceil(((ContainerSpellTinkerer)this.inventorySlots).inventory.tokenList.size() / 9.0) - startingIndex - tokenRows, 0));
+			startingIndex = Math.min(startingIndex + 1, Math.max((int)Math.ceil(((ContainerSpellTinkerer)this.inventorySlots).inventory.tokenList.size() / 8.0) - startingIndex - tokenRows, 0));
 			break;
 		case 21:
 			startingIndex = Math.max(0, startingIndex - 1);
