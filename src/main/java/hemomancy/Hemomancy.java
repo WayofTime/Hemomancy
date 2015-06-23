@@ -10,6 +10,7 @@ import hemomancy.common.harvest.HemomancyHarvestHandler;
 import hemomancy.common.spells.BlockBreakToken;
 import hemomancy.common.spells.BounceToken;
 import hemomancy.common.spells.ChainToken;
+import hemomancy.common.spells.DisrobeToken;
 import hemomancy.common.spells.EarthSpikeToken;
 import hemomancy.common.spells.ExplosionToken;
 import hemomancy.common.spells.FireSmeltToken;
@@ -147,6 +148,7 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("flameGasToken", new FlameGasToken());
         SpellTokenRegistry.registerSpellToken("earthSpikeToken", new EarthSpikeToken());
         SpellTokenRegistry.registerSpellToken("poisonToken", new PoisonToken());
+        SpellTokenRegistry.registerSpellToken("disrobeToken", new DisrobeToken());
     }
 
     public void registerHarvestHandlers()

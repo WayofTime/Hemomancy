@@ -3,6 +3,7 @@ package hemomancy.common.util;
 import hemomancy.api.ApiUtils;
 import hemomancy.api.harvest.HarvestRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ import net.minecraft.block.BlockBush;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -375,5 +377,62 @@ public class Utils extends ApiUtils
         }
         
         return mop;
+	}
+	
+	public static boolean disrobeEntity(EntityLivingBase hitEntity, float chance, int armourSlot)
+	{
+		if(hitEntity == null)
+		{
+			return false;
+		}
+		
+		if(rand.nextFloat() < chance)
+		{
+			ItemStack armourStack = hitEntity.getEquipmentInSlot(armourSlot + 1);
+			
+			if(armourStack == null)
+			{
+				List<ItemStack> itemList = new ArrayList();
+				itemList.add(armourStack);
+				
+				Utils.dropItemsAtPosition(hitEntity.worldObj, hitEntity.posX, hitEntity.posY, hitEntity.posZ, itemList);
+				hitEntity.setCurrentItemOrArmor(armourSlot + 1, null);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public static boolean disarmEntity(EntityLivingBase hitEntity, float chance)
+	{
+		if(hitEntity == null)
+		{
+			return false;
+		}
+		
+		if(hitEntity instanceof EntityPlayer) //TODO If the player has an open gui, return false.
+		{
+			
+		}
+		
+		if(rand.nextFloat() < chance)
+		{
+			ItemStack heldStack = hitEntity.getEquipmentInSlot(0);
+			
+			if(heldStack == null)
+			{
+				List<ItemStack> itemList = new ArrayList();
+				itemList.add(heldStack);
+				
+				Utils.dropItemsAtPosition(hitEntity.worldObj, hitEntity.posX, hitEntity.posY, hitEntity.posZ, itemList);
+				hitEntity.setCurrentItemOrArmor(0, null);
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
