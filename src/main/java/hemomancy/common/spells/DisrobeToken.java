@@ -14,7 +14,7 @@ public class DisrobeToken extends SpellToken implements IProjectileToken, IEleme
 {
 	public DisrobeToken() 
 	{
-		super("textures/tokens/ExplosionToken.png");
+		super("textures/tokens/DisrobeToken.png");
 		this.setUnlocalizedName("token.tokenDisrobe.name");
 	}
 

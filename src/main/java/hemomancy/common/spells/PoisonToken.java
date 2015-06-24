@@ -5,16 +5,19 @@ import hemomancy.api.spells.IElementalToken;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.common.spells.beam.IBeamToken;
+import hemomancy.common.spells.beam.PoisonEntityBeamEffect;
+import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.projectile.PoisonProjectileEffect;
 
 import java.util.List;
 
-public class PoisonToken extends SpellToken implements IProjectileToken, IElementalToken
+public class PoisonToken extends SpellToken implements IProjectileToken, IBeamToken, IElementalToken
 {
 	public PoisonToken() 
 	{
-		super("textures/tokens/FireToken.png");
+		super("textures/tokens/PoisonToken.png");
 		this.setUnlocalizedName("token.tokenPoison.name");
 	}
 
@@ -47,12 +50,18 @@ public class PoisonToken extends SpellToken implements IProjectileToken, IElemen
 	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
 		// TODO Auto-generated method stub
-		return 7 * potency*potency;
+		return 3 * potency*potency;
 	}
 
 	@Override
 	public EnumElement getElement() 
 	{
 		return EnumElement.POISON;
+	}
+
+	@Override
+	public void manipulateBeamFocus(BeamFocusToken focus, float potency) 
+	{
+		focus.entityEffects.add(new PoisonEntityBeamEffect(potency));
 	}
 }

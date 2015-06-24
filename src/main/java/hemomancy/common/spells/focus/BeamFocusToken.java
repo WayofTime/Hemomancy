@@ -9,6 +9,7 @@ import hemomancy.api.spells.SpellToken;
 import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.beam.IBeamToken;
 import hemomancy.common.spells.beam.IBlockBeamEffect;
+import hemomancy.common.spells.beam.IEntityBeamEffect;
 import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	private static HashMap<String, Object> circle = new HashMap();
 	
 	public List<IBlockBeamEffect> blockEffects = new ArrayList();
+	public List<IEntityBeamEffect> entityEffects = new ArrayList();
 	
 	private double beamLength = 10.0;
 	public boolean ignoreEntities = false;
@@ -195,6 +197,8 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	@Override
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count) 
 	{
+		int timeUsed = count;
+		
 		float potency = 1;
 		
 		for(SpellToken token : tokenList)
@@ -270,7 +274,24 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 					break;
 					
 				case ENTITY:
-//					mop.entityHit.attackEntityFrom(DamageSource.cactus, 3);
+					if(mop.entityHit instanceof EntityLivingBase)
+					{
+						EntityLivingBase livingEntity = (EntityLivingBase)mop.entityHit;
+						
+						for(IEntityBeamEffect effect : entityEffects)
+						{
+							if(effect.onBeamHitEntity(player, livingEntity, timeUsed))
+							{
+								success = true;
+							}
+						}
+						
+						if(success)
+						{
+							ProficiencyHandler.handleSuccessfulSpellCast(player, tokenList, potency, SpellSituation.BEAM_ENTITY);
+						}
+					}
+					
 					break;
 				default:
 					return;

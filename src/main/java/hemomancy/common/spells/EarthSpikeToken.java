@@ -20,7 +20,7 @@ public class EarthSpikeToken extends SpellToken implements IProjectileToken, ITo
 {
 	public EarthSpikeToken() 
 	{
-		super("textures/tokens/DigToken.png");
+		super("textures/tokens/EarthSpikeToken.png");
 		this.setUnlocalizedName("token.tokenEarthSpike.name");
 	}
 

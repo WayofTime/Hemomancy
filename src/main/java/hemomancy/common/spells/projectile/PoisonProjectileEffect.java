@@ -28,9 +28,10 @@ public class PoisonProjectileEffect implements IOnProjectileCollideEffect
 	@Override
 	public boolean onProjectileHitEntity(Entity projectile, EntityPlayer shooter, EntityLivingBase hitEntity) 
 	{
-        if(!hitEntity.isPotionActive(Potion.poison))
+		PotionEffect eff = new PotionEffect(Potion.poison.id, (int)(200 * potency), Math.max((int)Math.floor(potency - 0.01), 0));
+        if(!hitEntity.isPotionActive(Potion.poison) && hitEntity.isPotionApplicable(eff))
         {
-        	hitEntity.addPotionEffect(new PotionEffect(Potion.poison.id, (int)(200 * potency), Math.max((int)Math.floor(potency - 0.01), 0)));
+        	hitEntity.addPotionEffect(eff);
         	return true;
         }
 

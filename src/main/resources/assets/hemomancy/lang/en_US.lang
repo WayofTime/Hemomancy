@@ -12,6 +12,8 @@ tile.blockSpellTinkerer.name=Spell Tinkerer
 #Token localization
 token.tokenProjectile.name=Projectile
 token.tokenSelf.name=Self
+token.tokenBeam.name=Beam
+token.tokenTouch.name=Touch
 
 token.tokenBounce.name=Bounce
 token.tokenSticky.name=Sticky
@@ -26,3 +28,13 @@ token.tokenChain.name=Succession
 token.tokenSpiritForce.name=Spirit Force
 token.tokenHeal.name=Heal
 token.tokenPlasmaBomb.name=Plasma Bomb
+token.tokenEarthSpike.name=Earthen Spike
+token.tokenPoison.name=Poison
+token.tokenPlanting.name=Plant
+token.tokenFlameGas.name=Flammable Gas
+token.tokenDisrobe.name=Disrobe
+token.tokenUndeadTurn.name=Turn Undead
+token.tokenStatic.name=Static
+token.tokenHarvest.name=Harvest
+token.tokenGrowth.name=Grow
+token.tokenPush.name=Push
