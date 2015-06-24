@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public interface ISelfToken
 {
-    public void applyEffectToPlayer(World world, EntityPlayer player, SelfFocusToken focus, float potency);
+    public boolean applyEffectToPlayer(World world, EntityPlayer player, SelfFocusToken focus, float potency);
 
-    public int getSelfTokenUseDuration();
+    public int getSelfTokenUseDurationMinimum();
 }

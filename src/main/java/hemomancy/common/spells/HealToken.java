@@ -30,9 +30,15 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
     }
 
     @Override
-    public void applyEffectToPlayer(World world, EntityPlayer player, SelfFocusToken focus, float potency)
+    public boolean applyEffectToPlayer(World world, EntityPlayer player, SelfFocusToken focus, float potency)
     {
-        player.heal(3 * potency);
+    	if(player.getHealth() < player.getMaxHealth())
+    	{
+    		player.heal(5 * potency);
+    		return true;
+    	}
+        
+    	return false;
     }
 
     @Override
@@ -54,9 +60,9 @@ public class HealToken extends SpellToken implements IProjectileToken, ISelfToke
     }
 
     @Override
-    public int getSelfTokenUseDuration()
+    public int getSelfTokenUseDurationMinimum()
     {
-        return 5;
+        return 60;
     }
 
     @Override

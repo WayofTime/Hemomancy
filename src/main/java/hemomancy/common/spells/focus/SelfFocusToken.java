@@ -24,7 +24,7 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
 
     public float manaCost = 0;
     public float bloodCost = 0;
-    public int focusUseDuration = 50;
+    public int focusUseDuration = 20;
 
     public SelfFocusToken()
     {
@@ -43,9 +43,16 @@ public class SelfFocusToken extends SpellToken implements IFocusToken
 
             if (token instanceof ISelfToken)
             {
-                this.focusUseDuration += ((ISelfToken) token).getSelfTokenUseDuration();
+                this.setUseDurationToMinimum(((ISelfToken) token).getSelfTokenUseDurationMinimum());
             }
         }
+    }
+    
+    public int setUseDurationToMinimum(int min)
+    {
+    	focusUseDuration = Math.max(focusUseDuration, min);
+    	
+    	return focusUseDuration;
     }
     
     @Override
