@@ -4,10 +4,11 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
+import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
-import hemomancy.api.spells.projectile.IProjectileDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
+import hemomancy.common.spells.effect.IAfterHitEffect;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 
 import java.util.ArrayList;
@@ -64,7 +65,8 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     
     public List<IOnProjectileUpdateEffect> onUpdateEffectList = new ArrayList();
 	public List<IOnProjectileCollideEffect> onCollideEffectList = new ArrayList();
-	public List<IProjectileDamageModifier> damageModifierList = new ArrayList();
+	public List<IDamageModifier> damageModifierList = new ArrayList();
+	public List<IAfterHitEffect> afterHitEffects = new ArrayList();
 	
 	public int bouncesLeft = 0;
 	public int stickyTimer = 0;
@@ -724,11 +726,13 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     	{
     		numberAttacked++;
     		
+    		float currentHealth = mop.entityHit instanceof EntityLivingBase ? ((EntityLivingBase)mop.entityHit).getHealth() : 0;
+    		
     		if(this.dealDamage)
     		{
 				float newDamage = (float) this.damage;
 		    	
-		    	for(IProjectileDamageModifier modifier : this.damageModifierList)
+		    	for(IDamageModifier modifier : this.damageModifierList)
 		    	{
 		    		newDamage += modifier.getDamageAgainstEntity(this.shootingEntity, mop.entityHit, this.damage);
 		    	}
@@ -773,6 +777,7 @@ public class EntitySpellProjectile extends Entity implements IProjectile
     		}
             
             
+    		
             if(mop.entityHit instanceof EntityLivingBase)
             {
     			boolean success = false;
@@ -790,6 +795,19 @@ public class EntitySpellProjectile extends Entity implements IProjectile
             		sendProficiencyCollide = true;
             	}
             }
+            
+            float damageDealt = mop.entityHit instanceof EntityLivingBase ? currentHealth - ((EntityLivingBase)mop.entityHit).getHealth() : 0;
+			
+            if(damageDealt > 0)
+            {
+            	for(IAfterHitEffect effect : afterHitEffects)
+    			{
+    				if(effect.applyAfterDamageEffect(this.shootingEntity, mop.entityHit, damageDealt))
+    				{
+    					sendProficiencyAttack = true;
+    				}
+    			} 
+            }    
     	}
     	
     	if(sendProficiencyAttack)

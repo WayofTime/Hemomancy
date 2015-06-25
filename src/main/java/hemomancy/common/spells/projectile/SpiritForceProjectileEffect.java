@@ -1,11 +1,11 @@
 package hemomancy.common.spells.projectile;
 
-import hemomancy.api.spells.projectile.IProjectileDamageModifier;
+import hemomancy.api.spells.projectile.IDamageModifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 
-public class SpiritForceProjectileEffect implements IProjectileDamageModifier
+public class SpiritForceProjectileEffect implements IDamageModifier
 {
     public float potency;
 

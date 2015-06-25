@@ -1,7 +1,7 @@
 package hemomancy.common.spells.projectile;
 
+import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
-import hemomancy.api.spells.projectile.IProjectileDamageModifier;
 import hemomancy.common.util.DamageCounterExtendedProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
-public class FireProjectileEffect implements IProjectileDamageModifier, IOnProjectileCollideEffect
+public class FireProjectileEffect implements IDamageModifier, IOnProjectileCollideEffect
 {
     public float potency;
 

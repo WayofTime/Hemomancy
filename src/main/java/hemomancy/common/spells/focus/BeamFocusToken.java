@@ -6,15 +6,19 @@ import hemomancy.api.events.SpellCastEvent;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.beam.IBeamToken;
 import hemomancy.common.spells.beam.IBlockBeamEffect;
 import hemomancy.common.spells.beam.IEntityBeamEffect;
+import hemomancy.common.spells.effect.IAfterHitEffect;
 import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -24,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -37,11 +42,15 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	private static HashMap<String, Object> beam = new HashMap();
 	private static HashMap<String, Object> circle = new HashMap();
 	
+	public Map<String, Float> damageMap = new HashMap();
 	public List<IBlockBeamEffect> blockEffects = new ArrayList();
 	public List<IEntityBeamEffect> entityEffects = new ArrayList();
+	public List<IDamageModifier> damageModifierList = new ArrayList();
+	public List<IAfterHitEffect> afterHitEffects = new ArrayList();
 	
 	private double beamLength = 10.0;
 	public boolean ignoreEntities = false;
+	public boolean dealDamage = true;
 	
 	public boolean collideWithLiquids = true;
 	
@@ -278,6 +287,30 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 					{
 						EntityLivingBase livingEntity = (EntityLivingBase)mop.entityHit;
 						
+						float currentHealth = livingEntity.getHealth();
+						
+						if(this.dealDamage)
+			    		{
+							float damage = 0;
+							
+							for(Entry<String, Float> entry : this.damageMap.entrySet())
+							{
+								damage += entry.getValue();
+							}
+							
+							float newDamage = damage;
+					    	
+					    	for(IDamageModifier modifier : this.damageModifierList)
+					    	{
+					    		newDamage += modifier.getDamageAgainstEntity(player, mop.entityHit, damage);
+					    	}
+					    	
+					    	if(livingEntity.attackEntityFrom(DamageSource.causePlayerDamage(player), newDamage))
+					    	{
+					    		
+					    	}
+			    		}
+						
 						for(IEntityBeamEffect effect : entityEffects)
 						{
 							if(effect.onBeamHitEntity(player, livingEntity, timeUsed))
@@ -285,6 +318,19 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 								success = true;
 							}
 						}
+						
+						float damageDealt = currentHealth - livingEntity.getHealth();
+						
+						if(damageDealt > 0)
+			            {
+							for(IAfterHitEffect effect : afterHitEffects)
+							{
+								if(effect.applyAfterDamageEffect(player, livingEntity, damageDealt))
+								{
+									success = true;
+								}
+							}
+			            }
 						
 						if(success)
 						{
