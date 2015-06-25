@@ -21,6 +21,7 @@ import hemomancy.common.spells.HarvestToken;
 import hemomancy.common.spells.HealToken;
 import hemomancy.common.spells.IceToken;
 import hemomancy.common.spells.IcicleDropToken;
+import hemomancy.common.spells.LifeDrainToken;
 import hemomancy.common.spells.LiquidToken;
 import hemomancy.common.spells.PlantingToken;
 import hemomancy.common.spells.PlasmaBombToken;
@@ -153,6 +154,7 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("disrobeToken", new DisrobeToken());
         SpellTokenRegistry.registerSpellToken("regenToken", new RegenToken());
         SpellTokenRegistry.registerSpellToken("icicleDropToken", new IcicleDropToken());
+        SpellTokenRegistry.registerSpellToken("lifeDrainToken", new LifeDrainToken());
     }
 
     public void registerHarvestHandlers()

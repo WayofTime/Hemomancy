@@ -9,9 +9,9 @@ import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.beam.IBeamToken;
 import hemomancy.api.spells.beam.IBlockBeamEffect;
 import hemomancy.api.spells.beam.IEntityBeamEffect;
+import hemomancy.api.spells.effect.IAfterHitEffect;
 import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
-import hemomancy.common.spells.effect.IAfterHitEffect;
 import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;

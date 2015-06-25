@@ -1,4 +1,4 @@
-package hemomancy.common.spells.effect;
+package hemomancy.api.spells.effect;
 
 import net.minecraft.entity.Entity;
 

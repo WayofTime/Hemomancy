@@ -4,11 +4,11 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
+import hemomancy.api.spells.effect.IAfterHitEffect;
 import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
 import hemomancy.common.spells.ProficiencyHandler;
-import hemomancy.common.spells.effect.IAfterHitEffect;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 
 import java.util.ArrayList;
