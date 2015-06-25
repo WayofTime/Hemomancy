@@ -79,6 +79,7 @@ public class RegenToken extends SpellToken implements IProjectileToken, IBeamTok
         if(player.isPotionApplicable(eff))
         {
         	player.addPotionEffect(eff);
+        	
         	return true;
         }
 

@@ -4,6 +4,7 @@ import hemomancy.api.ApiUtils;
 import hemomancy.api.harvest.HarvestRegistry;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -288,7 +289,6 @@ public class Utils extends ApiUtils
                     
 					//This is "rotation" logic to rotate the block based on the facing hit
 					BlockPos newPos = pos.add(sideHit.getFrontOffsetX() != 0 ? (i * sideHit.getFrontOffsetX()) : (sideHit.getFrontOffsetZ() != 0 ? k : j), sideHit.getFrontOffsetY() != 0 ? i * sideHit.getFrontOffsetY() : j, sideHit.getFrontOffsetZ() != 0 ? (i * sideHit.getFrontOffsetZ()) : (k));
-//					IBlockState newState = world.getBlockState(newPos);
 					
 					if(world.isAirBlock(newPos))
 					{
@@ -301,6 +301,45 @@ public class Utils extends ApiUtils
 		}
 		
 		return success;
+	}
+	
+	public static List<BlockPos> getPillarBlocksForPoint(BlockPos pos, EnumFacing facing, int height, float radius, float featheringChance, float featheringDepth)
+	{
+		List<BlockPos> posList = new LinkedList();
+		
+		if(height <= 0)
+		{
+			return posList;
+		}
+				
+		int intRadius = (int)Math.ceil(radius);
+		for(int i = 0; i <= height; i++)
+		{
+			float effectiveRadius = radius - i * radius / (float)height;
+			
+			for(int j = -intRadius; j <= intRadius; j++)
+			{
+				for(int k = -intRadius; k <= intRadius; k++)
+				{					
+					if (j * j + k * k >= (effectiveRadius + 0.50f) * (effectiveRadius + 0.50f))
+                    {
+                        continue;
+                    }
+                    
+                    if(j * j + k * k >= (effectiveRadius + 0.50f - featheringDepth) * (effectiveRadius + 0.50f - featheringDepth) && rand.nextFloat() < featheringChance)
+                    {
+                    	continue;
+                    }
+                    
+					//This is "rotation" logic to rotate the block based on the facing hit
+					BlockPos newPos = pos.add(facing.getFrontOffsetX() != 0 ? (i * facing.getFrontOffsetX()) : (facing.getFrontOffsetZ() != 0 ? k : j), facing.getFrontOffsetY() != 0 ? i * facing.getFrontOffsetY() : j, facing.getFrontOffsetZ() != 0 ? (i * facing.getFrontOffsetZ()) : (k));
+					
+					posList.add(newPos);
+				}
+			}
+		}
+		
+		return posList;
 	}
 	
 	public static MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer player, boolean useLiquids)
