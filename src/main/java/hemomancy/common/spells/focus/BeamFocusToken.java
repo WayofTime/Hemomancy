@@ -6,11 +6,11 @@ import hemomancy.api.events.SpellCastEvent;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.beam.IBeamToken;
+import hemomancy.api.spells.beam.IBlockBeamEffect;
+import hemomancy.api.spells.beam.IEntityBeamEffect;
 import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
-import hemomancy.common.spells.beam.IBeamToken;
-import hemomancy.common.spells.beam.IBlockBeamEffect;
-import hemomancy.common.spells.beam.IEntityBeamEffect;
 import hemomancy.common.spells.effect.IAfterHitEffect;
 import hemomancy.common.util.Utils;
 

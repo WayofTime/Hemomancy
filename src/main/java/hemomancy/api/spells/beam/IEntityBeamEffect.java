@@ -1,4 +1,4 @@
-package hemomancy.common.spells.beam;
+package hemomancy.api.spells.beam;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

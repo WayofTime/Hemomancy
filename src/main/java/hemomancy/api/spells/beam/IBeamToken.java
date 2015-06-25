@@ -1,4 +1,4 @@
-package hemomancy.common.spells.beam;
+package hemomancy.api.spells.beam;
 
 import hemomancy.common.spells.focus.BeamFocusToken;
 

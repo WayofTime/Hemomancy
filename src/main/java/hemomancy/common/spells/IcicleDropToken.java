@@ -6,31 +6,31 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.beam.IBeamToken;
-import hemomancy.common.spells.beam.PoisonEntityBeamEffect;
+import hemomancy.common.spells.beam.IceBlockBeamEffect;
 import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
-import hemomancy.common.spells.projectile.PoisonProjectileEffect;
+import hemomancy.common.spells.projectile.IcicleDropProjectileEffect;
 
 import java.util.List;
 
-public class PoisonToken extends SpellToken implements IProjectileToken, IBeamToken, IElementalToken
+public class IcicleDropToken extends SpellToken implements IProjectileToken, IBeamToken, IElementalToken
 {
-	public PoisonToken() 
+	public IcicleDropToken() 
 	{
-		super("textures/tokens/PoisonToken.png");
-		this.setUnlocalizedName("token.tokenPoison.name");
+		super("textures/tokens/IceToken.png");
+		this.setUnlocalizedName("token.tokenIcicle.name");
 	}
 
 	@Override
 	public void manipulateProjectileFocus(ProjectileFocusToken focus, float potency) 
 	{
-		focus.onCollideEffectList.add(new PoisonProjectileEffect(potency));
+		focus.onCollideEffectList.add(new IcicleDropProjectileEffect(potency));
 	}
 
 	@Override
 	public SpellToken copy() 
 	{
-		return new PoisonToken();
+		return new IcicleDropToken();
 	}
 	
 	@Override
@@ -42,26 +42,24 @@ public class PoisonToken extends SpellToken implements IProjectileToken, IBeamTo
 	@Override
 	public float getBloodCostOfToken(IFocusToken token, float potency) 
 	{
-		// TODO Auto-generated method stub
-		return 1 * potency*potency;
+		return 3 * potency*potency;
 	}
 
 	@Override
 	public float getManaCostOfToken(IFocusToken token, float potency) 
 	{
-		// TODO Auto-generated method stub
-		return 3 * potency*potency;
+		return 5 * potency*potency;
 	}
 
 	@Override
 	public EnumElement getElement() 
 	{
-		return EnumElement.POISON;
+		return EnumElement.ICE;
 	}
 
 	@Override
 	public void manipulateBeamFocus(BeamFocusToken focus, float potency) 
 	{
-		focus.entityEffects.add(new PoisonEntityBeamEffect(potency));
+		focus.blockEffects.add(new IceBlockBeamEffect(potency));
 	}
 }

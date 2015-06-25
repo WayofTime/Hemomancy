@@ -1,5 +1,6 @@
 package hemomancy.common.spells.beam;
 
+import hemomancy.api.spells.beam.IBlockBeamEffect;
 import hemomancy.common.util.Utils;
 
 import java.util.HashMap;

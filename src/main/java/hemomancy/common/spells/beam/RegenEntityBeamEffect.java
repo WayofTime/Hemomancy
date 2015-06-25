@@ -1,5 +1,6 @@
 package hemomancy.common.spells.beam;
 
+import hemomancy.api.spells.beam.IEntityBeamEffect;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;

@@ -6,7 +6,7 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.ISelfToken;
 import hemomancy.api.spells.SpellToken;
-import hemomancy.common.spells.beam.IBeamToken;
+import hemomancy.api.spells.beam.IBeamToken;
 import hemomancy.common.spells.beam.RegenEntityBeamEffect;
 import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
