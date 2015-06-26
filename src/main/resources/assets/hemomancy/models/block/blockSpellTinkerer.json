@@ -1,6 +1,11 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "hemomancy:blocks/SpellTinkerer"
+        "up": "hemomancy:blocks/SpellTinkererTop",
+        "down": "hemomancy:blocks/SpellTinkererBottom",
+        "north": "hemomancy:blocks/SpellTinkererSide1",
+        "south": "hemomancy:blocks/SpellTinkererSide1",
+        "east": "hemomancy:blocks/SpellTinkererSide2",
+        "west": "hemomancy:blocks/SpellTinkererSide2"
     }
 }
