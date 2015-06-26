@@ -12,6 +12,7 @@ import hemomancy.api.spells.beam.IEntityBeamEffect;
 import hemomancy.api.spells.effect.IAfterHitEffect;
 import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
+import hemomancy.common.spells.beam.IBeamManipulatorBlock;
 import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;
@@ -263,6 +264,15 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 					BlockPos pos = mop.getBlockPos();
 					IBlockState state = world.getBlockState(pos);
 					Block block = state.getBlock();
+					
+					if(block instanceof IBeamManipulatorBlock)
+					{
+						if(((IBeamManipulatorBlock)block).manipulateBeam(this, world, pos, player))
+						{
+							return;
+						}
+					}
+					
 					EnumFacing sideHit = mop.sideHit;
 					
 					for(IBlockBeamEffect effect : blockEffects)
