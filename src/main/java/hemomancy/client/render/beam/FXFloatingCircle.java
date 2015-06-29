@@ -123,8 +123,6 @@ public class FXFloatingCircle extends EntityFX
 		Tessellator tessellator = Tessellator.getInstance();
 
 		tessellator.draw();
-//    	tessellator.func_78381_a();
-//	  	wr.finishDrawing();
     
 		GL11.glPushMatrix();
 		float rot = (float)(this.worldObj.provider.getWorldTime() % (360 / this.rotationspeed) * this.rotationspeed) + this.rotationspeed * f;
@@ -153,9 +151,7 @@ public class FXFloatingCircle extends EntityFX
 	    
 	    GL11.glEnable(3042);
 	    GL11.glBlendFunc(770, 1);
-	
-//    	GL11.glDepthMask(false);
-	    
+		    
 	    double prex = this.player.prevPosX;
 	    double prey = this.player.prevPosY;
 	    double prez = this.player.prevPosZ;
@@ -197,8 +193,6 @@ public class FXFloatingCircle extends EntityFX
 			GL11.glRotatef(90.0f, 0, 1, 0);
 			break;
 	    }
-	
-	    
 	    
     	GL11.glPushMatrix();
     	GL11.glTranslatef(0.5f, 0.5f, 0);

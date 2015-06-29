@@ -6,6 +6,7 @@ import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.client.GuiHandler;
 import hemomancy.common.CommonProxy;
 import hemomancy.common.commands.CommandHUD;
+import hemomancy.common.commands.CommandSummonControlTest;
 import hemomancy.common.harvest.HemomancyHarvestHandler;
 import hemomancy.common.spells.BlockBreakToken;
 import hemomancy.common.spells.BounceToken;
@@ -120,6 +121,7 @@ public class Hemomancy
     public void initCommands(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandHUD());
+        event.registerServerCommand(new CommandSummonControlTest());
     }
 
     public void registerSpellTokens()

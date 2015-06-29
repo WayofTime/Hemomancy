@@ -70,7 +70,8 @@ public class FXBeam extends EntityFX
     this.tX = x;
     this.tY = y;
     this.tZ = z;
-    while (this.particleMaxAge - this.particleAge < 4) {
+    while (this.particleMaxAge - this.particleAge < 4) 
+    {
       this.particleMaxAge += 1;
     }
   }
@@ -88,7 +89,7 @@ public class FXBeam extends EntityFX
     this.prevYaw = this.rotYaw;
     this.prevPitch = this.rotPitch;
     
-    float xd = (float)(this.player.posX - this.tX);
+    float xd = (float)(this.player.posX - this.tX); //Basically the beam position...
     float yd = (float)(this.player.posY + this.offset - this.tY);
     float zd = (float)(this.player.posZ - this.tZ);
     
@@ -127,7 +128,7 @@ public class FXBeam extends EntityFX
   private float rotPitch = 0.0F;
   private float prevYaw = 0.0F;
   private float prevPitch = 0.0F;
-  private double tX = 0.0D; //Positions
+  private double tX = 0.0D; //Positions of the tip of the beam
   private double tY = 0.0D;
   private double tZ = 0.0D;
   private double ptX = 0.0D; //Previous positions

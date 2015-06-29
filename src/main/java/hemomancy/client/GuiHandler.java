@@ -6,6 +6,8 @@ import hemomancy.client.gui.ContainerSpellTinkerer;
 import hemomancy.client.gui.GuiManaTab;
 import hemomancy.client.gui.GuiSpellTinkerer;
 import hemomancy.client.gui.InventorySpellTinkerer;
+import hemomancy.client.gui.entity.ContainerSummonControl;
+import hemomancy.client.gui.entity.GuiSummonControl;
 import hemomancy.client.hud.ContainerHUDElements;
 import hemomancy.client.hud.GuiHUDElements;
 import hemomancy.common.blocks.tileEntity.TESpellTinkerer;
@@ -21,6 +23,7 @@ public class GuiHandler implements IGuiHandler
 	public static final int MANA_GUI = 0;
 	public static final int HUD_GUI = 1;
 	public static final int SPELL_TINKERER_GUI = 2;
+	public static final int SUMMON_GUI = 3;
 	
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
@@ -38,6 +41,8 @@ public class GuiHandler implements IGuiHandler
         	{
         		return new ContainerSpellTinkerer(player, new InventorySpellTinkerer(player, (TESpellTinkerer)tile));
         	}
+        case SUMMON_GUI:
+        	return new ContainerSummonControl(player);
         }
 
         return null;
@@ -59,6 +64,8 @@ public class GuiHandler implements IGuiHandler
         	{
         		return new GuiSpellTinkerer(player, new InventorySpellTinkerer(player, (TESpellTinkerer)tile));
         	}
+        case SUMMON_GUI:
+        	return new GuiSummonControl(player);
         }
 
         return null;

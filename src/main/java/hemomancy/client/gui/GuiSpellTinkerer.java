@@ -373,13 +373,6 @@ public class GuiSpellTinkerer extends GuiContainer
                 this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 
                 this.drawTexturedModalRect(this.xPosition, this.yPosition, xOffset, yOffset, this.width, this.height);
-
-//                if (!GuiBeacon.beaconGuiTextures.equals(this.field_146145_o))
-//                {
-//                    mc.getTextureManager().bindTexture(this.field_146145_o);
-//                }
-
-//                this.drawTexturedModalRect(this.xPosition + 2, this.yPosition + 2, this.xOffset, this.yOffset, 18, 18);
             }
         }
 	}
