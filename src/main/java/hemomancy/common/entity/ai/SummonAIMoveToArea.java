@@ -2,9 +2,7 @@ package hemomancy.common.entity.ai;
 
 import hemomancy.common.entity.mob.EntitySummon;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 
 public class SummonAIMoveToArea extends EntityAIBase
 {
@@ -27,26 +25,23 @@ public class SummonAIMoveToArea extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (this.theEntity.isWithinHomeDistanceCurrentPosition())
+        if (this.theEntity.isWithinWorkArea())
         {
             return false;
         }
         else
         {
-            BlockPos blockpos = this.theEntity.func_180486_cf();
-            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.theEntity, 16, 7, new Vec3((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ()));
-
-            if (vec3 == null)
+            BlockPos blockpos = this.theEntity.getCentralPositionInBlockArea();
+            if(blockpos == null)
             {
-                return false;
+            	return false;
             }
-            else
-            {
-                this.movePosX = vec3.xCoord;
-                this.movePosY = vec3.yCoord;
-                this.movePosZ = vec3.zCoord;
-                return true;
-            }
+            
+            this.movePosX = blockpos.getX();
+            this.movePosY = blockpos.getY();
+            this.movePosZ = blockpos.getZ();
+            return true;
+            
         }
     }
 
