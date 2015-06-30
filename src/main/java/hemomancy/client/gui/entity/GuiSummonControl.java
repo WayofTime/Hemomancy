@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -146,6 +145,16 @@ public class GuiSummonControl extends GuiContainer
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException
 	{		
+		if(button == 0)
+		{
+			SummonControlButton ctrButton = getButtonAtLocation(mouseX, mouseY);
+			
+			if(ctrButton != null && ctrButton.onButtonClicked())
+			{
+				return;
+			}
+		}
+		
 		super.mouseClicked(mouseX, mouseY, button);
 	}
 	
@@ -179,14 +188,4 @@ public class GuiSummonControl extends GuiContainer
 
         this.drawHoveringText(list, x, y, (fontRendererObj));
     }
-	
-	@Override
-	protected void actionPerformed(GuiButton clickedButton)
-	{
-		switch(clickedButton.id)
-		{
-		case 20:
-			
-		}
-	}
 }

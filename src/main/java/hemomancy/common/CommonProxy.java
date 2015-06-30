@@ -4,6 +4,7 @@ import hemomancy.Hemomancy;
 import hemomancy.common.blocks.tileEntity.TEFlammableGas;
 import hemomancy.common.blocks.tileEntity.TEPlasma;
 import hemomancy.common.blocks.tileEntity.TESpellTinkerer;
+import hemomancy.common.entity.mob.EntitySummon;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;
 import hemomancy.common.network.PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,6 +64,7 @@ public class CommonProxy
     public void registerEntityTrackers()
     {
     	EntityRegistry.registerModEntity(EntitySpellProjectile.class, "entitySpellProjectile", 0, Hemomancy.instance, 128, 1, true);
+    	EntityRegistry.registerModEntity(EntitySummon.class, "entitySummon", 1, Hemomancy.instance, 128, 1, true);
     }
 
     public void registerTickHandlers()

@@ -37,6 +37,7 @@ import hemomancy.common.spells.WaterToken;
 import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
 import hemomancy.common.spells.focus.SelfFocusToken;
+import hemomancy.common.spells.focus.SummonFocusToken;
 import hemomancy.common.spells.focus.TouchFocusToken;
 import hemomancy.common.util.PlayerSyncHandler;
 
@@ -130,6 +131,7 @@ public class Hemomancy
         SpellTokenRegistry.registerSpellToken("selfToken", new SelfFocusToken());
         SpellTokenRegistry.registerSpellToken("touchToken", new TouchFocusToken());
         SpellTokenRegistry.registerSpellToken("beamToken", new BeamFocusToken());
+        SpellTokenRegistry.registerSpellToken("summonToken", new SummonFocusToken());
 
         SpellTokenRegistry.registerSpellToken("bounceToken", new BounceToken());
         SpellTokenRegistry.registerSpellToken("stickyToken", new StickyToken());

@@ -342,7 +342,6 @@ public class EntitySpellProjectile extends Entity implements IProjectile
 
             float f2;
             float f3;
-            float f4;
 
             if (movingobjectposition != null)
             {
