@@ -5,6 +5,7 @@ import hemomancy.api.events.SpellCastEvent;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.ISelfToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.summon.ISummonToken;
 import hemomancy.common.entity.mob.EntitySummon;
 
 import java.util.ArrayList;
@@ -74,10 +75,19 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
         {
             return stack;
         }
+        
+        for(SpellToken token : this.tokenList)
+		{
+			if(token instanceof ISummonToken)
+			{
+				((ISummonToken)token).manipulateSummonFocus(this, potency);
+			}
+		}
 
         if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)) && !world.isRemote)
         {
         	EntitySummon summon = new EntitySummon(world, player.posX, player.posY, player.posZ);
+        	prepareSummon(world, summon, potency);
         	world.spawnEntityInWorld(summon);
         	
 //            for (SpellToken token : tokenList)
@@ -90,6 +100,12 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
         }
         
         return stack;
+    }
+    
+    public void prepareSummon(World world, EntitySummon summon, float potency)
+    {
+    	summon.tokenList = this.tokenList;
+    	summon.potency = potency;
     }
 
     @Override

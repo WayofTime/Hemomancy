@@ -4,7 +4,7 @@ import hemomancy.common.entity.mob.EntitySummon;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.BlockPos;
 
-public class SummonAIMoveToArea extends EntityAIBase
+public class SummonAIMoveToNextTargetBlock extends EntityAIBase
 {
     private EntitySummon theEntity;
     private double movePosX;
@@ -12,7 +12,7 @@ public class SummonAIMoveToArea extends EntityAIBase
     private double movePosZ;
     private double movementSpeed;
 
-    public SummonAIMoveToArea(EntitySummon summon, double moveSpeed)
+    public SummonAIMoveToNextTargetBlock(EntitySummon summon, double moveSpeed)
     {
         this.theEntity = summon;
         this.movementSpeed = moveSpeed;
@@ -25,13 +25,14 @@ public class SummonAIMoveToArea extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (!this.theEntity.workArea || this.theEntity.isWithinWorkArea())
+        if (!this.theEntity.workArea || !this.theEntity.isWithinWorkArea())
         {
             return false;
         }
         else
         {
-            BlockPos blockpos = this.theEntity.getCentralPositionInBlockArea();
+        	System.out.println("Executing");
+            BlockPos blockpos = this.theEntity.getNextTargetBlock();
             if(blockpos == null)
             {
             	return false;
