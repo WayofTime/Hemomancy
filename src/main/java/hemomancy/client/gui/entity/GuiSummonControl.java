@@ -1,13 +1,18 @@
 package hemomancy.client.gui.entity;
 
+import hemomancy.common.summon.SummonHandler;
+import hemomancy.common.util.Utils;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -16,6 +21,8 @@ public class GuiSummonControl extends GuiContainer
 {
 	public static final ResourceLocation resourceLocation = new ResourceLocation("hemomancy", "textures/gui/SpellTinkerer.png");
 	public final EntityPlayer player;
+	public final UUID summonId;
+	public final MovingObjectPosition mop;
 	
 	public List<SummonControlButton> controlButtonList = new ArrayList();
 	
@@ -23,10 +30,14 @@ public class GuiSummonControl extends GuiContainer
 	int numberOfButtonsOnCircle = 3;
 	int buttonSize = 16;
 	
+	double range = 10;
+	
 	public GuiSummonControl(EntityPlayer player) 
 	{
 		super(new ContainerSummonControl(player));
 		this.player = player;
+		this.summonId = SummonHandler.getActiveSummon(player);
+		this.mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false, range, true, true);
 		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
 		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
 		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
@@ -149,7 +160,7 @@ public class GuiSummonControl extends GuiContainer
 		{
 			SummonControlButton ctrButton = getButtonAtLocation(mouseX, mouseY);
 			
-			if(ctrButton != null && ctrButton.onButtonClicked())
+			if(ctrButton != null && ctrButton.onClientButtonClicked(summonId, mop))
 			{
 				return;
 			}

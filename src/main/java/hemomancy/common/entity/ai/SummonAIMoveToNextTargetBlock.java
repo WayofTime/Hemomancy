@@ -31,7 +31,6 @@ public class SummonAIMoveToNextTargetBlock extends EntityAIBase
         }
         else
         {
-        	System.out.println("Executing");
             BlockPos blockpos = this.theEntity.getNextTargetBlock();
             if(blockpos == null)
             {

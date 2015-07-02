@@ -1,15 +1,18 @@
 package hemomancy.common.entity.mob;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
+import hemomancy.api.spells.summon.ISummonBlockManipulator;
 import hemomancy.common.entity.ai.SummonAIManipulateTargetBlock;
 import hemomancy.common.entity.ai.SummonAIMoveToArea;
 import hemomancy.common.entity.ai.SummonAIMoveToNextTargetBlock;
 import hemomancy.common.spells.focus.SummonFocusToken;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -17,7 +20,6 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -30,7 +32,9 @@ public class EntitySummon extends EntityZombie
 	public List<SpellToken> tokenList = new ArrayList();
     public SummonFocusToken focus = null;
 	
-	public String targetKey;
+    public List<ISummonBlockManipulator> blockManipulatorList = new ArrayList();
+    
+	public String targetKey = "";
 	
 	public BlockPos targetPos = null;
 	
@@ -112,7 +116,7 @@ public class EntitySummon extends EntityZombie
         if(focusToken instanceof SummonFocusToken)
         {
         	this.focus = (SummonFocusToken)focusToken;
-//        	this.focus.prepareProjectileForEntity(worldObj, this, potency);
+        	this.focus.prepareSummon(null, worldObj, this, potency);
         }
         
         workArea = tagCompound.getBoolean("workArea");
@@ -249,10 +253,19 @@ public class EntitySummon extends EntityZombie
 	
 	public boolean canManipulateBlock(BlockPos pos)
 	{
-		Block block = worldObj.getBlockState(pos).getBlock();
-		if((block == Blocks.dirt || block == Blocks.grass) && worldObj.isAirBlock(pos.up()))
+		IBlockState state = worldObj.getBlockState(pos);
+		Block block = state.getBlock();
+//		if((block == Blocks.dirt || block == Blocks.grass) && worldObj.isAirBlock(pos.up()))
+//		{
+//			return true;
+//		}
+		
+		for(ISummonBlockManipulator effect : this.blockManipulatorList)
 		{
-			return true;
+			if(effect.canManipulateBlock(this, worldObj, pos, block, state))
+			{
+				return true;
+			}
 		}
 		
 		return false;
@@ -322,10 +335,18 @@ public class EntitySummon extends EntityZombie
 	{
 		IBlockState state = worldObj.getBlockState(pos);
 		Block block = state.getBlock();
-		if(block == Blocks.dirt || block == Blocks.grass)
+//		if(block == Blocks.dirt || block == Blocks.grass)
+//		{
+//			worldObj.setBlockState(pos, Blocks.farmland.getStateFromMeta(7));
+//			return true;
+//		}
+		
+		for(ISummonBlockManipulator effect : this.blockManipulatorList)
 		{
-			worldObj.setBlockState(pos, Blocks.farmland.getStateFromMeta(7));
-			return true;
+			if(effect.manipulateBlock(this, worldObj, pos, block, state))
+			{
+				return true;
+			}
 		}
 		
 		return false;

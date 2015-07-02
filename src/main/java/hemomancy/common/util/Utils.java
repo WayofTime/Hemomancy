@@ -474,4 +474,9 @@ public class Utils extends ApiUtils
 		
 		return false;
 	}
+	
+	public static boolean isWithinRangeOfBlock(Entity entity, BlockPos pos, double range)
+	{
+		return pos.distanceSqToCenter(entity.posX, entity.posY, entity.posZ) < range*range;
+	}
 }

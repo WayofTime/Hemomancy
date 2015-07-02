@@ -23,7 +23,6 @@ public class SummonAIManipulateTargetBlock extends EntityAIBase
         {
             return false;
         }
-    	
 
         return this.theEntity.performActionOnBlockInRange(1);
     }
