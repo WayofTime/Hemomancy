@@ -1,11 +1,13 @@
 package hemomancy.common.spells.focus;
 
+import hemomancy.Hemomancy;
 import hemomancy.api.ApiUtils;
 import hemomancy.api.events.SpellCastEvent;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.summon.ISummonBlockManipulator;
 import hemomancy.api.spells.summon.ISummonToken;
+import hemomancy.client.GuiHandler;
 import hemomancy.common.entity.ai.SummonAIWoodCutter;
 import hemomancy.common.entity.mob.EntitySummon;
 import hemomancy.common.spells.summon.WoodCutterBlockManipulator;
@@ -94,6 +96,7 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
         if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)) && !world.isRemote)
         {
         	EntitySummon summon = new EntitySummon(world, player.posX, player.posY, player.posZ);
+        	SummonHandler.registerSummonToPlayer(player, summon); 
         	prepareSummon(stack, world, summon, potency);
         	world.spawnEntityInWorld(summon);
         	
@@ -116,7 +119,8 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
     	
     	if(stack != null)
     	{
-    		this.setControlledSummonId(stack, summon.getPersistentID());
+    		UUID id = summon.getPersistentID();
+    		this.setControlledSummonId(stack, id);
     	}
     	
     	blockManipulatorList.add(new WoodCutterBlockManipulator(1));
@@ -137,13 +141,20 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
     {
     	if(this.hasControlledSummon(stack))
     	{
-    		if(SummonHandler.hasRegisteredSummon(player, this.getControlledSummonId(stack)))
+    		UUID id = this.getControlledSummonId(stack);
+
+    		if(SummonHandler.hasRegisteredSummon(player, id) && (world.isRemote ? true : SummonHandler.getSummonEntity(world, this.getControlledSummonId(stack)) != null))
     		{
-    			
+        		System.out.println("Hi!");
+
+        		SummonHandler.setActiveSummon(player, id);
+    			player.openGui(Hemomancy.instance, GuiHandler.SUMMON_GUI, world, (int)player.posX, (int)player.posY, (int)player.posZ);
     			
         		return stack;
     		}else
     		{
+    			SummonHandler.removeSummonFromPlayer(player, this.getControlledSummonId(stack));
+    			
     			this.setControlledSummonId(stack, null);
     		}
     	}
@@ -259,7 +270,7 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
 		stack.getTagCompound().setLong("Summon1", id.getMostSignificantBits());
 		stack.getTagCompound().setLong("Summon2", id.getLeastSignificantBits());
 		
-		stack.getTagCompound().setBoolean("hasUUID", false);
+		stack.getTagCompound().setBoolean("hasUUID", true);
 	}
 	
 	public boolean hasControlledSummon(ItemStack stack)

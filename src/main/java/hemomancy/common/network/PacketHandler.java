@@ -16,5 +16,7 @@ public class PacketHandler  //Server-to-client packet handler
     	INSTANCE.registerMessage(ExpPacketProcessor.class, ExpPacketProcessor.class, 2, Side.CLIENT);
     	INSTANCE.registerMessage(TESpellTinkererPacketProcessor.class, TESpellTinkererPacketProcessor.class, 3, Side.SERVER);
     	INSTANCE.registerMessage(SpellTokenPacketProcessor.class, SpellTokenPacketProcessor.class, 4, Side.CLIENT);
+    	INSTANCE.registerMessage(SummonSyncPacketProcessor.class, SummonSyncPacketProcessor.class, 5, Side.CLIENT);
+    	INSTANCE.registerMessage(SummonSendToPacketProcessor.class, SummonSendToPacketProcessor.class, 6, Side.SERVER);
     }
 }

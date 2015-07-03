@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
@@ -28,6 +29,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class Utils extends ApiUtils
 {
@@ -478,5 +480,15 @@ public class Utils extends ApiUtils
 	public static boolean isWithinRangeOfBlock(Entity entity, BlockPos pos, double range)
 	{
 		return pos.distanceSqToCenter(entity.posX, entity.posY, entity.posZ) < range*range;
+	}
+	
+	public static Entity getEntityForUUID(World world, UUID id)
+	{
+		if(world instanceof WorldServer)
+		{
+			return ((WorldServer)world).getEntityFromUuid(id);
+		}
+		
+		return null;
 	}
 }

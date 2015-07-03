@@ -1,8 +1,13 @@
 package hemomancy.client.gui.entity;
 
+import hemomancy.common.network.PacketHandler;
+import hemomancy.common.network.SummonSendToPacketProcessor;
+import hemomancy.common.summon.SummonHandler;
+
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,6 +38,13 @@ public class SummonControlButton
 	 */
 	public boolean onClientButtonClicked(UUID id, MovingObjectPosition mop)
 	{
+		if(id != null && mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+		{
+			PacketHandler.INSTANCE.sendToServer(new SummonSendToPacketProcessor(id, SummonHandler.getKeyStringForPlayer(Minecraft.getMinecraft().thePlayer), mop.getBlockPos()));
+			
+			return true;
+		}
+		
 		return false;
 	}
 	

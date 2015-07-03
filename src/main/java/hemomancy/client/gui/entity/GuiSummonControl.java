@@ -32,15 +32,14 @@ public class GuiSummonControl extends GuiContainer
 	
 	double range = 10;
 	
-	public GuiSummonControl(EntityPlayer player) 
+	public GuiSummonControl(EntityPlayer player) //TODO: Write the buttons from the summon onto the player's NBT so that they may see which buttons are allowed.
 	{
 		super(new ContainerSummonControl(player));
+		System.out.println("Client");
 		this.player = player;
 		this.summonId = SummonHandler.getActiveSummon(player);
 		this.mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false, range, true, true);
-		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
-		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
-		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
+		this.controlButtonList = ((ContainerSummonControl)this.inventorySlots).controlButtonList;
 	}
 	
 	@Override
