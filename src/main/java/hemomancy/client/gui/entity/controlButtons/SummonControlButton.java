@@ -1,7 +1,7 @@
-package hemomancy.client.gui.entity;
+package hemomancy.client.gui.entity.controlButtons;
 
 import hemomancy.common.network.PacketHandler;
-import hemomancy.common.network.SummonSendToPacketProcessor;
+import hemomancy.common.network.SummonBlockPosPacketProcessor;
 import hemomancy.common.summon.SummonHandler;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class SummonControlButton
 	{
 		if(id != null && mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 		{
-			PacketHandler.INSTANCE.sendToServer(new SummonSendToPacketProcessor(id, SummonHandler.getKeyStringForPlayer(Minecraft.getMinecraft().thePlayer), mop.getBlockPos()));
+			PacketHandler.INSTANCE.sendToServer(new SummonBlockPosPacketProcessor(SummonBlockPosPacketProcessor.SEND_TO, id, SummonHandler.getKeyStringForPlayer(Minecraft.getMinecraft().thePlayer), mop.getBlockPos()));
 			
 			return true;
 		}

@@ -31,7 +31,7 @@ public class SummonAIMoveToArea extends EntityAIBase
         }
         else
         {
-            BlockPos blockpos = this.theEntity.getCentralPositionInBlockArea();
+            BlockPos blockpos = this.theEntity.idleLocation;
             if(blockpos == null)
             {
             	return false;

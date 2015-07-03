@@ -1,5 +1,6 @@
 package hemomancy.client.gui.entity;
 
+import hemomancy.client.gui.entity.controlButtons.SummonControlButton;
 import hemomancy.common.summon.SummonHandler;
 
 import java.util.ArrayList;
@@ -21,10 +22,6 @@ public class ContainerSummonControl extends Container
 		super();
 		this.player = player;
 		this.summonId = SummonHandler.getActiveSummon(player);
-
-		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
-		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
-		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
 	}
 	
 	@Override

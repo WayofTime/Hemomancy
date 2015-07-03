@@ -11,7 +11,6 @@ import hemomancy.common.spells.focus.SummonFocusToken;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -38,10 +37,15 @@ public class EntitySummon extends EntityZombie
 	
 	public BlockPos targetPos = null;
 	
-	public BlockPos startingBlockArea = new BlockPos(0,0,0);
-	public BlockPos endingBlockArea = new BlockPos(0,0,0);
+	public BlockPos startingBlockArea = new BlockPos(0, 0, 0);
+	public BlockPos endingBlockArea = new BlockPos(0, 0, 0);
+	public boolean startWasLastSet = false;
+	public boolean workAreaWasReset = true;
+	
+	public BlockPos idleLocation = new BlockPos(0, 0, 0);
 	
 	public boolean workArea = false;
+	public boolean isIdle = true;
 	
 	public EntitySummon(World worldIn) 
 	{
@@ -59,11 +63,13 @@ public class EntitySummon extends EntityZombie
 		
 		startingBlockArea = new BlockPos(xPos - 5 + 10, yPos - 2, zPos - 5);
 		endingBlockArea = new BlockPos(xPos + 5 + 10, yPos + 2, zPos + 5);
+				
 		targetPos = new BlockPos(this);
 		
 		workArea = true;
+		isIdle = true;
 		
-		System.out.println("Summon on " + (world.isRemote ? "client" : "server") + " side");
+		idleLocation = this.getCentralPositionInBlockArea();	
 	}
 	
 	@Override
@@ -88,12 +94,18 @@ public class EntitySummon extends EntityZombie
         tagCompound.setTag("tokenList", SpellTokenRegistry.writeSpellTokensToTag(tokenList, new NBTTagCompound()));
         
         tagCompound.setBoolean("workArea", workArea);
+        tagCompound.setBoolean("isIdle", isIdle);
+        tagCompound.setBoolean("workAreaWasReset", workAreaWasReset);
         
         tagCompound.setString("targetKey", targetKey);
         
         tagCompound.setInteger("targetX", targetPos.getX());
         tagCompound.setInteger("targetY", targetPos.getY());
         tagCompound.setInteger("targetZ", targetPos.getZ());
+        
+        tagCompound.setInteger("idleX", idleLocation.getX());
+        tagCompound.setInteger("idleY", idleLocation.getY());
+        tagCompound.setInteger("idleZ", idleLocation.getZ());
         
         tagCompound.setInteger("startX", startingBlockArea.getX());
         tagCompound.setInteger("startY", startingBlockArea.getY());
@@ -102,6 +114,8 @@ public class EntitySummon extends EntityZombie
         tagCompound.setInteger("endX", endingBlockArea.getX());
         tagCompound.setInteger("endY", endingBlockArea.getY());
         tagCompound.setInteger("endZ", endingBlockArea.getZ());
+        
+        tagCompound.setBoolean("startWasLastSet", startWasLastSet);
     }
 	
 	@Override
@@ -120,12 +134,17 @@ public class EntitySummon extends EntityZombie
         }
         
         workArea = tagCompound.getBoolean("workArea");
+        isIdle = tagCompound.getBoolean("isIdle");
+        workAreaWasReset = tagCompound.getBoolean("workAreaWasReset");
         
         targetKey = tagCompound.getString("targetKey");
         
         targetPos = new BlockPos(tagCompound.getInteger("targetX"), tagCompound.getInteger("targetY"), tagCompound.getInteger("targetZ"));
+        idleLocation = new BlockPos(tagCompound.getInteger("idleX"), tagCompound.getInteger("idleY"), tagCompound.getInteger("idleZ"));
         startingBlockArea = new BlockPos(tagCompound.getInteger("startX"), tagCompound.getInteger("startY"), tagCompound.getInteger("startZ"));
         endingBlockArea = new BlockPos(tagCompound.getInteger("endX"), tagCompound.getInteger("endY"), tagCompound.getInteger("endZ"));
+        
+        startWasLastSet = tagCompound.getBoolean("startWasLastSet");
     }
 	
 	@Override
@@ -148,7 +167,7 @@ public class EntitySummon extends EntityZombie
 		return null;
 	}
 	
-	public boolean isWithinWorkArea()
+	public boolean isWithinWorkArea(double xPos, double yPos, double zPos)
 	{
 		int minX;
 		int minY;
@@ -187,7 +206,17 @@ public class EntitySummon extends EntityZombie
 			minZ = endingBlockArea.getZ();
 		}
 		
-		return this.posX > minX && this.posX < maxX + 1 && this.posY > minY && this.posY < maxY + 1 && this.posZ > minZ && this.posZ < maxZ + 1;
+		return xPos >= minX && xPos < maxX + 1 && yPos >= minY && yPos < maxY + 1 && zPos >= minZ && zPos < maxZ + 1;
+	}
+	
+	public boolean isWithinWorkArea()
+	{
+		return isWithinWorkArea(posX, posY, posZ);
+	}
+	
+	public boolean isWithinWorkArea(BlockPos pos)
+	{
+		return isWithinWorkArea(pos.getX(), pos.getY(), pos.getZ());
 	}
 	
 	public BlockPos getNextTargetBlock()

@@ -1,5 +1,8 @@
 package hemomancy.client.gui.entity;
 
+import hemomancy.client.gui.entity.controlButtons.MarkCentralLocationButton;
+import hemomancy.client.gui.entity.controlButtons.MarkWorkAreaButton;
+import hemomancy.client.gui.entity.controlButtons.SummonControlButton;
 import hemomancy.common.summon.SummonHandler;
 import hemomancy.common.util.Utils;
 
@@ -39,7 +42,10 @@ public class GuiSummonControl extends GuiContainer
 		this.player = player;
 		this.summonId = SummonHandler.getActiveSummon(player);
 		this.mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false, range, true, true);
-		this.controlButtonList = ((ContainerSummonControl)this.inventorySlots).controlButtonList;
+
+		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
+		controlButtonList.add(new MarkCentralLocationButton());
+		controlButtonList.add(new MarkWorkAreaButton());
 	}
 	
 	@Override

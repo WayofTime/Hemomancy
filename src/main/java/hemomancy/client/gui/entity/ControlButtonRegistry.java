@@ -1,5 +1,7 @@
 package hemomancy.client.gui.entity;
 
+import hemomancy.client.gui.entity.controlButtons.SummonControlButton;
+
 import java.util.HashMap;
 
 public class ControlButtonRegistry 
