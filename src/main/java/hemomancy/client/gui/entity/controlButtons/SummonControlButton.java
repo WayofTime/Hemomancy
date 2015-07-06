@@ -55,11 +55,11 @@ public class SummonControlButton
 	
 	public String getLocalizedName()
 	{
-		return "Name";
+		return "Go here!";
 	}
 	
 	public void getHoverText(List<String> list)
 	{
-		list.add("Button!");
+		list.add("Tells the summon to go here.");
 	}
 }

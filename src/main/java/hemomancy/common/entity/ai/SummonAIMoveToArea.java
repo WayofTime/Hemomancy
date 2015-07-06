@@ -1,6 +1,7 @@
 package hemomancy.common.entity.ai;
 
 import hemomancy.common.entity.mob.EntitySummon;
+import hemomancy.common.util.Utils;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.BlockPos;
 
@@ -25,12 +26,13 @@ public class SummonAIMoveToArea extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (!this.theEntity.workArea || this.theEntity.isWithinWorkArea())
+        if (Utils.isWithinRangeOfBlock(theEntity, theEntity.idleLocation, 3))
         {
             return false;
         }
         else
         {
+        	System.out.println("I am being called to execute");
             BlockPos blockpos = this.theEntity.idleLocation;
             if(blockpos == null)
             {
@@ -51,6 +53,7 @@ public class SummonAIMoveToArea extends EntityAIBase
     @Override
     public boolean continueExecuting()
     {
+    	System.out.println("Executing...");
         return !this.theEntity.getNavigator().noPath();
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -30,6 +31,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Utils extends ApiUtils
 {
@@ -139,6 +142,9 @@ public class Utils extends ApiUtils
 		}
 		
 		block.dropBlockAsItem(world, pos, state, 0);
+
+		world.destroyBlock(pos, false);
+		
 		world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
 		
 		return true;
@@ -490,5 +496,11 @@ public class Utils extends ApiUtils
 		}
 		
 		return null;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void spawnBreakParticles(BlockPos pos, IBlockState state)
+	{
+		Minecraft.getMinecraft().effectRenderer.func_180533_a(pos, state);
 	}
 }

@@ -8,6 +8,7 @@ import hemomancy.common.entity.ai.SummonAIManipulateTargetBlock;
 import hemomancy.common.entity.ai.SummonAIMoveToArea;
 import hemomancy.common.entity.ai.SummonAIMoveToNextTargetBlock;
 import hemomancy.common.spells.focus.SummonFocusToken;
+import hemomancy.common.summon.SummonHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -47,6 +49,8 @@ public class EntitySummon extends EntityZombie
 	public boolean workArea = false;
 	public boolean isIdle = true;
 	
+	public String ownerKey = "";
+	
 	public EntitySummon(World worldIn) 
 	{
 		super(worldIn);
@@ -72,11 +76,17 @@ public class EntitySummon extends EntityZombie
 		idleLocation = this.getCentralPositionInBlockArea();	
 	}
 	
+	public void setOwner(EntityPlayer player)
+	{
+		this.ownerKey = SummonHandler.getKeyStringForPlayer(player);
+	}
+	
 	@Override
 	protected void applyEntityAI()
     {
 //        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityMob.class, 1.0D, true));
-        this.tasks.addTask(5, new SummonAIMoveToArea(this, 1.0));
+        
+        this.tasks.addTask(9, new SummonAIMoveToArea(this, 1.01));
         this.tasks.addTask(4, new SummonAIManipulateTargetBlock(this));
         this.tasks.addTask(6, new SummonAIMoveToNextTargetBlock(this, 1.0));
 
@@ -116,6 +126,8 @@ public class EntitySummon extends EntityZombie
         tagCompound.setInteger("endZ", endingBlockArea.getZ());
         
         tagCompound.setBoolean("startWasLastSet", startWasLastSet);
+        
+        tagCompound.setString("ownerKey", ownerKey);
     }
 	
 	@Override
@@ -129,6 +141,7 @@ public class EntitySummon extends EntityZombie
         IFocusToken focusToken = SpellTokenRegistry.getPreparedFocusFromList(tokenList);
         if(focusToken instanceof SummonFocusToken)
         {
+        	System.out.println("Preparing... list size is: " + this.tokenList.size());
         	this.focus = (SummonFocusToken)focusToken;
         	this.focus.prepareSummon(null, worldObj, this, potency);
         }
@@ -145,6 +158,10 @@ public class EntitySummon extends EntityZombie
         endingBlockArea = new BlockPos(tagCompound.getInteger("endX"), tagCompound.getInteger("endY"), tagCompound.getInteger("endZ"));
         
         startWasLastSet = tagCompound.getBoolean("startWasLastSet");
+        
+        ownerKey = tagCompound.getString("ownerKey");
+        
+        SummonHandler.registerSummonToPlayer(ownerKey, getPersistentID());
     }
 	
 	@Override
@@ -260,14 +277,16 @@ public class EntitySummon extends EntityZombie
 				minZ = endingBlockArea.getZ();
 			}
 			
-			for(int j = minY; j <= maxY; j++)
+			System.out.println(minX + ", " + minY + ", " + minZ + ", " + maxX + ", " + maxY + ", " + maxZ);
+			
+			for(int j = maxY; j >= minY; j--)
 			{
 				for(int i = minX; i <= maxX; i++)
 				{
 					for(int k = minZ; k <= maxZ; k++)
 					{
 						BlockPos pos = new BlockPos(i, j, k);
-						
+
 						if(this.canManipulateBlock(pos))
 						{
 							return pos;
@@ -288,7 +307,7 @@ public class EntitySummon extends EntityZombie
 //		{
 //			return true;
 //		}
-		
+//		System.out.println("Size: " + this.blockManipulatorList.size());
 		for(ISummonBlockManipulator effect : this.blockManipulatorList)
 		{
 			if(effect.canManipulateBlock(this, worldObj, pos, block, state))
@@ -341,7 +360,7 @@ public class EntitySummon extends EntityZombie
 			minZ = endingBlockArea.getZ();
 		}
 		
-		for(int j = Math.max(minY, pos.getY() - range); j <= Math.min(maxY, pos.getY() + range); j++)
+		for(int j = Math.min(maxY, pos.getY() + range); j >= Math.max(minY, pos.getY() - range); j--)
 		{
 			for(int i = Math.max(minX, pos.getX() - range); i <= Math.min(maxX, pos.getX() + range); i++)
 			{

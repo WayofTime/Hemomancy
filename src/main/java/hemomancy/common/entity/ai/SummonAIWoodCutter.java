@@ -80,7 +80,7 @@ public class SummonAIWoodCutter extends EntityAIBase
         	return true;
         }else
         {
-        	this.theEntity.targetKey = "nothing";
+        	this.theEntity.targetKey = "";
         	return false;
         }
     }

@@ -5,6 +5,4 @@ import hemomancy.common.spells.focus.SummonFocusToken;
 public interface ISummonToken 
 {
 	public void manipulateSummonFocus(SummonFocusToken token, float potency);
-	
-	public float getPotency();
 }

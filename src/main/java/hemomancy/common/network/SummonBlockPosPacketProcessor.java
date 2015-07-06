@@ -85,15 +85,15 @@ public class SummonBlockPosPacketProcessor implements IMessage, IMessageHandler<
         		break;
         		
     		case MARK_IDLE_LOCATION:
-    			if(!summon.isWithinWorkArea(pos))
-    			{
-    				summon.workArea = false;
-    				summon.startingBlockArea = new BlockPos(0, 0, 0);
-    				summon.endingBlockArea = new BlockPos(0, 0, 0);
-    				summon.isIdle = true;
-    				summon.startWasLastSet = false;
-    				summon.workAreaWasReset = true;
-    			}
+//    			if(!summon.isWithinWorkArea(pos))
+//    			{
+//    				summon.workArea = false;
+//    				summon.startingBlockArea = new BlockPos(0, 0, 0);
+//    				summon.endingBlockArea = new BlockPos(0, 0, 0);
+//    				summon.isIdle = true;
+//    				summon.startWasLastSet = false;
+//    				summon.workAreaWasReset = true;
+//    			}
     			
     			summon.idleLocation = pos;
     			break;
@@ -116,15 +116,16 @@ public class SummonBlockPosPacketProcessor implements IMessage, IMessageHandler<
     					summon.workAreaWasReset = false;
     					summon.workArea = true;
     					
-    					if(!summon.isWithinWorkArea(summon.idleLocation))
-    					{
-    						summon.idleLocation = summon.getCentralPositionInBlockArea();
-    					}
+//    					if(!summon.isWithinWorkArea(summon.idleLocation))
+//    					{
+//    						summon.idleLocation = summon.getCentralPositionInBlockArea();
+//    					}
     				}
-    			}else if(!summon.isWithinWorkArea(summon.idleLocation))
-				{
-					summon.idleLocation = summon.getCentralPositionInBlockArea();
-				}
+    			}
+//    			else if(!summon.isWithinWorkArea(summon.idleLocation))
+//				{
+//					summon.idleLocation = summon.getCentralPositionInBlockArea();
+//				}
     			
     			break;
     		}

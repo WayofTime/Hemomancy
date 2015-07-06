@@ -7,16 +7,19 @@ import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.ITouchToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.beam.IBeamToken;
+import hemomancy.api.spells.summon.ISummonToken;
 import hemomancy.common.spells.beam.BlockBreakBlockBeamEffect;
 import hemomancy.common.spells.focus.BeamFocusToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
+import hemomancy.common.spells.focus.SummonFocusToken;
 import hemomancy.common.spells.focus.TouchFocusToken;
 import hemomancy.common.spells.projectile.BlockBreakProjectileEffect;
+import hemomancy.common.spells.summon.DigBlockManipulator;
 import hemomancy.common.spells.touch.BlockBreakTouchEffect;
 
 import java.util.List;
 
-public class BlockBreakToken extends SpellToken implements IProjectileToken, ITouchToken, IBeamToken, IElementalToken
+public class BlockBreakToken extends SpellToken implements IProjectileToken, ITouchToken, IBeamToken, ISummonToken, IElementalToken
 {
 	public BlockBreakToken() 
 	{
@@ -73,5 +76,12 @@ public class BlockBreakToken extends SpellToken implements IProjectileToken, ITo
 	{
 		focus.ignoreEntities = true;
 		focus.blockEffects.add(new BlockBreakBlockBeamEffect(potency));
+	}
+
+	@Override
+	public void manipulateSummonFocus(SummonFocusToken token, float potency) 
+	{
+		System.out.println("Added dig manipulator");
+		token.blockManipulatorList.add(new DigBlockManipulator(potency));
 	}
 }

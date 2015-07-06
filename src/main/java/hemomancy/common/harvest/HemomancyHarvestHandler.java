@@ -17,7 +17,8 @@ import net.minecraftforge.common.IPlantable;
 
 public class HemomancyHarvestHandler extends HarvestHandler
 {
-	public boolean canHarvestBlock(Block block, IBlockState state)
+	@Override
+	public boolean canHarvestBlock(World world, Block block, IBlockState state, BlockPos pos)
 	{
 		int meta = block.getMetaFromState(state);
 		
@@ -32,7 +33,7 @@ public class HemomancyHarvestHandler extends HarvestHandler
 	@Override
 	public boolean harvestBlock(World world, Block block, IBlockState state, BlockPos pos, boolean replantSeed) 
 	{
-		if(canHarvestBlock(block, state))
+		if(canHarvestBlock(world, block, state, pos))
 		{
 			IPlantable seed = replantSeed ? getItemSeedFromBlock(block) : null;
 			List<ItemStack> dropList = block.getDrops(world, pos, state, 0);

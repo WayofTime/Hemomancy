@@ -84,29 +84,14 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
         {
             return stack;
         }
-        
-        for(SpellToken token : this.tokenList)
-		{
-			if(token instanceof ISummonToken)
-			{
-				((ISummonToken)token).manipulateSummonFocus(this, potency);
-			}
-		}
 
         if (ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)) && !world.isRemote)
         {
         	EntitySummon summon = new EntitySummon(world, player.posX, player.posY, player.posZ);
         	SummonHandler.registerSummonToPlayer(player, summon); 
         	prepareSummon(stack, world, summon, potency);
+        	summon.setOwner(player);
         	world.spawnEntityInWorld(summon);
-        	
-//            for (SpellToken token : tokenList)
-//            {
-//                if (token instanceof ISummonToken)
-//                {
-//                    ((ISummonToken) token).applyEffectToPlayer(world, player, this, potency * potencyMultiplier);
-//                }
-//            }
         }
         
         return stack;
@@ -114,6 +99,14 @@ public class SummonFocusToken extends SpellToken implements IFocusToken
     
     public void prepareSummon(ItemStack stack, World world, EntitySummon summon, float potency)
     {
+    	for(SpellToken token : this.tokenList)
+		{
+			if(token instanceof ISummonToken)
+			{
+				((ISummonToken)token).manipulateSummonFocus(this, potency);
+			}
+		}
+    	
     	summon.tokenList = this.tokenList;
     	summon.potency = potency;
     	

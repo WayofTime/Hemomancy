@@ -19,12 +19,12 @@ public class SummonAIManipulateTargetBlock extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (!this.theEntity.workArea || !this.theEntity.isWithinWorkArea())
+        if (!this.theEntity.workArea)
         {
             return false;
         }
 
-        return this.theEntity.performActionOnBlockInRange(1);
+        return this.theEntity.performActionOnBlockInRange(4);
     }
 
     /**
@@ -33,7 +33,7 @@ public class SummonAIManipulateTargetBlock extends EntityAIBase
     @Override
     public boolean continueExecuting()
     {
-        return this.theEntity.performActionOnBlockInRange(1);
+        return this.theEntity.performActionOnBlockInRange(4);
     }
 
     /**

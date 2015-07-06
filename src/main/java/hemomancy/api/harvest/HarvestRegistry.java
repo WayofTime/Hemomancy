@@ -29,4 +29,17 @@ public class HarvestRegistry
 		
 		return false;
 	}
+	
+	public static boolean canHarvestBlock(World world, Block block, IBlockState state, BlockPos pos)
+	{
+		for(HarvestHandler handler : harvestHandlerList)
+		{
+			if(handler.canHarvestBlock(world, block, state, pos))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

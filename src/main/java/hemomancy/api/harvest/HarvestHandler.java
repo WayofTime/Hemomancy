@@ -20,4 +20,6 @@ public abstract class HarvestHandler
 	 * @return				true if the block was successfully harvested, false if not.
 	 */
 	public abstract boolean harvestBlock(World world, Block block, IBlockState state, BlockPos pos, boolean replantSeed);
+	
+	public abstract boolean canHarvestBlock(World world,  Block block, IBlockState state, BlockPos pos);
 }

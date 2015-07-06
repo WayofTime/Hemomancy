@@ -25,7 +25,7 @@ public class SummonAIMoveToNextTargetBlock extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (!this.theEntity.workArea || !this.theEntity.isWithinWorkArea())
+        if (!this.theEntity.workArea)
         {
             return false;
         }

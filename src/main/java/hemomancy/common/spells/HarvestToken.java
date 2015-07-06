@@ -6,14 +6,17 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.ITouchToken;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.summon.ISummonToken;
 import hemomancy.common.spells.focus.ProjectileFocusToken;
+import hemomancy.common.spells.focus.SummonFocusToken;
 import hemomancy.common.spells.focus.TouchFocusToken;
 import hemomancy.common.spells.projectile.HarvestProjectileEffect;
+import hemomancy.common.spells.summon.HarvestBlockManipulator;
 import hemomancy.common.spells.touch.HarvestTouchEffect;
 
 import java.util.List;
 
-public class HarvestToken extends SpellToken implements IProjectileToken, ITouchToken, IElementalToken
+public class HarvestToken extends SpellToken implements IProjectileToken, ITouchToken, ISummonToken, IElementalToken
 {
 	public HarvestToken() 
 	{
@@ -63,5 +66,11 @@ public class HarvestToken extends SpellToken implements IProjectileToken, ITouch
 	public EnumElement getElement() 
 	{
 		return EnumElement.NATURE;
+	}
+
+	@Override
+	public void manipulateSummonFocus(SummonFocusToken token, float potency) 
+	{
+		token.blockManipulatorList.add(new HarvestBlockManipulator(potency));
 	}
 }
