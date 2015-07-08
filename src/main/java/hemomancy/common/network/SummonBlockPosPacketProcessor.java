@@ -20,6 +20,7 @@ public class SummonBlockPosPacketProcessor implements IMessage, IMessageHandler<
 	public static final int SEND_TO = 0;
 	public static final int MARK_IDLE_LOCATION = 1;
 	public static final int DEFINE_WORK_AREA = 2;
+	public static final int OUTPUT_CHEST = 3;
 	
 	private int packetType;
     private UUID summonId;
@@ -128,6 +129,9 @@ public class SummonBlockPosPacketProcessor implements IMessage, IMessageHandler<
 //				}
     			
     			break;
+    			
+    		case OUTPUT_CHEST:
+    			summon.dumpChestLocation = pos;
     		}
     	}
     }

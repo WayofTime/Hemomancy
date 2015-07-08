@@ -24,7 +24,15 @@ public class SummonAIManipulateTargetBlock extends EntityAIBase
             return false;
         }
 
-        return this.theEntity.performActionOnBlockInRange(4);
+        if(this.theEntity.performActionOnTargetBlockInRange(4))
+    	{
+        	this.theEntity.isWorking = true;
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
     }
 
     /**
@@ -33,7 +41,15 @@ public class SummonAIManipulateTargetBlock extends EntityAIBase
     @Override
     public boolean continueExecuting()
     {
-        return this.theEntity.performActionOnBlockInRange(4);
+    	if(this.theEntity.performActionOnTargetBlockInRange(4))
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		this.theEntity.isWorking = false;
+    		return false;
+    	}
     }
 
     /**

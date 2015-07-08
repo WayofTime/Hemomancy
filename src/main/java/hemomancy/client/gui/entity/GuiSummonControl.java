@@ -1,6 +1,7 @@
 package hemomancy.client.gui.entity;
 
 import hemomancy.client.gui.entity.controlButtons.MarkCentralLocationButton;
+import hemomancy.client.gui.entity.controlButtons.MarkOutputChestButton;
 import hemomancy.client.gui.entity.controlButtons.MarkWorkAreaButton;
 import hemomancy.client.gui.entity.controlButtons.SummonControlButton;
 import hemomancy.common.summon.SummonHandler;
@@ -30,7 +31,7 @@ public class GuiSummonControl extends GuiContainer
 	public List<SummonControlButton> controlButtonList = new ArrayList();
 	
 	int circleRadius = 40;
-	int numberOfButtonsOnCircle = 3;
+	int numberOfButtonsOnCircle = 20;
 	int buttonSize = 16;
 	
 	double range = 10;
@@ -46,6 +47,7 @@ public class GuiSummonControl extends GuiContainer
 		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
 		controlButtonList.add(new MarkCentralLocationButton());
 		controlButtonList.add(new MarkWorkAreaButton());
+		controlButtonList.add(new MarkOutputChestButton());
 	}
 	
 	@Override

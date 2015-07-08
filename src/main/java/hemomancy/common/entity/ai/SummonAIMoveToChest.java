@@ -3,9 +3,10 @@ package hemomancy.common.entity.ai;
 import hemomancy.common.entity.mob.EntitySummon;
 import hemomancy.common.util.Utils;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.BlockPos;
 
-public class SummonAIMoveToArea extends EntityAIBase
+public class SummonAIMoveToChest extends EntityAIBase
 {
     private EntitySummon theEntity;
     private double movePosX;
@@ -13,7 +14,7 @@ public class SummonAIMoveToArea extends EntityAIBase
     private double movePosZ;
     private double movementSpeed;
 
-    public SummonAIMoveToArea(EntitySummon summon, double moveSpeed)
+    public SummonAIMoveToChest(EntitySummon summon, double moveSpeed)
     {
         this.theEntity = summon;
         this.movementSpeed = moveSpeed;
@@ -26,14 +27,19 @@ public class SummonAIMoveToArea extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (Utils.isWithinRangeOfBlock(theEntity, theEntity.idleLocation, 3))
+        if ((!theEntity.isWorking && this.theEntity.inventory.isEmpty()) || (theEntity.isWorking && (Utils.isWithinRangeOfBlock(theEntity, theEntity.dumpChestLocation, 3) || this.theEntity.inventory.getFirstEmptyStack() >= 0))) //Will only dump if full.
         {
             return false;
         }
         else
         {
-            BlockPos blockpos = this.theEntity.idleLocation;
+            BlockPos blockpos = this.theEntity.dumpChestLocation;
             if(blockpos == null)
+            {
+            	return false;
+            }
+            
+            if(!(theEntity.worldObj.getTileEntity(blockpos) instanceof IInventory))
             {
             	return false;
             }

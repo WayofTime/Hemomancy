@@ -20,7 +20,6 @@ public class DigBlockManipulator implements ISummonBlockManipulator
 	@Override
 	public boolean canManipulateBlock(EntitySummon summon, World world, BlockPos pos, Block block, IBlockState state) 
 	{
-		System.out.println("Called?");
 		return !world.isAirBlock(pos) && !block.isTranslucent();
 	}
 

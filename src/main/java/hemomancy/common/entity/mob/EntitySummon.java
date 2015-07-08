@@ -4,11 +4,15 @@ import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.SpellTokenRegistry;
 import hemomancy.api.spells.summon.ISummonBlockManipulator;
+import hemomancy.common.entity.ai.SummonAIDumpToChest;
 import hemomancy.common.entity.ai.SummonAIManipulateTargetBlock;
 import hemomancy.common.entity.ai.SummonAIMoveToArea;
+import hemomancy.common.entity.ai.SummonAIMoveToChest;
 import hemomancy.common.entity.ai.SummonAIMoveToNextTargetBlock;
+import hemomancy.common.inventory.InventorySummon;
 import hemomancy.common.spells.focus.SummonFocusToken;
 import hemomancy.common.summon.SummonHandler;
+import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +21,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EntitySummon extends EntityZombie
@@ -46,10 +55,16 @@ public class EntitySummon extends EntityZombie
 	
 	public BlockPos idleLocation = new BlockPos(0, 0, 0);
 	
+	public BlockPos dumpChestLocation = new BlockPos(0, 0, 0);
+	
 	public boolean workArea = false;
-	public boolean isIdle = true;
+	public boolean isWorking = false;
 	
 	public String ownerKey = "";
+	
+	int invSize = 5;
+	
+	public InventorySummon inventory;
 	
 	public EntitySummon(World worldIn) 
 	{
@@ -71,9 +86,11 @@ public class EntitySummon extends EntityZombie
 		targetPos = new BlockPos(this);
 		
 		workArea = true;
-		isIdle = true;
+		isWorking = true;
 		
 		idleLocation = this.getCentralPositionInBlockArea();	
+		
+		inventory = new InventorySummon(this);
 	}
 	
 	public void setOwner(EntityPlayer player)
@@ -86,9 +103,12 @@ public class EntitySummon extends EntityZombie
     {
 //        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, EntityMob.class, 1.0D, true));
         
-        this.tasks.addTask(9, new SummonAIMoveToArea(this, 1.01));
+        this.tasks.addTask(9, new SummonAIMoveToArea(this, 1.0));
         this.tasks.addTask(4, new SummonAIManipulateTargetBlock(this));
         this.tasks.addTask(6, new SummonAIMoveToNextTargetBlock(this, 1.0));
+        
+        this.tasks.addTask(3, new SummonAIMoveToChest(this, 1.0));
+        this.tasks.addTask(4, new SummonAIDumpToChest(this));
 
 //        this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] {EntityPigZombie.class}));
@@ -100,11 +120,13 @@ public class EntitySummon extends EntityZombie
     {
         super.writeEntityToNBT(tagCompound);
         
+        tagCompound.setTag("Inventory", this.inventory.writeToNBT(new NBTTagList()));
+        
         tagCompound.setFloat("potency", potency);
         tagCompound.setTag("tokenList", SpellTokenRegistry.writeSpellTokensToTag(tokenList, new NBTTagCompound()));
         
         tagCompound.setBoolean("workArea", workArea);
-        tagCompound.setBoolean("isIdle", isIdle);
+        tagCompound.setBoolean("isWorking", isWorking);
         tagCompound.setBoolean("workAreaWasReset", workAreaWasReset);
         
         tagCompound.setString("targetKey", targetKey);
@@ -125,6 +147,10 @@ public class EntitySummon extends EntityZombie
         tagCompound.setInteger("endY", endingBlockArea.getY());
         tagCompound.setInteger("endZ", endingBlockArea.getZ());
         
+        tagCompound.setInteger("dumpChestX", dumpChestLocation.getX());
+        tagCompound.setInteger("dumpChestY", dumpChestLocation.getY());
+        tagCompound.setInteger("dumpChestZ", dumpChestLocation.getZ());
+        
         tagCompound.setBoolean("startWasLastSet", startWasLastSet);
         
         tagCompound.setString("ownerKey", ownerKey);
@@ -134,6 +160,10 @@ public class EntitySummon extends EntityZombie
     public void readEntityFromNBT(NBTTagCompound tagCompound)
     {
         super.readEntityFromNBT(tagCompound);
+        this.inventory = new InventorySummon(this);
+        
+        NBTTagList nbttaglist = tagCompound.getTagList("Inventory", 10);
+        this.inventory.readFromNBT(nbttaglist);
         
         this.potency = tagCompound.getFloat("potency");
         
@@ -141,13 +171,12 @@ public class EntitySummon extends EntityZombie
         IFocusToken focusToken = SpellTokenRegistry.getPreparedFocusFromList(tokenList);
         if(focusToken instanceof SummonFocusToken)
         {
-        	System.out.println("Preparing... list size is: " + this.tokenList.size());
         	this.focus = (SummonFocusToken)focusToken;
         	this.focus.prepareSummon(null, worldObj, this, potency);
         }
         
         workArea = tagCompound.getBoolean("workArea");
-        isIdle = tagCompound.getBoolean("isIdle");
+        isWorking = tagCompound.getBoolean("isWorking");
         workAreaWasReset = tagCompound.getBoolean("workAreaWasReset");
         
         targetKey = tagCompound.getString("targetKey");
@@ -156,6 +185,8 @@ public class EntitySummon extends EntityZombie
         idleLocation = new BlockPos(tagCompound.getInteger("idleX"), tagCompound.getInteger("idleY"), tagCompound.getInteger("idleZ"));
         startingBlockArea = new BlockPos(tagCompound.getInteger("startX"), tagCompound.getInteger("startY"), tagCompound.getInteger("startZ"));
         endingBlockArea = new BlockPos(tagCompound.getInteger("endX"), tagCompound.getInteger("endY"), tagCompound.getInteger("endZ"));
+        
+        dumpChestLocation = new BlockPos(tagCompound.getInteger("dumpChestX"), tagCompound.getInteger("dumpChestY"), tagCompound.getInteger("dumpChestZ"));
         
         startWasLastSet = tagCompound.getBoolean("startWasLastSet");
         
@@ -168,6 +199,22 @@ public class EntitySummon extends EntityZombie
 	public void onLivingUpdate()
     {
 		this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 100, 0));
+		
+		if(!this.worldObj.isRemote && this.worldObj.getTotalWorldTime() % 20 == 0)
+		{
+//			for(int i = 0; i < this.inventory.getSizeInventory(); i++)
+//			{
+//				System.out.println("In slot " + i + ": " + this.inventory.getStackInSlot(i));
+//			}
+//			System.out.println((this.inventory == null || this.inventory.getStackInSlot(4) == null) ? "" : this.inventory.getStackInSlot(4));
+		}
+		
+		List<EntityItem> itemList = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1, 1, 1));
+		
+		for(EntityItem item : itemList)
+		{
+			this.pickUpItem(item);
+		}
 		
 		super.onLivingUpdate();
     }
@@ -276,9 +323,7 @@ public class EntitySummon extends EntityZombie
 				maxZ = startingBlockArea.getZ();
 				minZ = endingBlockArea.getZ();
 			}
-			
-			System.out.println(minX + ", " + minY + ", " + minZ + ", " + maxX + ", " + maxY + ", " + maxZ);
-			
+						
 			for(int j = maxY; j >= minY; j--)
 			{
 				for(int i = minX; i <= maxX; i++)
@@ -299,23 +344,16 @@ public class EntitySummon extends EntityZombie
 		return null;
 	}
 	
-	public boolean canManipulateBlock(BlockPos pos)
+	public boolean performActionOnTargetBlockInRange(int range)
 	{
-		IBlockState state = worldObj.getBlockState(pos);
-		Block block = state.getBlock();
-//		if((block == Blocks.dirt || block == Blocks.grass) && worldObj.isAirBlock(pos.up()))
-//		{
-//			return true;
-//		}
-//		System.out.println("Size: " + this.blockManipulatorList.size());
-		for(ISummonBlockManipulator effect : this.blockManipulatorList)
+		if(Utils.isWithinRangeOfBlock(this, targetPos, range))
 		{
-			if(effect.canManipulateBlock(this, worldObj, pos, block, state))
+			if(canManipulateBlock(targetPos) && performActionOnBlock(targetPos))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 	
@@ -379,6 +417,26 @@ public class EntitySummon extends EntityZombie
 		return false;
 	}
 	
+	public boolean canManipulateBlock(BlockPos pos)
+	{
+		IBlockState state = worldObj.getBlockState(pos);
+		Block block = state.getBlock();
+//		if((block == Blocks.dirt || block == Blocks.grass) && worldObj.isAirBlock(pos.up()))
+//		{
+//			return true;
+//		}
+//		System.out.println("Size: " + this.blockManipulatorList.size());
+		for(ISummonBlockManipulator effect : this.blockManipulatorList)
+		{
+			if(effect.canManipulateBlock(this, worldObj, pos, block, state))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public boolean performActionOnBlock(BlockPos pos)
 	{
 		IBlockState state = worldObj.getBlockState(pos);
@@ -398,5 +456,96 @@ public class EntitySummon extends EntityZombie
 		}
 		
 		return false;
+	}
+	
+	public EntityItem dropItem(ItemStack droppedItem, boolean dropAround, boolean traceItem)
+    {
+        if (droppedItem == null)
+        {
+            return null;
+        }
+        else if (droppedItem.stackSize == 0)
+        {
+            return null;
+        }
+        else
+        {
+            double d0 = this.posY - 0.30000001192092896D + (double)this.getEyeHeight();
+            EntityItem entityitem = new EntityItem(this.worldObj, this.posX, d0, this.posZ, droppedItem);
+            entityitem.setPickupDelay(40);
+
+            if (traceItem)
+            {
+                entityitem.setThrower(this.getName());
+            }
+
+            float f;
+            float f1;
+
+            if (dropAround)
+            {
+                f = this.rand.nextFloat() * 0.5F;
+                f1 = this.rand.nextFloat() * (float)Math.PI * 2.0F;
+                entityitem.motionX = (double)(-MathHelper.sin(f1) * f);
+                entityitem.motionZ = (double)(MathHelper.cos(f1) * f);
+                entityitem.motionY = 0.20000000298023224D;
+            }
+            else
+            {
+                f = 0.3F;
+                entityitem.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
+                entityitem.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
+                entityitem.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f + 0.1F);
+                f1 = this.rand.nextFloat() * (float)Math.PI * 2.0F;
+                f = 0.02F * this.rand.nextFloat();
+                entityitem.motionX += Math.cos((double)f1) * (double)f;
+                entityitem.motionY += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F);
+                entityitem.motionZ += Math.sin((double)f1) * (double)f;
+            }
+
+            this.worldObj.spawnEntityInWorld(entityitem);
+
+            return entityitem;
+        }
+    }
+	
+	@Override
+	public void onDeath(DamageSource cause)
+    {
+		super.onDeath(cause);
+		if(!worldObj.isRemote)
+		{
+			this.inventory.dropAllItems();
+		}
+    }
+	
+	public void pickUpItem(EntityItem item)
+	{
+		if (!this.worldObj.isRemote)
+		{
+            if (item.cannotPickup()) 
+            {
+            	return;
+            }
+
+            ItemStack itemStack = item.getEntityItem();
+            int size = itemStack.stackSize;
+            
+            if(inventory.addItemStackToInventory(itemStack))
+            {
+            	System.out.println("Added");
+            	if (!item.isSilent())
+                {
+                    this.worldObj.playSoundAtEntity(this, "random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                }
+
+                this.onItemPickup(this, size);
+
+                if (itemStack.stackSize <= 0)
+                {
+                    item.setDead();
+                }
+            }
+		}
 	}
 }

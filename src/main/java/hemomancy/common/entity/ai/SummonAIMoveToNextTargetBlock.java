@@ -37,6 +37,9 @@ public class SummonAIMoveToNextTargetBlock extends EntityAIBase
             	return false;
             }
             
+            this.theEntity.isWorking = true;
+            this.theEntity.targetPos = blockpos;
+            
             this.movePosX = blockpos.getX();
             this.movePosY = blockpos.getY();
             this.movePosZ = blockpos.getZ();
