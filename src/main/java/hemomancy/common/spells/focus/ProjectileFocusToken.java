@@ -2,11 +2,11 @@ package hemomancy.common.spells.focus;
 
 import hemomancy.api.ApiUtils;
 import hemomancy.api.events.SpellCastEvent;
+import hemomancy.api.spells.IDamageModifier;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.IProjectileToken;
 import hemomancy.api.spells.SpellToken;
 import hemomancy.api.spells.effect.IAfterHitEffect;
-import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.api.spells.projectile.IOnProjectileUpdateEffect;
 import hemomancy.common.entity.projectile.EntitySpellProjectile;

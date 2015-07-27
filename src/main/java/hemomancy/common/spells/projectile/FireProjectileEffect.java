@@ -1,6 +1,6 @@
 package hemomancy.common.spells.projectile;
 
-import hemomancy.api.spells.projectile.IDamageModifier;
+import hemomancy.api.spells.IDamageModifier;
 import hemomancy.api.spells.projectile.IOnProjectileCollideEffect;
 import hemomancy.common.util.DamageCounterExtendedProperties;
 import net.minecraft.block.state.IBlockState;

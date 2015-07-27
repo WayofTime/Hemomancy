@@ -2,16 +2,23 @@ package hemomancy.common.spells.focus;
 
 import hemomancy.api.ApiUtils;
 import hemomancy.api.events.SpellCastEvent;
+import hemomancy.api.spells.ICustomDamageSource;
+import hemomancy.api.spells.IDamageModifier;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.ITouchToken;
 import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
+import hemomancy.api.spells.effect.IAfterHitEffect;
+import hemomancy.api.spells.touch.IEntityTouchEffect;
 import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.touch.IClickBlockTouchEffect;
 import hemomancy.common.util.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -31,6 +39,16 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 	private List<SpellToken> tokenList = new ArrayList();
 	
 	public List<IClickBlockTouchEffect> blockEffects = new ArrayList(); 
+	public Map<String, Float> damageMap = new HashMap();
+	public List<IEntityTouchEffect> entityEffects = new ArrayList();
+	public List<IDamageModifier> damageModifierList = new ArrayList();
+	public List<IAfterHitEffect> afterHitEffects = new ArrayList();
+	public List<ICustomDamageSource> damageSources = new ArrayList();
+
+	public boolean ignoreEntities = false;
+	public boolean dealDamage = true;
+	
+	public boolean collideWithLiquids = true;
 	
 	public float manaCost = 0;
 	public float bloodCost = 0;
@@ -76,10 +94,10 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 			}
 		}
 		
-		boolean flag = true;
+		double armLength = 5;
 		
-		MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, flag);
-
+		MovingObjectPosition mop = Utils.getMovingObjectPositionFromPlayer(world, player, collideWithLiquids, armLength, true, !ignoreEntities);
+		
         if (mop == null)
         {
             return stack;
@@ -88,7 +106,6 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
         {
         	if((mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK || mop.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) && ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
         	{
-
 				boolean success = false;
 
         		switch(mop.typeOfHit)
@@ -117,7 +134,71 @@ public class TouchFocusToken extends SpellToken implements IFocusToken
 					break;
 					
 				case ENTITY:
-					
+					if(mop.entityHit instanceof EntityLivingBase)
+					{
+						EntityLivingBase livingEntity = (EntityLivingBase)mop.entityHit;
+						
+						float currentHealth = livingEntity.getHealth();
+						
+						if(this.dealDamage)
+			    		{
+							float damage = 0;
+							
+							for(Entry<String, Float> entry : this.damageMap.entrySet())
+							{
+								damage += entry.getValue();
+							}
+							
+							float newDamage = damage;
+					    	
+					    	for(IDamageModifier modifier : this.damageModifierList)
+					    	{
+					    		newDamage += modifier.getDamageAgainstEntity(player, mop.entityHit, damage);
+					    	}
+					    	
+					    	DamageSource source = null;
+					    	
+					    	for(ICustomDamageSource src : this.damageSources)
+					    	{
+					    		source = src.getDamageSourceAgainstEntity(player, livingEntity, newDamage);
+					    		if(source != null)
+					    		{
+					    			break;
+					    		}
+					    	}
+					    	
+					    	if(source != null)
+					    	{
+					    		livingEntity.attackEntityFrom(source, newDamage);
+					    	}
+			    		}
+						
+						for(IEntityTouchEffect effect : entityEffects)
+						{
+							if(effect.onHitEntity(player, livingEntity))
+							{
+								success = true;
+							}
+						}
+						
+						float damageDealt = currentHealth - livingEntity.getHealth();
+						
+						if(damageDealt > 0)
+			            {
+							for(IAfterHitEffect effect : afterHitEffects)
+							{
+								if(effect.applyAfterDamageEffect(player, livingEntity, damageDealt))
+								{
+									success = true;
+								}
+							}
+			            }
+						
+						if(success)
+						{
+							ProficiencyHandler.handleSuccessfulSpellCast(player, tokenList, potency, SpellSituation.TOUCH_ENTITY);
+						}
+					}
 					break;
 				default:
 					return stack;

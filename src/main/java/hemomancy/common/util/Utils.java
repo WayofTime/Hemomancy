@@ -404,10 +404,15 @@ public class Utils extends ApiUtils
         		Entity closestEntity = null;
         		double closestDistance = searchDistance;
         		
-        		List<Entity> entityList = world.getEntitiesWithinAABBExcludingEntity(player, new AxisAlignedBB(hitX - 0.5, hitY - 0.5, hitZ - 0.5, hitX + 0.5, hitY + 0.5, hitZ + 0.5));
+        		List<Entity> entityList = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(hitX - 0.5, hitY - 0.5, hitZ - 0.5, hitX + 0.5, hitY + 0.5, hitZ + 0.5));
         		
         		for(Entity entity : entityList)
         		{
+        			if(entity == player)
+        			{
+        				continue;
+        			}
+        			
         			double testDistance = entity.getPositionVector().distanceTo(vec3);
         			if(testDistance < closestDistance)
         			{

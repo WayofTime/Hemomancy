@@ -1,6 +1,6 @@
 package hemomancy.common.spells.projectile;
 
-import hemomancy.api.spells.projectile.IDamageModifier;
+import hemomancy.api.spells.IDamageModifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;

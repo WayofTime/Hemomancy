@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 
 public class MarkOutputChestButton extends SummonControlButton
@@ -18,7 +19,7 @@ public class MarkOutputChestButton extends SummonControlButton
 	}
 	
 	@Override
-	public boolean onClientButtonClicked(UUID id, MovingObjectPosition mop)
+	public boolean onClientButtonClicked(EntityPlayer player, UUID id, MovingObjectPosition mop)
 	{
 		if(id != null && mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 		{

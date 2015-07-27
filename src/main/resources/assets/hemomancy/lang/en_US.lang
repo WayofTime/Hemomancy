@@ -38,3 +38,4 @@ token.tokenStatic.name=Static
 token.tokenHarvest.name=Harvest
 token.tokenGrowth.name=Grow
 token.tokenPush.name=Push
+token.tokenPhysicalDamage.name=Physical Damage

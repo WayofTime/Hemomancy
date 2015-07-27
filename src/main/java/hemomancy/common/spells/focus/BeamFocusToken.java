@@ -3,6 +3,8 @@ package hemomancy.common.spells.focus;
 import hemomancy.Hemomancy;
 import hemomancy.api.ApiUtils;
 import hemomancy.api.events.SpellCastEvent;
+import hemomancy.api.spells.ICustomDamageSource;
+import hemomancy.api.spells.IDamageModifier;
 import hemomancy.api.spells.IFocusToken;
 import hemomancy.api.spells.SpellSituation;
 import hemomancy.api.spells.SpellToken;
@@ -10,7 +12,6 @@ import hemomancy.api.spells.beam.IBeamToken;
 import hemomancy.api.spells.beam.IBlockBeamEffect;
 import hemomancy.api.spells.beam.IEntityBeamEffect;
 import hemomancy.api.spells.effect.IAfterHitEffect;
-import hemomancy.api.spells.projectile.IDamageModifier;
 import hemomancy.common.spells.ProficiencyHandler;
 import hemomancy.common.spells.beam.IBeamManipulatorBlock;
 import hemomancy.common.util.Utils;
@@ -48,6 +49,7 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 	public List<IEntityBeamEffect> entityEffects = new ArrayList();
 	public List<IDamageModifier> damageModifierList = new ArrayList();
 	public List<IAfterHitEffect> afterHitEffects = new ArrayList();
+	public List<ICustomDamageSource> damageSources = new ArrayList();
 	
 	private double beamLength = 10.0;
 	public boolean ignoreEntities = false;
@@ -144,9 +146,7 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
     			{
     				((IBeamToken)token).manipulateBeamFocus(this, potency);
     			}
-    		}
-    		
-    		
+    		}    		
         }
     }
 
@@ -238,7 +238,7 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 		
 		this.renderBeam(player);
 		
-		if(player.worldObj.getTotalWorldTime() % 5 == 0 && !ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
+		if(player.worldObj.getTotalWorldTime() % 5 != 0 || !ApiUtils.drainManaAndBlood(player, this.getManaCost(potency), this.getBloodCost(potency)))
 		{
 //			player.clearItemInUse();
 			return;
@@ -279,8 +279,6 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 					{
 						if(effect.collideWithBlock(world, player, pos, state, block, sideHit))
 						{
-			        		System.out.println("Called");
-
 							success = true;
 						}
 					}
@@ -315,9 +313,20 @@ public class BeamFocusToken extends SpellToken implements IFocusToken
 					    		newDamage += modifier.getDamageAgainstEntity(player, mop.entityHit, damage);
 					    	}
 					    	
-					    	if(livingEntity.attackEntityFrom(DamageSource.causePlayerDamage(player), newDamage))
+					    	DamageSource source = null;
+					    	
+					    	for(ICustomDamageSource src : this.damageSources)
 					    	{
-					    		
+					    		source = src.getDamageSourceAgainstEntity(player, livingEntity, newDamage);
+					    		if(source != null)
+					    		{
+					    			break;
+					    		}
+					    	}
+					    	
+					    	if(source != null)
+					    	{
+					    		livingEntity.attackEntityFrom(source, newDamage);
 					    	}
 			    		}
 						

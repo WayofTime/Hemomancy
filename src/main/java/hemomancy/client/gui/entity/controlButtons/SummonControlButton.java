@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 
@@ -36,7 +37,7 @@ public class SummonControlButton
 	 * @param mop	The target that the player is looking at.
 	 * @return
 	 */
-	public boolean onClientButtonClicked(UUID id, MovingObjectPosition mop)
+	public boolean onClientButtonClicked(EntityPlayer player, UUID id, MovingObjectPosition mop)
 	{
 		if(id != null && mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 		{

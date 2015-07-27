@@ -1,4 +1,4 @@
-package hemomancy.api.spells.projectile;
+package hemomancy.api.spells;
 
 import net.minecraft.entity.Entity;
 

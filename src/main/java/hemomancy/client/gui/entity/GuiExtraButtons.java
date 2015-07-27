@@ -1,9 +1,5 @@
 package hemomancy.client.gui.entity;
 
-import hemomancy.client.gui.entity.controlButtons.MarkCentralLocationButton;
-import hemomancy.client.gui.entity.controlButtons.MarkOutputChestButton;
-import hemomancy.client.gui.entity.controlButtons.MarkWorkAreaButton;
-import hemomancy.client.gui.entity.controlButtons.OpenExtraGuiButtons;
 import hemomancy.client.gui.entity.controlButtons.SummonControlButton;
 import hemomancy.common.summon.SummonHandler;
 import hemomancy.common.util.Utils;
@@ -22,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-public class GuiSummonControl extends GuiContainer
+public class GuiExtraButtons extends GuiContainer
 {
 	public static final ResourceLocation resourceLocation = new ResourceLocation("hemomancy", "textures/gui/SpellTinkerer.png");
 	public final EntityPlayer player;
@@ -37,7 +33,7 @@ public class GuiSummonControl extends GuiContainer
 	
 	double range = 10;
 	
-	public GuiSummonControl(EntityPlayer player) //TODO: Write the buttons from the summon onto the player's NBT so that they may see which buttons are allowed. Or grab them from the held item's focus?
+	public GuiExtraButtons(EntityPlayer player) //TODO: Write the buttons from the summon onto the player's NBT so that they may see which buttons are allowed. Or grab them from the held item's focus?
 	{
 		super(new ContainerSummonControl(player));
 		this.player = player;
@@ -45,10 +41,6 @@ public class GuiSummonControl extends GuiContainer
 		this.mop = Utils.getMovingObjectPositionFromPlayer(player.worldObj, player, false, range, true, true);
 
 		controlButtonList.add(new SummonControlButton("textures/tokens/BeamToken.png"));
-		controlButtonList.add(new MarkCentralLocationButton());
-		controlButtonList.add(new MarkWorkAreaButton());
-		controlButtonList.add(new MarkOutputChestButton());
-		controlButtonList.add(new OpenExtraGuiButtons());
 	}
 	
 	@Override
